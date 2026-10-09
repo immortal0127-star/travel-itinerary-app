@@ -27,6 +27,7 @@
         --accent: #0f766e;
         --accent-2: #e76f51;
         --accent-soft: rgba(15, 118, 110, 0.1);
+        --day-image: url("./assets/day-1.jpg");
         --shadow: 0 18px 45px rgba(14, 31, 28, 0.13);
       }
 
@@ -65,7 +66,7 @@
         z-index: -2;
         background:
           linear-gradient(180deg, rgba(245, 247, 244, 0.34), rgba(245, 247, 244, 0.92) 58%),
-          url("./assets/trip-hero.jpg") center / cover no-repeat;
+          var(--day-image) center / cover no-repeat;
         opacity: 0.72;
       }
 
@@ -138,7 +139,7 @@
         background:
           linear-gradient(112deg, rgba(255, 255, 255, 0.96) 0 48%, rgba(255, 255, 255, 0.7)),
           linear-gradient(0deg, rgba(15, 32, 29, 0.08), rgba(15, 32, 29, 0.08)),
-          url("./assets/trip-hero.jpg") right center / cover no-repeat,
+          var(--day-image) right center / cover no-repeat,
           linear-gradient(90deg, var(--accent-soft), transparent),
           var(--panel);
         box-shadow: var(--shadow);
@@ -224,7 +225,7 @@
         overflow: hidden;
         background-image:
           linear-gradient(180deg, rgba(23, 32, 29, 0.04), rgba(23, 32, 29, 0.62)),
-          url("./assets/trip-hero.jpg");
+          var(--day-image);
         background-size: cover;
         box-shadow: 0 12px 26px rgba(14, 31, 28, 0.12);
       }
@@ -273,7 +274,7 @@
         inset: 0;
         background:
           linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0 46%, rgba(255, 255, 255, 0.72)),
-          url("./assets/trip-hero.jpg") right center / cover no-repeat;
+          var(--day-image) right center / cover no-repeat;
         opacity: 0.9;
       }
 
@@ -337,7 +338,7 @@
         background:
           linear-gradient(160deg, color-mix(in srgb, var(--accent) 34%, #17201d), rgba(23, 32, 29, 0.9) 56%),
           linear-gradient(0deg, rgba(23, 32, 29, 0.38), rgba(23, 32, 29, 0.38)),
-          url("./assets/trip-hero.jpg") center / cover no-repeat,
+          var(--day-image) center / cover no-repeat,
           #17201d;
         color: #ffffff;
         overflow: hidden;
@@ -410,7 +411,7 @@
         border-radius: 8px;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(23, 32, 29, 0.18)),
-          url("./assets/trip-hero.jpg") center 58% / cover no-repeat;
+          var(--day-image) center 58% / cover no-repeat;
         overflow: hidden;
       }
 
@@ -1022,6 +1023,8 @@
             label: "Day 1",
             date: "2026-10-16（五）",
             title: "高雄出發 · 名古屋市區",
+            image: "./assets/day-1.jpg",
+            tiles: ["名古屋城", "車站夜景", "大須商店街"],
             startTime: "05:00",
             stops: [
               {
@@ -1094,6 +1097,8 @@
             label: "Day 2",
             date: "2026-10-17（六）",
             title: "吉卜力公園",
+            image: "./assets/day-2.jpg",
+            tiles: ["魔女之谷", "園區森林", "大倉庫"],
             startTime: "08:00",
             stops: [
               {
@@ -1158,6 +1163,8 @@
             label: "Day 3",
             date: "2026-10-18（日）",
             title: "包車 · 高山老街與白川鄉",
+            image: "./assets/day-3.jpg",
+            tiles: ["高山老街", "宮川朝市", "白川鄉"],
             startTime: "08:00",
             stops: [
               {
@@ -1222,6 +1229,8 @@
             label: "Day 4",
             date: "2026-10-19（一）",
             title: "包車 · 立山黑部穿越",
+            image: "./assets/day-4.jpg",
+            tiles: ["黑部水壩", "空中纜車", "室堂"],
             startTime: "08:20",
             fixedSchedule: true,
             stops: [
@@ -1381,6 +1390,8 @@
             label: "Day 5",
             date: "2026-10-20（二）",
             title: "包車 · 上高地",
+            image: "./assets/day-5.jpg",
+            tiles: ["大正池", "河童橋", "明神池"],
             startTime: "08:00",
             stops: [
               {
@@ -1437,6 +1448,8 @@
             label: "Day 6",
             date: "2026-10-21（三）",
             title: "常滑 · 中部國際機場回程",
+            image: "./assets/day-6.jpg",
+            tiles: ["常滑散步道", "陶器街", "中部機場"],
             startTime: "09:00",
             stops: [
               {
@@ -1524,6 +1537,7 @@
       const tabsEl = document.getElementById("dayTabs");
       const timelineEl = document.getElementById("timeline");
       const routeLineEl = document.getElementById("routeLine");
+      const photoTileEls = Array.from(document.querySelectorAll(".photo-tile span"));
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
       const toastEl = document.getElementById("toast");
@@ -1654,9 +1668,13 @@
         const totalSpan = end - scheduled[0].arrival;
 
         document.body.dataset.day = String(state.selectedDay);
+        document.documentElement.style.setProperty("--day-image", `url("${day.image}")`);
         document.getElementById("tripTitle").textContent = trip.title;
         document.getElementById("tripMeta").textContent = `${trip.traveler} · ${trip.note}`;
         document.getElementById("dayLabel").textContent = `${day.date} · ${day.title}`;
+        photoTileEls.forEach((tile, index) => {
+          tile.textContent = day.tiles[index] || day.title;
+        });
         document.getElementById("spotlightKicker").textContent = `${day.label} · ${day.date}`;
         document.getElementById("spotlightTitle").textContent = day.title;
         document.getElementById("spotlightNote").textContent =
