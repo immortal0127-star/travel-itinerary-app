@@ -1147,9 +1147,9 @@
                 name: "飛往大阪關西機場",
                 place: "Kansai International Airport Terminal 1",
                 address: "1 Senshukukokita, Izumisano, Osaka",
-                stayMinutes: 40,
+                stayMinutes: 70,
                 travelMinutes: 235,
-                memo: "06:40 起飛，10:35 抵達大阪 KIX"
+                memo: "06:40 起飛，10:35 抵達大阪 KIX；入境、取行李、移動到關西機場站與購票抓 70 分鐘"
               },
               {
                 name: "前往名古屋",
@@ -1157,7 +1157,7 @@
                 address: "1 Chome-1-4 Meieki, Nakamura Ward, Nagoya, Aichi",
                 stayMinutes: 25,
                 travelMinutes: 150,
-                memo: "建議路線：KIX 關西機場站搭 JR HARUKA 到新大阪，轉東海道新幹線往名古屋；車站到車站含轉乘約 2 小時，這裡抓 2.5 小時含入境、取行李與購票緩衝"
+                memo: "穩健版：目標接 11:44 前後 HARUKA 往新大阪，轉東海道新幹線到名古屋；這段抓 2.5 小時含新大阪轉乘緩衝"
               },
               {
                 name: "名古屋城",
@@ -1226,6 +1226,18 @@
               }
             ],
             extras: [
+              {
+                name: "KIX 到名古屋備案班次",
+                address: "關西機場站 → HARUKA → 新大阪 → 東海道新幹線 → 名古屋",
+                infoOnly: true,
+                memo: "JR おでかけネット顯示 2026/10/16 中午 HARUKA 約每 30 分一班；新大阪到名古屋的新幹線班次密集，以下以整段約 2.5 小時保守估算。",
+                scheduleItems: [
+                  { time: "主線 11:44", text: "關西機場站發車，約 14:15 抵達名古屋；App 目前採用這個穩健版。" },
+                  { time: "備案 12:14", text: "若入境較慢改搭此班，約 14:45 抵達名古屋；名古屋城停留需縮短。" },
+                  { time: "備案 12:44", text: "約 15:15 抵達名古屋；建議名古屋城改快速拍照，保留金鯱橫丁用餐。" },
+                  { time: "備案 13:14", text: "約 15:45 抵達名古屋；名古屋城可能只剩外觀或需改天，直接吃鰻魚飯較穩。" }
+                ]
+              },
               {
                 name: "三輪神社",
                 place: "Miwa Shrine Nagoya",
