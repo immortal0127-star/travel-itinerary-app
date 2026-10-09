@@ -664,6 +664,70 @@
         gap: 11px;
       }
 
+      .info-section {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .section-heading h2 {
+        font-size: 20px;
+        line-height: 1.2;
+      }
+
+      .section-heading span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .card-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .info-card {
+        display: grid;
+        gap: 10px;
+        padding: 13px;
+        border: 1px solid rgba(23, 32, 29, 0.09);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 28px rgba(14, 31, 28, 0.09);
+      }
+
+      .info-card h3 {
+        font-size: 17px;
+        line-height: 1.25;
+        padding-right: 28px;
+      }
+
+      .mini-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .mini-meta span {
+        display: inline-flex;
+        min-height: 27px;
+        align-items: center;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--accent) 10%, white);
+        color: #2f3d39;
+        padding: 5px 8px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
       .stop {
         position: relative;
         display: grid;
@@ -891,6 +955,10 @@
         .timeline {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
+
+        .card-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
 
       @media (max-width: 420px) {
@@ -1005,6 +1073,22 @@
 
       <section class="timeline" id="timeline" aria-label="行程列表"></section>
 
+      <section class="info-section" id="foodSection" aria-label="餐飲推薦">
+        <div class="section-heading">
+          <h2>餐飲推薦</h2>
+          <span>依行程順路整理</span>
+        </div>
+        <div class="card-grid" id="foodGrid"></div>
+      </section>
+
+      <section class="info-section" id="extrasSection" aria-label="補充行程">
+        <div class="section-heading">
+          <h2>補充行程</h2>
+          <span>從主行程最後一站出發</span>
+        </div>
+        <div class="card-grid" id="extrasGrid"></div>
+      </section>
+
       <section class="footer-actions" aria-label="更多操作">
         <button class="action secondary" id="copyPlan" type="button">複製今日行程</button>
         <a class="action map" id="fullRoute" href="#" target="_blank" rel="noopener">開啟整日路線</a>
@@ -1091,6 +1175,47 @@
                 travelMinutes: 12,
                 memo: "休息"
               }
+            ],
+            foods: [
+              {
+                name: "大須商店街小吃散策",
+                place: "Osu Shopping Street food",
+                address: "Osu, Naka Ward, Nagoya, Aichi",
+                timing: "午餐或晚餐",
+                memo: "商店街邊逛邊吃，適合搭配大須觀音、招財貓與三輪神社。"
+              },
+              {
+                name: "矢場とん 名古屋駅エスカ店",
+                place: "Yabaton Nagoya Station Esca",
+                address: "Nagoya Station Esca, Nagoya, Aichi",
+                timing: "晚餐備案",
+                memo: "名古屋味噌豬排代表店，若展望台後想在車站解決晚餐很順。"
+              },
+              {
+                name: "ひつまぶし 名古屋備長",
+                place: "Hitsumabushi Nagoya Bincho",
+                address: "Nagoya Station, Nagoya, Aichi",
+                timing: "晚餐備案",
+                memo: "想吃名古屋鰻魚飯時可查車站周邊分店與候位狀況。"
+              }
+            ],
+            extras: [
+              {
+                name: "三輪神社",
+                place: "Miwa Shrine Nagoya",
+                address: "3 Chome-9-32 Osu, Naka Ward, Nagoya, Aichi",
+                travelFromLastMinutes: 20,
+                stayMinutes: 25,
+                memo: "如果大須商店街時間不夠，可放到主行程後補拍兔子繪馬與結緣御守。"
+              },
+              {
+                name: "大須招財貓",
+                place: "Osu Manekineko",
+                address: "Osu, Naka Ward, Nagoya, Aichi",
+                travelFromLastMinutes: 18,
+                stayMinutes: 15,
+                memo: "快速合照點，適合當作回住宿前的補充小景點。"
+              }
             ]
           },
           {
@@ -1157,6 +1282,39 @@
                 travelMinutes: 60,
                 memo: "園區 17:00 結束"
               }
+            ],
+            foods: [
+              {
+                name: "カフェ大陸横断飛行",
+                place: "Cafe Transcontinental Flight Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                timing: "午餐",
+                memo: "你行程裡標記的園區餐廳，建議提早避開中午尖峰。"
+              },
+              {
+                name: "ミルクスタンド シベリあん",
+                place: "Milk Stand Siberi An Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                timing: "點心",
+                memo: "復古西伯利亞蛋糕與愛知牛奶，適合大倉庫中段休息。"
+              },
+              {
+                name: "ホットドッグスタンド ホット・ティン・ルーフ",
+                place: "Hot Tin Roof Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                timing: "輕食",
+                memo: "貓掌熱狗，適合不想花太多時間排正餐時使用。"
+              }
+            ],
+            extras: [
+              {
+                name: "名古屋車站伴手禮採買",
+                place: "JR Nagoya Takashimaya",
+                address: "1 Chome-1-4 Meieki, Nakamura Ward, Nagoya, Aichi",
+                travelFromLastMinutes: 10,
+                stayMinutes: 40,
+                memo: "園區回來還有體力時，可在車站補買隔天包車點心與飲料。"
+              }
             ]
           },
           {
@@ -1222,6 +1380,46 @@
                 stayMinutes: 0,
                 travelMinutes: 170,
                 memo: "包車返程"
+              }
+            ],
+            foods: [
+              {
+                name: "飛騨 こって牛",
+                place: "Hida Kotte Ushi",
+                address: "34 Kamisannomachi, Takayama, Gifu",
+                timing: "午餐小吃",
+                memo: "你行程列的飛驒牛握壽司，適合上三之町古街邊走邊吃。"
+              },
+              {
+                name: "牛まん喜八郎",
+                place: "Gyuman Kihachiro Takayama",
+                address: "Takayama, Gifu",
+                timing: "午餐小吃",
+                memo: "飛驒牛肉包，排隊較快時可補充熱食。"
+              },
+              {
+                name: "高山プリン亭",
+                place: "Takayama Pudding-tei",
+                address: "Takayama, Gifu",
+                timing: "甜點",
+                memo: "高山老街甜點點名店，適合午餐後當收尾。"
+              },
+              {
+                name: "さん陣 みたらしだんご",
+                place: "Sanjin Mitarashi Dango Takayama",
+                address: "Takayama, Gifu",
+                timing: "點心",
+                memo: "五平餅、醬油糰子類小吃，適合邊逛邊分食。"
+              }
+            ],
+            extras: [
+              {
+                name: "名古屋車站晚餐備案",
+                place: "Nagoya Station restaurants",
+                address: "Nagoya Station, Nagoya, Aichi",
+                travelFromLastMinutes: 10,
+                stayMinutes: 60,
+                memo: "包車回到住宿後若還想外出，車站地下街和百貨餐廳選擇最多。"
               }
             ]
           },
@@ -1384,6 +1582,55 @@
                 travelMinutes: 50,
                 memo: "富山住宿；金澤車站、寶可夢中心與晚餐視情況自由參加"
               }
+            ],
+            foods: [
+              {
+                name: "室堂總站 / 立山酒店午餐",
+                place: "Murodo Terminal Restaurant",
+                address: "Murodo, Tateyama, Toyama",
+                timing: "午餐",
+                memo: "立山蕎麥麵、白蝦丼、水壩咖哩飯；12:25 抵達時人潮多，抓 45 分鐘。"
+              },
+              {
+                name: "扇澤站或大觀峰外帶",
+                place: "Ogizawa Station food",
+                address: "Ogizawa, Omachi, Nagano",
+                timing: "備用午餐",
+                memo: "御飯糰、三明治或包子先買好，可省下室堂排餐廳時間。"
+              },
+              {
+                name: "焼肉 肉割烹 万福",
+                place: "Yakiniku Niku Kappo Manpuku Kanazawa",
+                address: "Kanazawa, Ishikawa",
+                timing: "晚餐自由參加",
+                memo: "你行程裡標註的能登牛晚餐，17:00-21:30，建議先確認訂位。"
+              }
+            ],
+            extras: [
+              {
+                name: "金澤車站",
+                place: "Kanazawa Station",
+                address: "1-1 Kinoshinbomachi, Kanazawa, Ishikawa",
+                travelFromLastMinutes: 25,
+                stayMinutes: 35,
+                memo: "從富山搭北陸新幹線約 20 分鐘，鼓門與款待之傘可快速拍照。"
+              },
+              {
+                name: "金澤寶可夢中心",
+                place: "Pokemon Center Kanazawa",
+                address: "Kanazawa, Ishikawa",
+                travelFromLastMinutes: 35,
+                stayMinutes: 45,
+                memo: "北陸地區寶可夢中心，適合有體力再加。"
+              },
+              {
+                name: "焼肉 肉割烹 万福",
+                place: "Yakiniku Niku Kappo Manpuku Kanazawa",
+                address: "Kanazawa, Ishikawa",
+                travelFromLastMinutes: 35,
+                stayMinutes: 90,
+                memo: "金澤晚餐補充行程；若要去建議先訂位並注意回富山車班。"
+              }
             ]
           },
           {
@@ -1441,6 +1688,39 @@
                 stayMinutes: 0,
                 travelMinutes: 250,
                 memo: "東橫 INN 中部國際機場 1 號店，8 號乘車點有接送巴士"
+              }
+            ],
+            foods: [
+              {
+                name: "河童橋周邊午餐",
+                place: "Kappa Bridge Kamikochi restaurants",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                timing: "午餐",
+                memo: "健行中段最順路，天氣好可買輕食在河邊休息。"
+              },
+              {
+                name: "上高地食堂",
+                place: "Kamikochi Shokudo",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                timing: "午餐備案",
+                memo: "想坐下來吃熱食時可查現場營業與排隊狀況。"
+              },
+              {
+                name: "中部國際機場晚餐",
+                place: "Chubu Centrair International Airport restaurants",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                timing: "晚餐",
+                memo: "抵達機場住宿後，若時間夠可到航廈或 Access Plaza 周邊簡單吃。"
+              }
+            ],
+            extras: [
+              {
+                name: "Flight of Dreams 夜間散步",
+                place: "Flight of Dreams Chubu Centrair",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                travelFromLastMinutes: 10,
+                stayMinutes: 35,
+                memo: "入住機場飯店後若還有精神，可先去熟悉隔天動線。"
               }
             ]
           },
@@ -1524,6 +1804,47 @@
                 travelMinutes: 10,
                 memo: "台灣虎航 IT269，20:05 起飛，22:30 抵達小港"
               }
+            ],
+            foods: [
+              {
+                name: "常滑牛奶站 BAITEN",
+                place: "Tokoname Milk Stand BAITEN",
+                address: "Tokoname, Aichi",
+                timing: "點心",
+                memo: "你行程列的復古牛奶站，適合陶瓷散步道中段休息。"
+              },
+              {
+                name: "永旺夢樂城常滑美食街",
+                place: "AEON Mall Tokoname restaurants",
+                address: "2 Chome-20-3 Rinku-cho, Tokoname, Aichi",
+                timing: "晚餐 / 採買",
+                memo: "最後採買順便用餐，時間最彈性。"
+              },
+              {
+                name: "中部國際機場航廈餐廳",
+                place: "Chubu Centrair International Airport restaurants",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                timing: "登機前",
+                memo: "若永旺時間不夠，就回機場報到後再吃。"
+              }
+            ],
+            extras: [
+              {
+                name: "中部國際機場 Sky Deck",
+                place: "Chubu Centrair Sky Deck",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                travelFromLastMinutes: 0,
+                stayMinutes: 25,
+                memo: "報到後若還有空檔，可看飛機起降再進安檢。"
+              },
+              {
+                name: "機場免稅與伴手禮補買",
+                place: "Chubu Centrair Duty Free",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                travelFromLastMinutes: 0,
+                stayMinutes: 35,
+                memo: "最後補買伴手禮；請優先保留安檢與登機時間。"
+              }
             ]
           }
         ]
@@ -1537,6 +1858,10 @@
       const tabsEl = document.getElementById("dayTabs");
       const timelineEl = document.getElementById("timeline");
       const routeLineEl = document.getElementById("routeLine");
+      const foodSectionEl = document.getElementById("foodSection");
+      const foodGridEl = document.getElementById("foodGrid");
+      const extrasSectionEl = document.getElementById("extrasSection");
+      const extrasGridEl = document.getElementById("extrasGrid");
       const photoTileEls = Array.from(document.querySelectorAll(".photo-tile span"));
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
@@ -1657,6 +1982,59 @@
         });
       }
 
+      function renderFood(day) {
+        const foods = day.foods || [];
+        foodSectionEl.hidden = foods.length === 0;
+        foodGridEl.innerHTML = "";
+
+        foods.forEach((food) => {
+          const card = document.createElement("article");
+          card.className = "info-card";
+          card.innerHTML = `
+            <div>
+              <h3>${food.name}</h3>
+              <p class="address">${food.address}</p>
+            </div>
+            <div class="mini-meta">
+              <span>${food.timing}</span>
+              <span>${food.memo}</span>
+            </div>
+            <div class="actions">
+              <a class="action map" href="${mapUrl(food)}" target="_blank" rel="noopener">地圖</a>
+              <a class="action route" href="${routeUrl(null, food)}" target="_blank" rel="noopener">導航</a>
+            </div>
+          `;
+          foodGridEl.appendChild(card);
+        });
+      }
+
+      function renderExtras(day, lastStop) {
+        const extras = day.extras || [];
+        extrasSectionEl.hidden = extras.length === 0;
+        extrasGridEl.innerHTML = "";
+
+        extras.forEach((extra) => {
+          const card = document.createElement("article");
+          card.className = "info-card";
+          card.innerHTML = `
+            <div>
+              <h3>${extra.name}</h3>
+              <p class="address">${extra.address}</p>
+            </div>
+            <div class="mini-meta">
+              <span>從最後一站約 ${formatMinutes(extra.travelFromLastMinutes)}</span>
+              <span>停留 ${formatMinutes(extra.stayMinutes)}</span>
+            </div>
+            <p class="address">${extra.memo}</p>
+            <div class="actions">
+              <a class="action map" href="${mapUrl(extra)}" target="_blank" rel="noopener">地圖</a>
+              <a class="action route" href="${routeUrl(lastStop, extra)}" target="_blank" rel="noopener">從最後一站導航</a>
+            </div>
+          `;
+          extrasGridEl.appendChild(card);
+        });
+      }
+
       function render() {
         const day = trip.days[state.selectedDay];
         const scheduled = scheduleFor(day);
@@ -1694,6 +2072,8 @@
 
         renderTabs();
         renderRouteMap(day, scheduled);
+        renderFood(day);
+        renderExtras(day, lastStop);
         timelineEl.innerHTML = "";
 
         scheduled.forEach((stop, index) => {
@@ -1743,7 +2123,18 @@
         const lines = scheduleFor(day).map((stop) => {
           return `${formatTime(stop.arrival)}-${formatTime(stop.leave)} ${stop.name}（停留 ${formatMinutes(stop.stayMinutes)}，交通 ${formatMinutes(stop.travelMinutes)}）`;
         });
-        const text = `${trip.title} ${day.label} ${day.title}\n${lines.join("\n")}`;
+        const foodLines = (day.foods || []).map((food) => {
+          return `${food.name}｜${food.timing}｜${food.memo}`;
+        });
+        const extraLines = (day.extras || []).map((extra) => {
+          return `${extra.name}｜從最後一站約 ${formatMinutes(extra.travelFromLastMinutes)}｜停留 ${formatMinutes(extra.stayMinutes)}`;
+        });
+        const text = [
+          `${trip.title} ${day.label} ${day.title}`,
+          lines.join("\n"),
+          foodLines.length ? `\n餐飲推薦\n${foodLines.join("\n")}` : "",
+          extraLines.length ? `\n補充行程\n${extraLines.join("\n")}` : ""
+        ].filter(Boolean).join("\n");
         try {
           await navigator.clipboard.writeText(text);
           showToast("今日行程已複製");
