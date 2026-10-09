@@ -1597,34 +1597,34 @@
                 memo: "從美女平降落至立山站"
               },
               {
-                name: "立山站轉乘等車",
+                name: "立山站司機接駁集合",
                 place: "Tateyama Station Toyama",
                 address: "Ashikuraji, Tateyama, Nakaniikawa District, Toyama",
                 start: "15:37",
-                end: "16:06",
-                stayMinutes: 29,
+                end: "15:50",
+                stayMinutes: 13,
                 travelMinutes: 0,
-                memo: "完成不走回頭路穿越；依 PDF 接 16:06 立山站往富山方向列車"
+                memo: "完成不走回頭路穿越；司機在立山站接駁，不需要再搭富山地方鐵道"
               },
               {
-                name: "富山地方鐵道前往電鐵富山",
-                place: "Tateyama Station Toyama",
-                address: "Ashikuraji, Tateyama, Nakaniikawa District, Toyama",
-                start: "16:06",
-                end: "17:04",
-                stayMinutes: 58,
+                name: "包車前往富山住宿",
+                place: "Toyoko Inn Toyama-eki Shinkansen-guchi No.1",
+                address: "1 Chome-5-1 Takaramachi, Toyama",
+                start: "15:50",
+                end: "16:40",
+                stayMinutes: 50,
                 travelMinutes: 0,
-                memo: "PDF 顯示 16:06 立山站發車，約 17:04 抵達電鐵富山"
+                memo: "立山站由包車司機接送至富山市區住宿，車程先抓約 50 分鐘"
               },
               {
                 name: "東橫 INN 富山站新幹線口 1 號店",
                 place: "Toyoko Inn Toyama-eki Shinkansen-guchi No.1",
                 address: "1 Chome-5-1 Takaramachi, Toyama",
-                start: "17:10",
-                end: "17:30",
+                start: "16:40",
+                end: "17:00",
                 stayMinutes: 20,
-                travelMinutes: 6,
-                memo: "抵達富山後步行至飯店放行李；金澤自由參加請視體力與車班決定"
+                travelMinutes: 0,
+                memo: "抵達富山住宿放行李；金澤自由參加請視體力與車班決定"
               }
             ],
             foods: [
@@ -1659,10 +1659,10 @@
             ],
             extras: [
               {
-                name: "官方接續班次",
+                name: "官方接續班次與司機接駁",
                 address: "立山黑部阿爾卑斯路線 2026/4/15-11/3 時刻表",
                 infoOnly: true,
-                memo: "目前主行程採用 09:00 扇澤出發，並一路接到富山的官方表定班次。",
+                memo: "目前主行程採用 09:00 扇澤出發，官方交通一路接到立山站；之後由包車司機在立山站接駁。",
                 scheduleItems: [
                   { time: "09:00-09:16", text: "扇澤 → 黑部水壩，關電隧道電氣巴士" },
                   { time: "10:30-10:35", text: "黑部湖 → 黑部平，黑部登山纜車" },
@@ -1670,18 +1670,20 @@
                   { time: "11:45-11:55", text: "大觀峰 → 室堂，立山隧道電氣巴士" },
                   { time: "14:30-15:20", text: "室堂 → 美女平，立山高原巴士" },
                   { time: "15:30-15:37", text: "美女平 → 立山站，立山登山纜車" },
-                  { time: "16:06-17:04", text: "立山站 → 電鐵富山，富山地方鐵道" }
+                  { time: "15:37-15:50", text: "立山站出站集合，司機接駁" },
+                  { time: "15:50-16:40", text: "包車前往富山市區住宿" }
                 ]
               },
               {
                 name: "可調整與末班提醒",
                 address: "現場以站內公告、整理券與天候管制為準",
                 infoOnly: true,
-                memo: "若想多留室堂，核心底線是不要錯過往立山站方向的一般日最後接續。建議仍保守抓 14:10 排隊、14:30 下山。",
+                memo: "若想多留室堂，核心底線是不要錯過往立山站方向的一般日最後接續；不用再銜接電鐵富山列車。",
                 scheduleItems: [
                   { time: "安全排法", text: "14:10 到室堂巴士月台排隊，接 14:30 下山班次" },
                   { time: "可微調", text: "黑部水壩、黑部平、大觀峰可依排隊狀況小幅縮放，但要守住下一段發車時間" },
                   { time: "備援方向", text: "官方表一般日後面仍有室堂往立山站接續，但紅葉季排隊會吃掉緩衝" },
+                  { time: "接駁重點", text: "司機在立山站接，不需要搭 16:06 立山站往電鐵富山列車" },
                   { time: "保守底線", text: "不要把室堂離開時間壓到接近末班；遇天候或人潮，優先提早下山" }
                 ]
               },
