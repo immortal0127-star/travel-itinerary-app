@@ -258,11 +258,19 @@
         color: rgba(255, 255, 255, 0.84);
       }
 
+      .route-label span:last-child {
+        text-align: right;
+      }
+
       .route-line {
         display: grid;
-        grid-template-columns: repeat(5, minmax(82px, 1fr));
-        gap: 8px;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(132px, 42%);
+        grid-template-columns: none;
+        gap: 10px;
         overflow-x: auto;
+        padding-bottom: 2px;
+        scroll-snap-type: x proximity;
         scrollbar-width: none;
       }
 
@@ -272,11 +280,31 @@
 
       .route-stop {
         position: relative;
-        min-height: 64px;
+        display: grid;
+        align-content: space-between;
+        min-height: 94px;
         border: 1px solid rgba(255, 255, 255, 0.14);
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.08);
-        padding: 10px;
+        color: #ffffff;
+        padding: 12px;
+        text-decoration: none;
+        scroll-snap-align: start;
+      }
+
+      .route-stop::after {
+        content: "";
+        position: absolute;
+        top: 24px;
+        left: 38px;
+        right: -16px;
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(244, 162, 97, 0.75), rgba(244, 162, 97, 0.1));
+      }
+
+      .route-stop[data-last="true"]::after {
+        display: none;
       }
 
       .hero-scene {
@@ -352,31 +380,43 @@
       }
 
       .route-stop::before {
-        content: "";
-        display: block;
-        width: 9px;
-        height: 9px;
-        margin-bottom: 8px;
+        content: attr(data-step);
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        margin-bottom: 10px;
         border-radius: 999px;
         background: var(--sun);
-        box-shadow: 0 0 0 4px rgba(244, 162, 97, 0.18);
+        color: #17201d;
+        font-size: 11px;
+        font-weight: 950;
+        box-shadow: 0 0 0 5px rgba(244, 162, 97, 0.18);
+        position: relative;
+        z-index: 1;
       }
 
       .route-stop strong,
       .route-stop span {
         display: block;
-        white-space: nowrap;
       }
 
       .route-stop strong {
-        font-size: 13px;
-        line-height: 1.15;
+        min-height: 34px;
+        font-size: 14px;
+        line-height: 1.18;
+        overflow: hidden;
       }
 
       .route-stop span {
         margin-top: 4px;
         color: rgba(255, 255, 255, 0.7);
         font-size: 11px;
+      }
+
+      .route-time {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 850;
       }
 
       .day-tabs {
@@ -804,8 +844,8 @@
 
         <div class="route-visual" aria-label="旅程路線">
           <div class="route-label">
-            <span>Route</span>
-            <span>KHH → KIX → NGO → KHH</span>
+            <span id="routeTitle">當日行程圖</span>
+            <span id="routeRange">--</span>
           </div>
           <div class="hero-scene" aria-hidden="true">
             <span class="sun-disc"></span>
@@ -813,13 +853,7 @@
             <span class="mountain two"></span>
             <span class="rail"></span>
           </div>
-          <div class="route-line">
-            <div class="route-stop"><strong>名古屋</strong><span>市區 · 吉卜力</span></div>
-            <div class="route-stop"><strong>高山</strong><span>老街 · 朝市</span></div>
-            <div class="route-stop"><strong>白川鄉</strong><span>合掌村</span></div>
-            <div class="route-stop"><strong>立山黑部</strong><span>扇澤 → 富山</span></div>
-            <div class="route-stop"><strong>常滑</strong><span>機場 · 採買</span></div>
-          </div>
+          <div class="route-line" id="routeLine"></div>
         </div>
 
         <nav class="day-tabs" id="dayTabs" aria-label="切換天數"></nav>
@@ -1389,6 +1423,7 @@
 
       const tabsEl = document.getElementById("dayTabs");
       const timelineEl = document.getElementById("timeline");
+      const routeLineEl = document.getElementById("routeLine");
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
       const toastEl = document.getElementById("toast");
@@ -1485,6 +1520,29 @@
         });
       }
 
+      function renderRouteMap(day, scheduled) {
+        document.getElementById("routeTitle").textContent = `${day.label} 行程圖`;
+        document.getElementById("routeRange").textContent =
+          `${formatTime(scheduled[0].arrival)} → ${formatTime(scheduled[scheduled.length - 1].leave)}`;
+        routeLineEl.innerHTML = "";
+
+        scheduled.forEach((stop, index) => {
+          const link = document.createElement("a");
+          link.className = "route-stop";
+          link.href = mapUrl(stop);
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.dataset.step = String(index + 1).padStart(2, "0");
+          if (index === scheduled.length - 1) link.dataset.last = "true";
+          link.innerHTML = `
+            <strong>${stop.name}</strong>
+            <span class="route-time">${formatTime(stop.arrival)}-${formatTime(stop.leave)}</span>
+            <span>${index === 0 ? "起點" : `前段 ${formatMinutes(stop.travelMinutes)}`}</span>
+          `;
+          routeLineEl.appendChild(link);
+        });
+      }
+
       function render() {
         const day = trip.days[state.selectedDay];
         const scheduled = scheduleFor(day);
@@ -1517,6 +1575,7 @@
         travelModeEl.value = state.mode;
 
         renderTabs();
+        renderRouteMap(day, scheduled);
         timelineEl.innerHTML = "";
 
         scheduled.forEach((stop, index) => {
