@@ -728,6 +728,30 @@
         font-weight: 800;
       }
 
+      .schedule-list {
+        display: grid;
+        gap: 7px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .schedule-list li {
+        display: grid;
+        grid-template-columns: minmax(88px, auto) 1fr;
+        gap: 9px;
+        align-items: start;
+        color: #31413d;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .schedule-list strong {
+        color: color-mix(in srgb, var(--accent) 78%, #17201d);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
       .stop {
         position: relative;
         display: grid;
@@ -1635,6 +1659,33 @@
             ],
             extras: [
               {
+                name: "官方接續班次",
+                address: "立山黑部阿爾卑斯路線 2026/4/15-11/3 時刻表",
+                infoOnly: true,
+                memo: "目前主行程採用 09:00 扇澤出發，並一路接到富山的官方表定班次。",
+                scheduleItems: [
+                  { time: "09:00-09:16", text: "扇澤 → 黑部水壩，關電隧道電氣巴士" },
+                  { time: "10:30-10:35", text: "黑部湖 → 黑部平，黑部登山纜車" },
+                  { time: "11:10-11:17", text: "黑部平 → 大觀峰，立山空中纜車" },
+                  { time: "11:45-11:55", text: "大觀峰 → 室堂，立山隧道電氣巴士" },
+                  { time: "14:30-15:20", text: "室堂 → 美女平，立山高原巴士" },
+                  { time: "15:30-15:37", text: "美女平 → 立山站，立山登山纜車" },
+                  { time: "16:06-17:04", text: "立山站 → 電鐵富山，富山地方鐵道" }
+                ]
+              },
+              {
+                name: "可調整與末班提醒",
+                address: "現場以站內公告、整理券與天候管制為準",
+                infoOnly: true,
+                memo: "若想多留室堂，核心底線是不要錯過往立山站方向的一般日最後接續。建議仍保守抓 14:10 排隊、14:30 下山。",
+                scheduleItems: [
+                  { time: "安全排法", text: "14:10 到室堂巴士月台排隊，接 14:30 下山班次" },
+                  { time: "可微調", text: "黑部水壩、黑部平、大觀峰可依排隊狀況小幅縮放，但要守住下一段發車時間" },
+                  { time: "備援方向", text: "官方表一般日後面仍有室堂往立山站接續，但紅葉季排隊會吃掉緩衝" },
+                  { time: "保守底線", text: "不要把室堂離開時間壓到接近末班；遇天候或人潮，優先提早下山" }
+                ]
+              },
+              {
                 name: "金澤車站",
                 place: "Kanazawa Station",
                 address: "1-1 Kinoshinbomachi, Kanazawa, Ishikawa",
@@ -2043,6 +2094,21 @@
         extras.forEach((extra) => {
           const card = document.createElement("article");
           card.className = "info-card";
+          if (extra.infoOnly) {
+            const scheduleRows = (extra.scheduleItems || []).map((item) => {
+              return `<li><strong>${item.time}</strong><span>${item.text}</span></li>`;
+            }).join("");
+            card.innerHTML = `
+              <div>
+                <h3>${extra.name}</h3>
+                <p class="address">${extra.address}</p>
+              </div>
+              <p class="address">${extra.memo}</p>
+              ${scheduleRows ? `<ul class="schedule-list">${scheduleRows}</ul>` : ""}
+            `;
+            extrasGridEl.appendChild(card);
+            return;
+          }
           card.innerHTML = `
             <div>
               <h3>${extra.name}</h3>
@@ -2154,6 +2220,12 @@
           return `${food.name}｜${food.timing}｜${food.memo}`;
         });
         const extraLines = (day.extras || []).map((extra) => {
+          if (extra.infoOnly) {
+            const scheduleText = (extra.scheduleItems || []).map((item) => {
+              return `${item.time} ${item.text}`;
+            }).join("；");
+            return `${extra.name}｜${extra.memo}${scheduleText ? `｜${scheduleText}` : ""}`;
+          }
           return `${extra.name}｜從最後一站約 ${formatMinutes(extra.travelFromLastMinutes)}｜停留 ${formatMinutes(extra.stayMinutes)}`;
         });
         const text = [
