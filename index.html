@@ -40,6 +40,7 @@
       }
 
       body {
+        position: relative;
         margin: 0;
         min-height: 100%;
         color: var(--ink);
@@ -55,6 +56,27 @@
           BlinkMacSystemFont,
           "Segoe UI",
           sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background:
+          linear-gradient(180deg, rgba(245, 247, 244, 0.34), rgba(245, 247, 244, 0.92) 58%),
+          url("./assets/trip-hero.jpg") center / cover no-repeat;
+        opacity: 0.72;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background:
+          radial-gradient(circle at 82% 8%, rgba(255, 247, 231, 0.58), transparent 19rem),
+          linear-gradient(120deg, rgba(245, 247, 244, 0.86), rgba(245, 247, 244, 0.58));
       }
 
       body[data-day="0"] {
@@ -100,6 +122,8 @@
       }
 
       .app {
+        position: relative;
+        z-index: 1;
         width: min(100%, 1060px);
         margin: 0 auto;
         padding: max(14px, env(safe-area-inset-top)) 14px max(28px, env(safe-area-inset-bottom));
@@ -112,7 +136,9 @@
         border: 1px solid rgba(255, 255, 255, 0.74);
         border-radius: 8px;
         background:
-          linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 247, 231, 0.88)),
+          linear-gradient(112deg, rgba(255, 255, 255, 0.96) 0 48%, rgba(255, 255, 255, 0.7)),
+          linear-gradient(0deg, rgba(15, 32, 29, 0.08), rgba(15, 32, 29, 0.08)),
+          url("./assets/trip-hero.jpg") right center / cover no-repeat,
           linear-gradient(90deg, var(--accent-soft), transparent),
           var(--panel);
         box-shadow: var(--shadow);
@@ -176,7 +202,58 @@
         font-weight: 800;
       }
 
+      .photo-strip {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(128px, 36%);
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+      }
+
+      .photo-strip::-webkit-scrollbar {
+        display: none;
+      }
+
+      .photo-tile {
+        position: relative;
+        min-height: 92px;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 8px;
+        overflow: hidden;
+        background-image:
+          linear-gradient(180deg, rgba(23, 32, 29, 0.04), rgba(23, 32, 29, 0.62)),
+          url("./assets/trip-hero.jpg");
+        background-size: cover;
+        box-shadow: 0 12px 26px rgba(14, 31, 28, 0.12);
+      }
+
+      .photo-tile:nth-child(1) {
+        background-position: 14% center;
+      }
+
+      .photo-tile:nth-child(2) {
+        background-position: 54% center;
+      }
+
+      .photo-tile:nth-child(3) {
+        background-position: 88% center;
+      }
+
+      .photo-tile span {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        bottom: 9px;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 900;
+        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.42);
+      }
+
       .day-spotlight {
+        position: relative;
         display: grid;
         gap: 10px;
         margin: 14px 0;
@@ -187,6 +264,22 @@
           linear-gradient(135deg, color-mix(in srgb, var(--accent) 11%, white), rgba(255, 255, 255, 0.9)),
           #ffffff;
         box-shadow: 0 12px 30px rgba(14, 31, 28, 0.08);
+        overflow: hidden;
+      }
+
+      .day-spotlight::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0 46%, rgba(255, 255, 255, 0.72)),
+          url("./assets/trip-hero.jpg") right center / cover no-repeat;
+        opacity: 0.9;
+      }
+
+      .day-spotlight > * {
+        position: relative;
+        z-index: 1;
       }
 
       .spotlight-kicker {
@@ -242,7 +335,9 @@
         padding: 14px;
         border-radius: 8px;
         background:
-          linear-gradient(160deg, color-mix(in srgb, var(--accent) 38%, #17201d), #17201d 56%),
+          linear-gradient(160deg, color-mix(in srgb, var(--accent) 34%, #17201d), rgba(23, 32, 29, 0.9) 56%),
+          linear-gradient(0deg, rgba(23, 32, 29, 0.38), rgba(23, 32, 29, 0.38)),
+          url("./assets/trip-hero.jpg") center / cover no-repeat,
           #17201d;
         color: #ffffff;
         overflow: hidden;
@@ -314,8 +409,8 @@
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 8px;
         background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02)),
-          rgba(255, 255, 255, 0.05);
+          linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(23, 32, 29, 0.18)),
+          url("./assets/trip-hero.jpg") center 58% / cover no-repeat;
         overflow: hidden;
       }
 
@@ -838,6 +933,11 @@
             <span class="fact">名古屋</span>
             <span class="fact">黑部立山</span>
             <span class="fact">上高地</span>
+          </div>
+          <div class="photo-strip" aria-label="旅程照片氛圍">
+            <div class="photo-tile"><span>名古屋市區</span></div>
+            <div class="photo-tile"><span>秋季山岳</span></div>
+            <div class="photo-tile"><span>湖畔與機場</span></div>
           </div>
           <div class="weather-chip" id="dayLabel"></div>
         </div>
