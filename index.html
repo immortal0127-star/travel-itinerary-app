@@ -1438,6 +1438,24 @@
             ],
             extras: [
               {
+                name: "FamilyMart Hotaka Ariake",
+                place: "FamilyMart Hotaka Ariake",
+                address: "Hotakaariake, Azumino, Nagano",
+                mapUrl: "https://maps.app.goo.gl/MZqsNwqRWTvQ2Ng47",
+                travelFromLastMinutes: 8,
+                stayMinutes: 15,
+                memo: "住宿附近便利商店，適合補買隔天扇澤上山的飲料、早餐與零食。"
+              },
+              {
+                name: "The BIG Hotaka by AEON",
+                place: "The BIG Hotaka by AEON",
+                address: "Hotaka, Azumino, Nagano",
+                mapUrl: "https://maps.app.goo.gl/PHQoWt94WnNDzzo67",
+                travelFromLastMinutes: 15,
+                stayMinutes: 45,
+                memo: "住宿附近大型超市，適合採買晚餐、早餐、飲料與隔天山上補給。"
+              },
+              {
                 name: "安曇野晚餐與採買",
                 place: "Azumino restaurants",
                 address: "Azumino, Nagano",
@@ -1980,6 +1998,7 @@
       }
 
       function mapUrl(stop) {
+        if (stop.mapUrl) return stop.mapUrl;
         return `https://www.google.com/maps/search/?api=1&query=${queryFor(stop)}`;
       }
 
