@@ -1430,20 +1430,12 @@
                 memo: "飛驒牛握壽司、牛饅、味噌、五平餅、高山布丁"
               },
               {
-                name: "高山陣屋",
-                place: "Takayama Jinya",
-                address: "1-5 Hachikenmachi, Takayama, Gifu",
-                stayMinutes: 35,
-                travelMinutes: 5,
-                memo: "門票 ¥400，日本唯一僅存代官所建築"
-              },
-              {
                 name: "白川鄉合掌村",
                 place: "Shirakawa-go",
                 address: "Ogimachi, Shirakawa, Ono District, Gifu",
-                stayMinutes: 160,
+                stayMinutes: 180,
                 travelMinutes: 70,
-                memo: "展望台接駁巴士 09:00-16:00，每 20 分鐘一班；加上合掌村必吃美食散步"
+                memo: "停留 3 小時；展望台接駁巴士 09:00-16:00，每 20 分鐘一班，再把必吃美食排進合掌村散步"
               },
               {
                 name: "The Woods Villa Alps-Azumino",
@@ -1489,13 +1481,49 @@
                 name: "★ 白川鄉必吃美食",
                 address: "白川鄉合掌村散步補充清單",
                 infoOnly: true,
-                memo: "安排在白川鄉停留時間內分散採買，建議先拍展望台，再邊逛合掌村邊吃。",
+                memo: "安排在白川鄉 3 小時停留內分散採買，建議先拍展望台，再邊逛合掌村邊吃。下面每一家都有地圖與從白川鄉導航。",
                 scheduleItems: [
                   { time: "白川鄉布丁之家", text: "三層次超美透明「水布丁」" },
                   { time: "味処 結の郷", text: "飛驒牛可樂餅，適合邊走邊吃" },
                   { time: "OKESA おけさ", text: "飛驒牛奶，岐阜縣飛驒地區酪農家 100% 生乳" },
                   { time: "KATARIBE かたりべ", text: "合掌雞蛋糕，適合當散步點心" }
                 ]
+              },
+              {
+                name: "白川鄉布丁之家",
+                place: "Shirakawa-go Pudding House",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 15,
+                memo: "三層次超美透明「水布丁」，白川鄉散步甜點。"
+              },
+              {
+                name: "味処 結の郷",
+                place: "Ajidokoro Yui no Sato Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 15,
+                memo: "飛驒牛可樂餅，適合邊逛合掌村邊吃。"
+              },
+              {
+                name: "OKESA おけさ",
+                place: "OKESA Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 10,
+                memo: "飛驒牛奶，岐阜縣飛驒地區酪農家 100% 生乳。"
+              },
+              {
+                name: "KATARIBE かたりべ",
+                place: "Kataribe Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 15,
+                memo: "合掌雞蛋糕，適合當白川鄉散步點心。"
               },
               {
                 name: "FamilyMart Hotaka Ariake",
@@ -2203,13 +2231,13 @@
               <p class="address">${extra.address}</p>
             </div>
             <div class="mini-meta">
-              <span>從最後一站約 ${formatMinutes(extra.travelFromLastMinutes)}</span>
+              <span>${extra.routeOrigin ? "從白川鄉約" : "從最後一站約"} ${formatMinutes(extra.travelFromLastMinutes)}</span>
               <span>停留 ${formatMinutes(extra.stayMinutes)}</span>
             </div>
             <p class="address">${extra.memo}</p>
             <div class="actions">
               <a class="action map" href="${mapUrl(extra)}" target="_blank" rel="noopener">地圖</a>
-              <a class="action route" href="${routeUrl(lastStop, extra)}" target="_blank" rel="noopener">從最後一站導航</a>
+              <a class="action route" href="${routeUrl(extra.routeOrigin ? { name: extra.routeOrigin, place: extra.routeOrigin, address: "" } : lastStop, extra)}" target="_blank" rel="noopener">${extra.routeOrigin ? "從白川鄉導航" : "從最後一站導航"}</a>
             </div>
           `;
           extrasGridEl.appendChild(card);
