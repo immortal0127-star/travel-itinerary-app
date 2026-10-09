@@ -1,0 +1,10 @@
+{
+  "name": "名古屋黑部立山六日遊",
+  "short_name": "名古屋行程",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7faf8",
+  "theme_color": "#0f766e",
+  "description": "名古屋、黑部立山、上高地六日家庭旅遊 App，含 Google Maps 連結與時間排程。",
+  "icons": []
+}

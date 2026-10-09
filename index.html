@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta
+      name="description"
+      content="手機版旅遊行程 App，含自動排程、Google Maps 連結與每日總時長。"
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <title>名古屋 + 黑部立山六日遊</title>
+    <style>
+      :root {
+        --ink: #19211f;
+        --muted: #65716d;
+        --line: #d8e0dc;
+        --paper: #f7faf8;
+        --panel: #ffffff;
+        --teal: #0f766e;
+        --teal-2: #0b5e57;
+        --coral: #e76f51;
+        --sun: #f4a261;
+        --mint: #d9f2e7;
+        --shadow: 0 18px 45px rgba(15, 35, 31, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        background: var(--paper);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100%;
+        color: var(--ink);
+        background:
+          linear-gradient(160deg, rgba(15, 118, 110, 0.14), transparent 32rem),
+          linear-gradient(20deg, rgba(231, 111, 81, 0.12), transparent 28rem),
+          var(--paper);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .app {
+        width: min(100%, 1080px);
+        margin: 0 auto;
+        padding: max(18px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+      }
+
+      .topbar {
+        display: grid;
+        gap: 14px;
+        padding: 16px 0 10px;
+      }
+
+      .title-row {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(28px, 9vw, 44px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .trip-meta {
+        color: var(--muted);
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+      .weather-chip {
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.74);
+        border-radius: 8px;
+        padding: 9px 10px;
+        color: var(--teal-2);
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .day-tabs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 0 8px;
+        scrollbar-width: none;
+      }
+
+      .day-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .day-tab {
+        min-width: 92px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--ink);
+        border-radius: 8px;
+        padding: 10px 12px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .day-tab[aria-selected="true"] {
+        border-color: var(--teal);
+        background: var(--teal);
+        color: #ffffff;
+      }
+
+      .day-tab strong,
+      .day-tab span {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .day-tab strong {
+        font-size: 15px;
+        line-height: 1.1;
+      }
+
+      .day-tab span {
+        margin-top: 4px;
+        font-size: 12px;
+        opacity: 0.82;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .field label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.88);
+        color: var(--ink);
+        padding: 8px 10px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin: 8px 0 16px;
+      }
+
+      .summary-card {
+        min-height: 74px;
+        border: 1px solid rgba(15, 118, 110, 0.18);
+        background: rgba(255, 255, 255, 0.82);
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 10px 30px rgba(25, 33, 31, 0.06);
+      }
+
+      .summary-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .summary-card strong {
+        display: block;
+        margin-top: 7px;
+        font-size: clamp(18px, 5vw, 24px);
+        line-height: 1;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 12px;
+      }
+
+      .stop {
+        position: relative;
+        display: grid;
+        grid-template-columns: 74px minmax(0, 1fr);
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid rgba(216, 224, 220, 0.9);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: var(--shadow);
+      }
+
+      .timebox {
+        display: grid;
+        align-content: start;
+        gap: 7px;
+        min-width: 0;
+      }
+
+      .arrival {
+        color: var(--teal-2);
+        font-size: 22px;
+        font-weight: 850;
+        line-height: 1;
+      }
+
+      .leave {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .stop-main {
+        display: grid;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .stop h2 {
+        font-size: 18px;
+        line-height: 1.25;
+        letter-spacing: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .address {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+      }
+
+      .details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        border-radius: 8px;
+        padding: 5px 8px;
+        background: #eef5f1;
+        color: #31413d;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .tag.travel {
+        background: #fff0e8;
+        color: #7b3a25;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .action.map {
+        background: var(--teal);
+      }
+
+      .action.route {
+        background: var(--coral);
+      }
+
+      .action.secondary {
+        border-color: var(--line);
+        background: #ffffff;
+        color: var(--ink);
+      }
+
+      .footer-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: max(18px, env(safe-area-inset-bottom));
+        transform: translateX(-50%) translateY(18px);
+        width: min(calc(100% - 32px), 420px);
+        border-radius: 8px;
+        background: #19211f;
+        color: #ffffff;
+        padding: 12px 14px;
+        text-align: center;
+        font-weight: 800;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 160ms ease,
+          transform 160ms ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      @media (min-width: 760px) {
+        .app {
+          padding-inline: 28px;
+        }
+
+        .topbar {
+          grid-template-columns: minmax(0, 1fr) 370px;
+          align-items: end;
+        }
+
+        .title-row {
+          grid-column: 1 / -1;
+        }
+
+        .day-tabs {
+          min-width: 0;
+        }
+
+        .controls {
+          align-self: start;
+        }
+
+        .timeline {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 420px) {
+        .controls,
+        .summary-grid,
+        .footer-actions {
+          grid-template-columns: 1fr;
+        }
+
+        .stop {
+          grid-template-columns: 64px minmax(0, 1fr);
+          padding: 12px;
+        }
+
+        .arrival {
+          font-size: 19px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="topbar" aria-label="旅遊行程">
+        <div class="title-row">
+          <div>
+            <h1 id="tripTitle">旅遊行程</h1>
+            <p class="trip-meta" id="tripMeta"></p>
+          </div>
+          <div class="weather-chip" id="dayLabel"></div>
+        </div>
+
+        <nav class="day-tabs" id="dayTabs" aria-label="切換天數"></nav>
+
+        <div class="controls">
+          <div class="field">
+            <label for="startTime">出發時間</label>
+            <input id="startTime" type="time" />
+          </div>
+          <div class="field">
+            <label for="travelMode">導航方式</label>
+            <select id="travelMode">
+              <option value="driving">開車</option>
+              <option value="transit" selected>大眾運輸</option>
+              <option value="walking">步行</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="當日摘要">
+        <article class="summary-card">
+          <span>預計結束</span>
+          <strong id="endTime">--:--</strong>
+        </article>
+        <article class="summary-card">
+          <span>行程停留</span>
+          <strong id="stayTotal">0 分</strong>
+        </article>
+        <article class="summary-card">
+          <span>交通預估</span>
+          <strong id="travelTotal">0 分</strong>
+        </article>
+      </section>
+
+      <section class="timeline" id="timeline" aria-label="行程列表"></section>
+
+      <section class="footer-actions" aria-label="更多操作">
+        <button class="action secondary" id="copyPlan" type="button">複製今日行程</button>
+        <a class="action map" id="fullRoute" href="#" target="_blank" rel="noopener">開啟整日路線</a>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const trip = {
+        title: "名古屋 + 黑部立山六日遊",
+        traveler: "家庭旅遊 · 台灣虎航",
+        note: "2026/10/16-10/21，已整合 Word 行程與黑部立山 09:00 扇澤穿越時間表。",
+        days: [
+          {
+            label: "Day 1",
+            date: "2026-10-16（五）",
+            title: "高雄出發 · 名古屋市區",
+            startTime: "05:00",
+            stops: [
+              {
+                name: "小港機場報到",
+                place: "Kaohsiung International Airport",
+                address: "高雄國際機場 KHH",
+                stayMinutes: 100,
+                travelMinutes: 0,
+                memo: "台灣虎航 IT284，櫃台 check-in 與托運行李"
+              },
+              {
+                name: "飛往大阪關西機場",
+                place: "Kansai International Airport Terminal 1",
+                address: "1 Senshukukokita, Izumisano, Osaka",
+                stayMinutes: 40,
+                travelMinutes: 235,
+                memo: "06:40 起飛，10:35 抵達大阪 KIX"
+              },
+              {
+                name: "前往名古屋",
+                place: "Nagoya Station",
+                address: "1 Chome-1-4 Meieki, Nakamura Ward, Nagoya, Aichi",
+                stayMinutes: 25,
+                travelMinutes: 150,
+                memo: "HARUKA + 新幹線或近鐵，請依現場票券調整"
+              },
+              {
+                name: "Airbnb 放行李",
+                place: "1 Chome-7-12 Taiko Nakamura Ward Nagoya Aichi",
+                address: "〒453-0801 愛知県名古屋市中村区太閤1-7-12",
+                stayMinutes: 45,
+                travelMinutes: 10,
+                memo: "傳統日式獨棟民宅，兩晚住宿"
+              },
+              {
+                name: "名古屋城",
+                place: "Nagoya Castle",
+                address: "1-1 Honmaru, Naka Ward, Nagoya, Aichi",
+                stayMinutes: 80,
+                travelMinutes: 25,
+                memo: "門票 ¥500，日本百大名城"
+              },
+              {
+                name: "大須觀音與大須商店街",
+                place: "Osu Kannon and Osu Shopping Street",
+                address: "Osu, Naka Ward, Nagoya, Aichi",
+                stayMinutes: 100,
+                travelMinutes: 20,
+                memo: "大須觀音、招財貓、三輪神社與商店街晚餐"
+              },
+              {
+                name: "Sky Promenade 展望台",
+                place: "Sky Promenade Midland Square",
+                address: "4 Chome-7-1 Meieki, Nakamura Ward, Nagoya, Aichi",
+                stayMinutes: 55,
+                travelMinutes: 12,
+                memo: "42 樓現場買票，門票約 ¥1000"
+              },
+              {
+                name: "返回 Airbnb",
+                place: "1 Chome-7-12 Taiko Nakamura Ward Nagoya Aichi",
+                address: "〒453-0801 愛知県名古屋市中村区太閤1-7-12",
+                stayMinutes: 0,
+                travelMinutes: 12,
+                memo: "休息"
+              }
+            ]
+          },
+          {
+            label: "Day 2",
+            date: "2026-10-17（六）",
+            title: "吉卜力公園",
+            startTime: "08:00",
+            stops: [
+              {
+                name: "從名古屋前往吉卜力公園",
+                place: "Ghibli Park Aichi",
+                address: "Ibaragabasama, Nagakute, Aichi",
+                stayMinutes: 20,
+                travelMinutes: 60,
+                memo: "週末假日營業 09:00-17:00，大散步券標準版"
+              },
+              {
+                name: "魔女之谷",
+                place: "Valley of Witches Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                stayMinutes: 90,
+                travelMinutes: 0,
+                memo: "霍爾移動城堡、琪琪住宅、麵包店；園區不可再次入場"
+              },
+              {
+                name: "Dondoko 森林",
+                place: "Dondoko Forest Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                stayMinutes: 30,
+                travelMinutes: 25,
+                memo: "龍貓、草子與次子之家；步行或搭免費巴士"
+              },
+              {
+                name: "魔法村莊",
+                place: "Mononoke Village Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                stayMinutes: 20,
+                travelMinutes: 20,
+                memo: "幽靈公主場景，五平餅體驗可視情況參加"
+              },
+              {
+                name: "青春之丘",
+                place: "Hill of Youth Ghibli Park",
+                address: "Ghibli Park, Nagakute, Aichi",
+                stayMinutes: 35,
+                travelMinutes: 15,
+                memo: "地球屋，屋內不可拍攝"
+              },
+              {
+                name: "吉卜力大倉庫",
+                place: "Ghibli's Grand Warehouse",
+                address: "Ghibli Park, Nagakute, Aichi",
+                stayMinutes: 180,
+                travelMinutes: 15,
+                memo: "先拍名場面展，再用餐與逛冒險飛行團商店"
+              },
+              {
+                name: "返回名古屋 Airbnb",
+                place: "1 Chome-7-12 Taiko Nakamura Ward Nagoya Aichi",
+                address: "〒453-0801 愛知県名古屋市中村区太閤1-7-12",
+                stayMinutes: 0,
+                travelMinutes: 60,
+                memo: "園區 17:00 結束"
+              }
+            ]
+          },
+          {
+            label: "Day 3",
+            date: "2026-10-18（日）",
+            title: "包車 · 高山老街與白川鄉",
+            startTime: "08:00",
+            stops: [
+              {
+                name: "名古屋出發",
+                place: "Nagoya Station",
+                address: "Nagoya, Aichi",
+                stayMinutes: 0,
+                travelMinutes: 0,
+                memo: "合法綠牌豐田海獅 9 人座包車"
+              },
+              {
+                name: "宮川朝市",
+                place: "Miyagawa Morning Market",
+                address: "Shimosannomachi, Takayama, Gifu",
+                stayMinutes: 45,
+                travelMinutes: 150,
+                memo: "日本三大早市之一，開放至中午 12:00"
+              },
+              {
+                name: "飛驒國分寺",
+                place: "Hida Kokubunji Temple",
+                address: "1 Chome-83 Sowamachi, Takayama, Gifu",
+                stayMinutes: 25,
+                travelMinutes: 8,
+                memo: "西元 746 年左右建立，銀杏與三重塔"
+              },
+              {
+                name: "上三之町古街午餐",
+                place: "Sanmachi Suji Takayama",
+                address: "Kamiichinomachi, Takayama, Gifu",
+                stayMinutes: 110,
+                travelMinutes: 8,
+                memo: "飛驒牛握壽司、牛饅、味噌、五平餅、高山布丁"
+              },
+              {
+                name: "高山陣屋",
+                place: "Takayama Jinya",
+                address: "1-5 Hachikenmachi, Takayama, Gifu",
+                stayMinutes: 45,
+                travelMinutes: 5,
+                memo: "門票 ¥400，日本唯一僅存代官所建築"
+              },
+              {
+                name: "白川鄉合掌村",
+                place: "Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                stayMinutes: 140,
+                travelMinutes: 70,
+                memo: "展望台接駁巴士 09:00-16:00，每 20 分鐘一班"
+              },
+              {
+                name: "返回名古屋住宿",
+                place: "1 Chome-7-12 Taiko Nakamura Ward Nagoya Aichi",
+                address: "〒453-0801 愛知県名古屋市中村区太閤1-7-12",
+                stayMinutes: 0,
+                travelMinutes: 170,
+                memo: "包車返程"
+              }
+            ]
+          },
+          {
+            label: "Day 4",
+            date: "2026-10-19（一）",
+            title: "包車 · 立山黑部穿越",
+            startTime: "08:20",
+            fixedSchedule: true,
+            stops: [
+              {
+                name: "抵達扇澤站",
+                place: "Ogizawa Station",
+                address: "Ogizawa, Omachi, Nagano",
+                start: "08:20",
+                end: "08:30",
+                stayMinutes: 10,
+                travelMinutes: 0,
+                memo: "提前 30-40 分鐘抵達，換票、洗手間、排隊登車；行李 08:30 前辦理托運"
+              },
+              {
+                name: "關電隧道電氣巴士",
+                place: "Kanden Tunnel Electric Bus Ogizawa Station",
+                address: "Ogizawa Station, Omachi, Nagano",
+                start: "09:00",
+                end: "09:16",
+                stayMinutes: 16,
+                travelMinutes: 30,
+                memo: "穿過破碎帶隧道，正式出發"
+              },
+              {
+                name: "黑部水壩",
+                place: "Kurobe Dam",
+                address: "Ashikuraji, Tateyama, Nakaniikawa District, Toyama",
+                start: "09:16",
+                end: "10:30",
+                stayMinutes: 74,
+                travelMinutes: 0,
+                memo: "登上水壩展望台，步行跨越水壩至黑部湖站"
+              },
+              {
+                name: "黑部湖站排隊",
+                place: "Kurobeko Station",
+                address: "Kurobe Dam, Tateyama, Toyama",
+                start: "10:30",
+                end: "10:40",
+                stayMinutes: 10,
+                travelMinutes: 0,
+                memo: "準備搭乘黑部登山纜車"
+              },
+              {
+                name: "黑部登山纜車",
+                place: "Kurobe Cable Car Kurobeko Station",
+                address: "Kurobeko Station, Tateyama, Toyama",
+                start: "10:40",
+                end: "10:45",
+                stayMinutes: 5,
+                travelMinutes: 0,
+                memo: "全地下化隧道纜車，直達黑部平"
+              },
+              {
+                name: "黑部平",
+                place: "Kurobedaira Station",
+                address: "Kurobedaira, Tateyama, Toyama",
+                start: "10:45",
+                end: "11:30",
+                stayMinutes: 45,
+                travelMinutes: 0,
+                memo: "關鍵排隊瓶頸；先拿纜車號碼牌，再到頂樓展望台看紅葉"
+              },
+              {
+                name: "立山空中纜車",
+                place: "Tateyama Ropeway Kurobedaira Station",
+                address: "Kurobedaira Station, Tateyama, Toyama",
+                start: "11:30",
+                end: "11:37",
+                stayMinutes: 7,
+                travelMinutes: 0,
+                memo: "7 分鐘無支柱空中紅葉視野"
+              },
+              {
+                name: "大觀峰",
+                place: "Daikanbo Station Tateyama",
+                address: "Daikanbo, Tateyama, Toyama",
+                start: "11:37",
+                end: "12:10",
+                stayMinutes: 33,
+                travelMinutes: 0,
+                memo: "雲上展望台拍明信片角度，拍完立刻往隧道電氣巴士月台"
+              },
+              {
+                name: "立山隧道電氣巴士",
+                place: "Tateyama Tunnel Trolley Bus Daikanbo",
+                address: "Daikanbo Station, Tateyama, Toyama",
+                start: "12:15",
+                end: "12:25",
+                stayMinutes: 10,
+                travelMinutes: 5,
+                memo: "穿越立山主峰下方，前往室堂"
+              },
+              {
+                name: "室堂午餐與御庫裏池",
+                place: "Murodo Terminal",
+                address: "Murodo, Tateyama, Toyama",
+                start: "12:25",
+                end: "14:45",
+                stayMinutes: 140,
+                travelMinutes: 0,
+                memo: "午餐約 45 分，御庫裏池來回 50-60 分；山頂 2-5 度請保暖"
+              },
+              {
+                name: "室堂巴士站排隊",
+                place: "Murodo Bus Terminal",
+                address: "Murodo, Tateyama, Toyama",
+                start: "14:45",
+                end: "15:10",
+                stayMinutes: 25,
+                travelMinutes: 0,
+                memo: "下午下山高峰，務必提早到月台"
+              },
+              {
+                name: "立山高原巴士",
+                place: "Tateyama Kogen Bus",
+                address: "Murodo to Bijodaira, Tateyama, Toyama",
+                start: "15:10",
+                end: "16:00",
+                stayMinutes: 50,
+                travelMinutes: 0,
+                memo: "10 月靈魂路段，紅葉隧道與稱名瀑布車窗景"
+              },
+              {
+                name: "立山登山纜車",
+                place: "Bijodaira Station",
+                address: "Bijodaira, Tateyama, Toyama",
+                start: "16:05",
+                end: "16:12",
+                stayMinutes: 7,
+                travelMinutes: 5,
+                memo: "從美女平降落至立山站"
+              },
+              {
+                name: "抵達立山站",
+                place: "Tateyama Station Toyama",
+                address: "Ashikuraji, Tateyama, Nakaniikawa District, Toyama",
+                start: "16:15",
+                end: "16:25",
+                stayMinutes: 10,
+                travelMinutes: 3,
+                memo: "完成不走回頭路穿越，可前往富山市區晚餐"
+              },
+              {
+                name: "東橫 INN 富山站新幹線口 1 號店",
+                place: "Toyoko Inn Toyama-eki Shinkansen-guchi No.1",
+                address: "1 Chome-5-1 Takaramachi, Toyama",
+                start: "17:15",
+                end: "17:40",
+                stayMinutes: 25,
+                travelMinutes: 50,
+                memo: "富山住宿；金澤車站、寶可夢中心與晚餐視情況自由參加"
+              }
+            ]
+          },
+          {
+            label: "Day 5",
+            date: "2026-10-20（二）",
+            title: "包車 · 上高地",
+            startTime: "08:00",
+            stops: [
+              {
+                name: "富山出發前往上高地",
+                place: "Kamikochi",
+                address: "Azumi, Matsumoto, Nagano",
+                stayMinutes: 15,
+                travelMinutes: 170,
+                memo: "包車移動，山區路程較長"
+              },
+              {
+                name: "大正池",
+                place: "Taisho Pond Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 35,
+                travelMinutes: 0,
+                memo: "倒映穗高連峰，枯木湖景很適合拍照"
+              },
+              {
+                name: "大正池到河童橋步道",
+                place: "Kappa Bridge Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 90,
+                travelMinutes: 0,
+                memo: "約 3.7 公里，粗估 1.5 小時"
+              },
+              {
+                name: "河童橋午餐與休息",
+                place: "Kappa Bridge Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 75,
+                travelMinutes: 0,
+                memo: "上高地象徵，可眺望穗高連峰"
+              },
+              {
+                name: "明神池來回健行",
+                place: "Myojin Pond Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 150,
+                travelMinutes: 0,
+                memo: "河童橋至明神橋來回約 2-2.5 小時，門票大人 ¥500"
+              },
+              {
+                name: "前往中部國際機場住宿",
+                place: "Toyoko Inn Chubu International Airport No.1",
+                address: "4 Chome-2-5 Centrair, Tokoname, Aichi",
+                stayMinutes: 0,
+                travelMinutes: 250,
+                memo: "東橫 INN 中部國際機場 1 號店，8 號乘車點有接送巴士"
+              }
+            ]
+          },
+          {
+            label: "Day 6",
+            date: "2026-10-21（三）",
+            title: "常滑 · 中部國際機場回程",
+            startTime: "09:00",
+            stops: [
+              {
+                name: "Flight of Dreams 波音博物館",
+                place: "Flight of Dreams Chubu Centrair",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                stayMinutes: 85,
+                travelMinutes: 10,
+                memo: "10:00-17:00，展示世界第一架 787 原型機 ZA001"
+              },
+              {
+                name: "LUXURY FLIGHT",
+                place: "Luxury Flight Chubu Centrair",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                stayMinutes: 30,
+                travelMinutes: 0,
+                memo: "波音海外官方直營商店"
+              },
+              {
+                name: "常滑巨大招財貓",
+                place: "Tokoname Manekineko Street",
+                address: "Sakaemachi, Tokoname, Aichi",
+                stayMinutes: 25,
+                travelMinutes: 18,
+                memo: "寬 6.3 公尺、高 3.2 公尺地標"
+              },
+              {
+                name: "陶瓷器散步道 A 路線",
+                place: "Tokoname Pottery Footpath",
+                address: "Sakaemachi, Tokoname, Aichi",
+                stayMinutes: 90,
+                travelMinutes: 5,
+                memo: "土管坡、招財貓與陶瓷街景"
+              },
+              {
+                name: "常滑市陶瓷器會館",
+                place: "Tokoname Ceramic Hall",
+                address: "3 Chome-8 Sakaemachi, Tokoname, Aichi",
+                stayMinutes: 35,
+                travelMinutes: 5,
+                memo: "09:00-17:00，可買常滑燒"
+              },
+              {
+                name: "滝田家古民家",
+                place: "Takita Family Residence Tokoname",
+                address: "4 Chome Sakaemachi, Tokoname, Aichi",
+                stayMinutes: 30,
+                travelMinutes: 5,
+                memo: "門票約 ¥300，江戶時代古民家"
+              },
+              {
+                name: "常滑牛奶站 BAITEN",
+                place: "Tokoname Milk Stand BAITEN",
+                address: "Tokoname, Aichi",
+                stayMinutes: 25,
+                travelMinutes: 6,
+                memo: "復古玻璃瓶與 85 度 15 分低溫殺菌牛奶"
+              },
+              {
+                name: "永旺夢樂城常滑",
+                place: "AEON Mall Tokoname",
+                address: "2 Chome-20-3 Rinku-cho, Tokoname, Aichi",
+                stayMinutes: 150,
+                travelMinutes: 10,
+                memo: "STYLE 09:00-22:00，最後採買與晚餐"
+              },
+              {
+                name: "中部國際機場報到",
+                place: "Chubu Centrair International Airport",
+                address: "1-1 Centrair, Tokoname, Aichi",
+                stayMinutes: 120,
+                travelMinutes: 10,
+                memo: "台灣虎航 IT269，20:05 起飛，22:30 抵達小港"
+              }
+            ]
+          }
+        ]
+      };
+
+      const state = {
+        selectedDay: Number(localStorage.getItem("selectedDay") || 0),
+        mode: localStorage.getItem("travelMode") || "transit"
+      };
+
+      const tabsEl = document.getElementById("dayTabs");
+      const timelineEl = document.getElementById("timeline");
+      const startTimeEl = document.getElementById("startTime");
+      const travelModeEl = document.getElementById("travelMode");
+      const toastEl = document.getElementById("toast");
+
+      function pad(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function parseTime(value) {
+        const [hours, minutes] = value.split(":").map(Number);
+        return hours * 60 + minutes;
+      }
+
+      function formatTime(minutes) {
+        const normalized = ((minutes % 1440) + 1440) % 1440;
+        return `${pad(Math.floor(normalized / 60))}:${pad(normalized % 60)}`;
+      }
+
+      function formatMinutes(minutes) {
+        if (minutes < 60) return `${minutes} 分`;
+        const hours = Math.floor(minutes / 60);
+        const rest = minutes % 60;
+        return rest ? `${hours} 小時 ${rest} 分` : `${hours} 小時`;
+      }
+
+      function queryFor(stop) {
+        return encodeURIComponent(`${stop.place || stop.name} ${stop.address || ""}`.trim());
+      }
+
+      function mapUrl(stop) {
+        return `https://www.google.com/maps/search/?api=1&query=${queryFor(stop)}`;
+      }
+
+      function routeUrl(origin, destination) {
+        const destinationQuery = queryFor(destination);
+        if (!origin) {
+          return `https://www.google.com/maps/dir/?api=1&destination=${destinationQuery}&travelmode=${state.mode}`;
+        }
+        return `https://www.google.com/maps/dir/?api=1&origin=${queryFor(origin)}&destination=${destinationQuery}&travelmode=${state.mode}`;
+      }
+
+      function fullRouteUrl(day) {
+        const stops = day.stops;
+        const origin = queryFor(stops[0]);
+        const destination = queryFor(stops[stops.length - 1]);
+        const waypoints = stops.slice(1, -1).map(queryFor).join("|");
+        return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=${state.mode}`;
+      }
+
+      function scheduleFor(day) {
+        if (day.fixedSchedule) {
+          return day.stops.map((stop) => ({
+            ...stop,
+            arrival: parseTime(stop.start),
+            leave: parseTime(stop.end),
+            travelMinutes: stop.travelMinutes || 0,
+            stayMinutes: stop.stayMinutes || parseTime(stop.end) - parseTime(stop.start)
+          }));
+        }
+
+        const startOverride = localStorage.getItem(`start-${state.selectedDay}`);
+        const startTime = startOverride || day.startTime;
+        let cursor = parseTime(startTime);
+        return day.stops.map((stop) => {
+          cursor += stop.travelMinutes || 0;
+          const arrival = cursor;
+          const leave = arrival + stop.stayMinutes;
+          cursor = leave;
+          return { ...stop, arrival, leave, travelMinutes: stop.travelMinutes || 0 };
+        });
+      }
+
+      function showToast(message) {
+        toastEl.textContent = message;
+        toastEl.classList.add("show");
+        window.clearTimeout(showToast.timer);
+        showToast.timer = window.setTimeout(() => toastEl.classList.remove("show"), 1800);
+      }
+
+      function renderTabs() {
+        tabsEl.innerHTML = "";
+        trip.days.forEach((day, index) => {
+          const button = document.createElement("button");
+          button.className = "day-tab";
+          button.type = "button";
+          button.setAttribute("aria-selected", String(index === state.selectedDay));
+          button.innerHTML = `<strong>${day.label}</strong><span>${day.title}</span>`;
+          button.addEventListener("click", () => {
+            state.selectedDay = index;
+            localStorage.setItem("selectedDay", String(index));
+            render();
+          });
+          tabsEl.appendChild(button);
+        });
+      }
+
+      function render() {
+        const day = trip.days[state.selectedDay];
+        const scheduled = scheduleFor(day);
+        const totalStay = scheduled.reduce((sum, stop) => sum + stop.stayMinutes, 0);
+        const totalTravel = scheduled.reduce((sum, stop) => sum + stop.travelMinutes, 0);
+        const end = scheduled[scheduled.length - 1].leave;
+
+        document.getElementById("tripTitle").textContent = trip.title;
+        document.getElementById("tripMeta").textContent = `${trip.traveler} · ${trip.note}`;
+        document.getElementById("dayLabel").textContent = `${day.date} · ${day.title}`;
+        document.getElementById("endTime").textContent = formatTime(end);
+        document.getElementById("stayTotal").textContent = formatMinutes(totalStay);
+        document.getElementById("travelTotal").textContent = formatMinutes(totalTravel);
+        document.getElementById("fullRoute").href = fullRouteUrl(day);
+        startTimeEl.value = day.fixedSchedule
+          ? day.startTime
+          : localStorage.getItem(`start-${state.selectedDay}`) || day.startTime;
+        startTimeEl.disabled = Boolean(day.fixedSchedule);
+        startTimeEl.title = day.fixedSchedule ? "此日使用固定班次時間表" : "";
+        travelModeEl.value = state.mode;
+
+        renderTabs();
+        timelineEl.innerHTML = "";
+
+        scheduled.forEach((stop, index) => {
+          const previousStop = index > 0 ? day.stops[index - 1] : null;
+          const card = document.createElement("article");
+          card.className = "stop";
+          card.innerHTML = `
+            <div class="timebox">
+              <div class="arrival">${formatTime(stop.arrival)}</div>
+              <div class="leave">離開 ${formatTime(stop.leave)}</div>
+            </div>
+            <div class="stop-main">
+              <div>
+                <h2>${stop.name}</h2>
+                <p class="address">${stop.address}</p>
+              </div>
+              <div class="details">
+                <span class="tag">停留 ${formatMinutes(stop.stayMinutes)}</span>
+                <span class="tag travel">交通 ${formatMinutes(stop.travelMinutes)}</span>
+                <span class="tag">${stop.memo}</span>
+              </div>
+              <div class="actions">
+                <a class="action map" href="${mapUrl(stop)}" target="_blank" rel="noopener">開地圖</a>
+                <a class="action route" href="${routeUrl(previousStop, stop)}" target="_blank" rel="noopener">導航</a>
+              </div>
+            </div>
+          `;
+          timelineEl.appendChild(card);
+        });
+      }
+
+      startTimeEl.addEventListener("change", () => {
+        if (trip.days[state.selectedDay].fixedSchedule) return;
+        localStorage.setItem(`start-${state.selectedDay}`, startTimeEl.value);
+        render();
+      });
+
+      travelModeEl.addEventListener("change", () => {
+        state.mode = travelModeEl.value;
+        localStorage.setItem("travelMode", state.mode);
+        render();
+      });
+
+      document.getElementById("copyPlan").addEventListener("click", async () => {
+        const day = trip.days[state.selectedDay];
+        const lines = scheduleFor(day).map((stop) => {
+          return `${formatTime(stop.arrival)}-${formatTime(stop.leave)} ${stop.name}（停留 ${formatMinutes(stop.stayMinutes)}，交通 ${formatMinutes(stop.travelMinutes)}）`;
+        });
+        const text = `${trip.title} ${day.label} ${day.title}\n${lines.join("\n")}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("今日行程已複製");
+        } catch (error) {
+          showToast("無法自動複製，請改用瀏覽器分享");
+        }
+      });
+
+      if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+        navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+      }
+
+      render();
+    </script>
+  </body>
+</html>
