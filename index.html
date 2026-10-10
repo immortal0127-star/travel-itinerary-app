@@ -1920,7 +1920,7 @@
     </main>
 
     <nav class="planner-nav" id="plannerNav" aria-label="旅行手帳導覽">
-      <button type="button" data-target="timeline"><strong>行</strong><span>行程</span></button>
+      <button type="button" data-target="topbar"><strong>行</strong><span>行程</span></button>
       <button type="button" data-target="reservationsPanel"><strong>票</strong><span>預約</span></button>
       <button type="button" data-target="accountingPanel"><strong>帳</strong><span>記帳</span></button>
       <button type="button" data-target="shoppingPanel"><strong>購</strong><span>購物</span></button>
@@ -3641,7 +3641,7 @@
         }
 
         setDailySectionsVisible(true);
-        setPlannerNavActive("timeline");
+        setPlannerNavActive("topbar");
         const day = trip.days[state.selectedDay];
         const scheduled = scheduleFor(day, state.selectedDay);
         const totalStay = scheduled.reduce((sum, stop) => sum + stop.stayMinutes, 0);
