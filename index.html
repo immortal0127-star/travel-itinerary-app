@@ -972,6 +972,28 @@
         color: var(--ink);
       }
 
+      .check-toggle {
+        display: inline-grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        background: transparent;
+        color: transparent;
+        cursor: pointer;
+      }
+
+      .check-toggle[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--ink);
+      }
+
+      .compact-list li.checked span {
+        color: #17201d;
+        font-weight: 850;
+      }
+
       .schedule-list {
         display: grid;
         gap: 7px;
@@ -3641,10 +3663,26 @@
 
       function renderPacking() {
         packingGridEl.innerHTML = "";
+        const checkedItems = JSON.parse(localStorage.getItem("packingChecked") || "{}");
         trip.packing.forEach((group) => {
           const card = document.createElement("article");
           card.className = "info-list-card";
-          const rows = group.items.map((item) => `<li><strong>確認</strong><span>${item}</span></li>`).join("");
+          const rows = group.items.map((item) => {
+            const key = `${group.title}::${item}`;
+            const checked = Boolean(checkedItems[key]);
+            return `
+              <li class="${checked ? "checked" : ""}">
+                <button
+                  class="check-toggle"
+                  type="button"
+                  data-pack-key="${escapeHtml(key)}"
+                  aria-label="${checked ? "取消確認" : "確認已帶"} ${escapeHtml(item)}"
+                  aria-pressed="${String(checked)}"
+                ></button>
+                <span>${escapeHtml(item)}</span>
+              </li>
+            `;
+          }).join("");
           card.innerHTML = `
             <h3>${group.title}</h3>
             <ul class="compact-list">${rows}</ul>
@@ -3979,6 +4017,16 @@
         localStorage.setItem("familyMemos", JSON.stringify(memos));
         renderMembers();
         showToast("已刪除備忘");
+      });
+
+      packingGridEl.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-pack-key]");
+        if (!button) return;
+        const key = button.dataset.packKey;
+        const checkedItems = JSON.parse(localStorage.getItem("packingChecked") || "{}");
+        checkedItems[key] = !checkedItems[key];
+        localStorage.setItem("packingChecked", JSON.stringify(checkedItems));
+        renderPacking();
       });
 
       document.querySelectorAll("[data-theme]").forEach((button) => {
