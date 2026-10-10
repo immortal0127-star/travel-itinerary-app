@@ -2978,6 +2978,17 @@
             ],
             extras: [
               {
+                name: "Phiten Shop 名古屋 Unimall 店",
+                place: "ファイテンショップ 名古屋ユニモール店",
+                address: "愛知県名古屋市中村区名駅4丁目5番26号先 ユニモール地下街",
+                routeOrigin: "Nagoya Station",
+                routeOriginLabel: "從名古屋車站約",
+                routeActionLabel: "從名古屋車站導航",
+                travelFromLastMinutes: 5,
+                stayMinutes: 20,
+                memo: "位在名古屋站前 Unimall 地下街，離名古屋車站比榮商圈近；建議安排在 17:10-19:00 名古屋車站晚餐與伴手禮採買時順路去。"
+              },
+              {
                 name: "Flight of Dreams 夜間散步",
                 place: "Flight of Dreams Chubu Centrair",
                 address: "1-1 Centrair, Tokoname, Aichi",
@@ -3561,13 +3572,13 @@
               <p class="address">${extra.address}</p>
             </div>
             <div class="mini-meta">
-              <span>${extra.routeOrigin ? "從白川鄉約" : "從最後一站約"} ${formatMinutes(extra.travelFromLastMinutes)}</span>
+              <span>${extra.routeOriginLabel || (extra.routeOrigin ? "從白川鄉約" : "從最後一站約")} ${formatMinutes(extra.travelFromLastMinutes)}</span>
               <span>停留 ${formatMinutes(extra.stayMinutes)}</span>
             </div>
             <p class="address">${extra.memo}</p>
             <div class="actions">
               <a class="action map" href="${mapUrl(extra)}" target="_blank" rel="noopener">地圖</a>
-              <a class="action route" href="${routeUrl(extra.routeOrigin ? { name: extra.routeOrigin, place: extra.routeOrigin, address: "" } : lastStop, extra)}" target="_blank" rel="noopener">${extra.routeOrigin ? "從白川鄉導航" : "從最後一站導航"}</a>
+              <a class="action route" href="${routeUrl(extra.routeOrigin ? { name: extra.routeOrigin, place: extra.routeOrigin, address: "" } : lastStop, extra)}" target="_blank" rel="noopener">${extra.routeActionLabel || (extra.routeOrigin ? "從白川鄉導航" : "從最後一站導航")}</a>
             </div>
           `;
           extrasGridEl.appendChild(card);
