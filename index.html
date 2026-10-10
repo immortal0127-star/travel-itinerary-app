@@ -1813,8 +1813,11 @@
 
         <article class="info-panel" id="reservationsPanel" aria-label="預約總覽">
           <div class="section-heading">
-            <h2>預約管理</h2>
-            <span>機票、住宿與重要票券</span>
+            <div>
+              <h2>預約管理</h2>
+              <span>Day 1-6 機票、住宿、包車與票券</span>
+            </div>
+            <button class="action map" id="addReservation" type="button">＋ 新增</button>
           </div>
           <div class="info-page-grid" id="reservationsGrid"></div>
         </article>
@@ -3012,6 +3015,7 @@
       const twdAmountEl = document.getElementById("twdAmount");
       const rateStatusEl = document.getElementById("rateStatus");
       const refreshRateEl = document.getElementById("refreshRate");
+      const addReservationEl = document.getElementById("addReservation");
       const footerActionsEl = document.getElementById("footerActions");
       const scrapbookDashboardEl = document.getElementById("scrapbookDashboard");
       const overviewWeatherEl = document.getElementById("overviewWeather");
@@ -3048,6 +3052,15 @@
         const hours = Math.floor(minutes / 60);
         const rest = minutes % 60;
         return rest ? `${hours} 小時 ${rest} 分` : `${hours} 小時`;
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
       }
 
       function queryFor(stop) {
@@ -3382,54 +3395,101 @@
 
       function renderReservations() {
         reservationsGridEl.innerHTML = "";
-        const flights = trip.days
-          .filter((day) => day.flight)
-          .map((day) => ({ day, flight: day.flight }));
+        const customReservations = JSON.parse(localStorage.getItem("customReservations") || "[]");
 
-        flights.forEach(({ day, flight }) => {
+        trip.days.forEach((day, index) => {
+          const lodging = lodgingForDay(index);
+          const scheduled = scheduleFor(day, index);
+          const rows = [];
+
+          if (day.flight) {
+            rows.push({
+              type: "機票",
+              title: `${day.flight.airline} ${day.flight.flightNo}`,
+              detail: `${day.flight.route}｜${day.flight.depart}-${day.flight.arrive}｜報到 ${day.flight.checkin}｜${day.flight.memo}`
+            });
+          }
+
+          if (lodging) {
+            rows.push({
+              type: "住宿",
+              title: lodging.name,
+              detail: `${lodging.address}｜${lodging.memo}`
+            });
+          }
+
+          if (index === 1) {
+            rows.push({
+              type: "票券",
+              title: "吉卜力公園大散步券",
+              detail: "Day 2 週末假日營業 09:00-17:00；請準備票券 / QR code，住宿出發先確認直達巴士月台。"
+            });
+            rows.push({
+              type: "交通",
+              title: "名鐵巴士中心直達巴士",
+              detail: "主要路線：07:30 住宿出發，直達巴士前往愛・地球博記念公園 / 吉卜力公園周邊。"
+            });
+          }
+
+          if (index === 2) {
+            rows.push({
+              type: "包車",
+              title: "高山老街與白川鄉包車",
+              detail: "合法綠牌豐田海獅 9 人座包車；07:30 出發，白川鄉停留 3 小時後前往安曇野住宿。"
+            });
+          }
+
+          if (index === 3) {
+            rows.push({
+              type: "包車",
+              title: "安曇野住宿到扇澤站",
+              detail: "建議 06:50 前後出發，08:20-08:30 抵達扇澤站；行李 08:30 前辦理托運。"
+            });
+            rows.push({
+              type: "票券",
+              title: "立山黑部阿爾卑斯路線",
+              detail: "09:00 扇澤出發，接官方班次一路到立山站；現場以換票、整理券與站務公告為準。"
+            });
+            rows.push({
+              type: "包車",
+              title: "立山站接駁至富山住宿",
+              detail: "司機在立山站接駁，不需再到電鐵富山；主行程抓 15:50-16:40 前往富山市區住宿。"
+            });
+          }
+
+          if (index === 4) {
+            rows.push({
+              type: "包車",
+              title: "富山到上高地與名古屋包車",
+              detail: "07:30 出發，上高地從河童橋往返明神池；之後加入名古屋車站，再前往機場住宿。"
+            });
+          }
+
+          const customRows = customReservations
+            .filter((item) => item.dayIndex === index)
+            .map((item) => ({
+              type: item.type || "自訂",
+              title: item.title,
+              detail: item.detail
+            }));
+          rows.push(...customRows);
+
           const card = document.createElement("article");
           card.className = "info-list-card";
+          const reservationRows = rows.map((row) => {
+            return `<li><strong>${escapeHtml(row.type)}</strong><span><b>${escapeHtml(row.title)}</b><br>${escapeHtml(row.detail)}</span></li>`;
+          }).join("");
+          const firstStop = scheduled[0];
+          const lastStop = scheduled[scheduled.length - 1];
           card.innerHTML = `
             <div>
-              <h3>${day.label} · ${flight.airline} ${flight.flightNo}</h3>
-              <p>${flight.route}</p>
+              <h3>${day.label} · ${day.title}</h3>
+              <p>${day.date}｜${firstStop.name} → ${lastStop.name}</p>
             </div>
-            <ul class="compact-list">
-              <li><strong>出發</strong><span>${flight.fromLabel} ${flight.depart}</span></li>
-              <li><strong>抵達</strong><span>${flight.toLabel} ${flight.arrive}</span></li>
-              <li><strong>報到</strong><span>${flight.checkin}｜${flight.memo}</span></li>
-            </ul>
+            <ul class="compact-list">${reservationRows}</ul>
           `;
           reservationsGridEl.appendChild(card);
         });
-
-        trip.lodgings.forEach((lodging) => {
-          const card = document.createElement("article");
-          card.className = "info-list-card";
-          card.innerHTML = `
-            <div>
-              <h3>${lodging.nights} · ${lodging.name}</h3>
-              <p>${lodging.address}</p>
-            </div>
-            <p>${lodging.memo}</p>
-            <div class="actions">
-              <a class="action map" href="${mapUrl(lodging)}" target="_blank" rel="noopener">地圖</a>
-              <a class="action route" href="${routeUrl(null, lodging)}" target="_blank" rel="noopener">導航</a>
-            </div>
-          `;
-          reservationsGridEl.appendChild(card);
-        });
-
-        const routePass = document.createElement("article");
-        routePass.className = "info-list-card";
-        routePass.innerHTML = `
-          <div>
-            <h3>Day 4 · 立山黑部交通票券</h3>
-            <p>扇澤 09:00 出發穿越至立山站，依官方班次表安排。</p>
-          </div>
-          <p>當天請優先確認換票、行李托運與各段交通整理券，現場以站務公告為準。</p>
-        `;
-        reservationsGridEl.appendChild(routePass);
       }
 
       function renderLodgings() {
@@ -3776,6 +3836,33 @@
       });
       twdAmountEl.addEventListener("input", updateJpyFromTwd);
       refreshRateEl.addEventListener("click", () => refreshExchangeRate(true));
+      addReservationEl.addEventListener("click", () => {
+        const dayInput = window.prompt("要新增到第幾天？請輸入 1-6", String(state.selectedDay + 1));
+        if (!dayInput) return;
+        const dayIndex = Number(dayInput) - 1;
+        if (!Number.isInteger(dayIndex) || dayIndex < 0 || dayIndex >= trip.days.length) {
+          showToast("請輸入 1 到 6");
+          return;
+        }
+
+        const type = window.prompt("類型？例如：機票、住宿、包車、票券、餐廳", "自訂");
+        if (!type) return;
+        const title = window.prompt("名稱？例如：包車司機、飯店、門票", "");
+        if (!title) return;
+        const detail = window.prompt("時間 / 編號 / 備註？", "");
+        if (detail === null) return;
+
+        const customReservations = JSON.parse(localStorage.getItem("customReservations") || "[]");
+        customReservations.push({
+          dayIndex,
+          type: type.trim(),
+          title: title.trim(),
+          detail: detail.trim() || "尚未填寫備註"
+        });
+        localStorage.setItem("customReservations", JSON.stringify(customReservations));
+        renderReservations();
+        showToast("已新增預約資料");
+      });
 
       document.querySelectorAll("[data-theme]").forEach((button) => {
         button.addEventListener("click", () => {
