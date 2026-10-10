@@ -710,6 +710,58 @@
         padding-right: 28px;
       }
 
+      .travel-info-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .travel-info-card {
+        display: grid;
+        gap: 11px;
+        padding: 14px;
+        border: 1px solid color-mix(in srgb, var(--accent) 18%, white);
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, white), rgba(255, 255, 255, 0.96)),
+          var(--panel);
+        box-shadow: 0 12px 28px rgba(14, 31, 28, 0.09);
+      }
+
+      .travel-info-card h3 {
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .ticket-row {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .ticket-city {
+        display: grid;
+        gap: 4px;
+      }
+
+      .ticket-city strong {
+        font-size: 24px;
+        line-height: 1;
+      }
+
+      .ticket-city span,
+      .weather-note {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .ticket-arrow {
+        color: color-mix(in srgb, var(--accent) 80%, #17201d);
+        font-size: 22px;
+        font-weight: 900;
+      }
+
       .mini-meta {
         display: flex;
         flex-wrap: wrap;
@@ -1095,6 +1147,22 @@
         </article>
       </section>
 
+      <section class="info-section" id="flightSection" aria-label="機票資訊" hidden>
+        <div class="section-heading">
+          <h2>機票資訊</h2>
+          <span>出發當日使用</span>
+        </div>
+        <div class="travel-info-grid" id="flightGrid"></div>
+      </section>
+
+      <section class="info-section" id="weatherSection" aria-label="當日天氣">
+        <div class="section-heading">
+          <h2>當日天氣</h2>
+          <span>出發前請再確認即時預報</span>
+        </div>
+        <div class="travel-info-grid" id="weatherGrid"></div>
+      </section>
+
       <section class="timeline" id="timeline" aria-label="行程列表"></section>
 
       <section class="info-section" id="foodSection" aria-label="餐飲推薦">
@@ -1134,6 +1202,21 @@
             image: "./assets/day-1.jpg",
             tiles: ["名古屋城", "車站夜景", "大須商店街"],
             startTime: "05:00",
+            flight: {
+              airline: "台灣虎航 Tigerair Taiwan",
+              flightNo: "IT284",
+              route: "高雄 KHH → 大阪關西 KIX",
+              depart: "06:40",
+              arrive: "10:35",
+              checkin: "05:00",
+              memo: "建議 05:00 前完成報到準備，確認護照、行動電源、託運與隨身行李規定。"
+            },
+            weather: {
+              location: "名古屋市區",
+              range: "約 18-24°C",
+              summary: "10 月中旬市區早晚偏涼，白天走名古屋城與大須仍可能微熱。",
+              gear: "薄外套、好走鞋、小折傘；若入境延誤，夜景時段風會比較明顯。"
+            },
             stops: [
               {
                 name: "小港機場報到",
@@ -1263,6 +1346,12 @@
             image: "./assets/day-2.jpg",
             tiles: ["魔女之谷", "園區森林", "大倉庫"],
             startTime: "07:30",
+            weather: {
+              location: "長久手 / 吉卜力公園",
+              range: "約 17-24°C",
+              summary: "園區戶外移動多，白天可能偏暖，傍晚回名古屋市區會轉涼。",
+              gear: "薄外套、帽子、行動雨具；鞋子以久走不累為優先。"
+            },
             stops: [
               {
                 name: "住宿出發前往名鐵巴士中心",
@@ -1396,6 +1485,12 @@
             image: "./assets/day-3.jpg",
             tiles: ["高山老街", "宮川朝市", "白川鄉"],
             startTime: "07:30",
+            weather: {
+              location: "高山 / 白川鄉 / 安曇野",
+              range: "約 9-20°C",
+              summary: "山區早晚冷，高山與白川鄉溫差比名古屋大，傍晚往安曇野會更涼。",
+              gear: "保暖外套、長褲、可收納雨具；白川鄉停留 3 小時要注意腳部保暖。"
+            },
             stops: [
               {
                 name: "名古屋出發",
@@ -1561,6 +1656,12 @@
             tiles: ["黑部水壩", "空中纜車", "室堂"],
             startTime: "08:20",
             fixedSchedule: true,
+            weather: {
+              location: "立山黑部 / 室堂",
+              range: "山下約 10-16°C，室堂約 2-8°C",
+              summary: "海拔落差大，室堂 10 月可能接近冬天，強風或初雪都要保守看待。",
+              gear: "防風外套、毛帽、手套、發熱衣；行李托運後把保暖層隨身帶上山。"
+            },
             stops: [
               {
                 name: "抵達扇澤站",
@@ -1826,6 +1927,12 @@
             image: "./assets/day-5.jpg",
             tiles: ["河童橋", "明神池", "名古屋車站"],
             startTime: "07:30",
+            weather: {
+              location: "上高地 / 名古屋",
+              range: "上高地約 5-15°C，名古屋約 17-24°C",
+              summary: "上高地清晨與林間步道偏冷，回到名古屋市區後溫度會明顯上升。",
+              gear: "洋蔥式穿搭、防滑好走鞋、輕便雨具；名古屋採買時可把厚外套收起。"
+            },
             stops: [
               {
                 name: "富山出發前往上高地巴士總站",
@@ -1924,6 +2031,12 @@
             image: "./assets/day-6.jpg",
             tiles: ["常滑散步道", "陶器街", "中部機場"],
             startTime: "09:00",
+            weather: {
+              location: "常滑 / 中部國際機場",
+              range: "約 18-24°C",
+              summary: "海邊機場與常滑散步道可能有海風，白天舒適、傍晚略涼。",
+              gear: "薄外套、好走鞋；回程日注意行李重量與伴手禮防撞。"
+            },
             stops: [
               {
                 name: "Flight of Dreams 波音博物館",
@@ -2051,6 +2164,9 @@
       const tabsEl = document.getElementById("dayTabs");
       const timelineEl = document.getElementById("timeline");
       const routeLineEl = document.getElementById("routeLine");
+      const flightSectionEl = document.getElementById("flightSection");
+      const flightGridEl = document.getElementById("flightGrid");
+      const weatherGridEl = document.getElementById("weatherGrid");
       const foodSectionEl = document.getElementById("foodSection");
       const foodGridEl = document.getElementById("foodGrid");
       const extrasSectionEl = document.getElementById("extrasSection");
@@ -2176,6 +2292,61 @@
         });
       }
 
+      function renderFlight(day) {
+        const flight = day.flight;
+        flightSectionEl.hidden = !flight;
+        flightGridEl.innerHTML = "";
+        if (!flight) return;
+
+        const card = document.createElement("article");
+        card.className = "travel-info-card";
+        card.innerHTML = `
+          <div>
+            <h3>${flight.airline} · ${flight.flightNo}</h3>
+            <p class="weather-note">${flight.route}</p>
+          </div>
+          <div class="ticket-row">
+            <div class="ticket-city">
+              <span>出發</span>
+              <strong>${flight.depart}</strong>
+              <span>高雄 KHH</span>
+            </div>
+            <div class="ticket-arrow" aria-hidden="true">→</div>
+            <div class="ticket-city">
+              <span>抵達</span>
+              <strong>${flight.arrive}</strong>
+              <span>大阪 KIX</span>
+            </div>
+          </div>
+          <div class="mini-meta">
+            <span>報到 ${flight.checkin}</span>
+            <span>${flight.memo}</span>
+          </div>
+        `;
+        flightGridEl.appendChild(card);
+      }
+
+      function renderWeather(day) {
+        const weather = day.weather;
+        weatherGridEl.innerHTML = "";
+        if (!weather) return;
+
+        const card = document.createElement("article");
+        card.className = "travel-info-card";
+        card.innerHTML = `
+          <div>
+            <h3>${weather.location}</h3>
+            <p class="weather-note">${weather.summary}</p>
+          </div>
+          <div class="mini-meta">
+            <span>${weather.range}</span>
+            <span>${weather.gear}</span>
+          </div>
+          <p class="weather-note">天氣預報請於出發前 1-2 天再確認；山區與機場風勢變化較快。</p>
+        `;
+        weatherGridEl.appendChild(card);
+      }
+
       function renderFood(day) {
         const foods = day.foods || [];
         foodSectionEl.hidden = foods.length === 0;
@@ -2281,6 +2452,8 @@
 
         renderTabs();
         renderRouteMap(day, scheduled);
+        renderFlight(day);
+        renderWeather(day);
         renderFood(day);
         renderExtras(day, lastStop);
         timelineEl.innerHTML = "";
@@ -2335,6 +2508,12 @@
         const foodLines = (day.foods || []).map((food) => {
           return `${food.name}｜${food.timing}｜${food.memo}`;
         });
+        const flightLine = day.flight
+          ? `\n機票資訊\n${day.flight.airline} ${day.flight.flightNo}｜${day.flight.route}｜${day.flight.depart}-${day.flight.arrive}｜報到 ${day.flight.checkin}`
+          : "";
+        const weatherLine = day.weather
+          ? `\n當日天氣\n${day.weather.location}｜${day.weather.range}｜${day.weather.summary}｜${day.weather.gear}`
+          : "";
         const extraLines = (day.extras || []).map((extra) => {
           if (extra.infoOnly) {
             const scheduleText = (extra.scheduleItems || []).map((item) => {
@@ -2346,6 +2525,8 @@
         });
         const text = [
           `${trip.title} ${day.label} ${day.title}`,
+          flightLine,
+          weatherLine,
           lines.join("\n"),
           foodLines.length ? `\n餐飲推薦\n${foodLines.join("\n")}` : "",
           extraLines.length ? `\n補充行程\n${extraLines.join("\n")}` : ""
