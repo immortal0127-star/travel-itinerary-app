@@ -789,77 +789,120 @@
         gap: 12px;
       }
 
-      .map-embed {
+      .route-map-canvas {
+        position: relative;
         width: 100%;
-        aspect-ratio: 16 / 10;
-        min-height: 260px;
-        border: 0;
+        min-height: 380px;
+        overflow: hidden;
         border-radius: 8px;
-        background: #dfe9e3;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(244, 249, 245, 0.72)),
+          radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--accent) 17%, transparent), transparent 28%),
+          radial-gradient(circle at 78% 68%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent 30%),
+          linear-gradient(90deg, rgba(23, 32, 29, 0.04) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(23, 32, 29, 0.04) 1px, transparent 1px);
+        background-size: auto, auto, auto, 32px 32px, 32px 32px;
         box-shadow: 0 12px 28px rgba(14, 31, 28, 0.11);
       }
 
-      .map-marker-list {
-        display: grid;
-        gap: 7px;
-        max-height: 260px;
-        overflow: auto;
-        padding-right: 2px;
+      .route-map-canvas::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: var(--day-image);
+        background-size: cover;
+        background-position: center;
+        opacity: 0.1;
+        filter: saturate(0.85);
       }
 
-      .map-marker {
-        display: grid;
-        grid-template-columns: 46px 1fr auto;
+      .route-map-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .route-map-pin {
+        position: absolute;
+        z-index: 2;
+        display: inline-flex;
         gap: 10px;
         align-items: center;
-        min-height: 54px;
-        padding: 9px 10px;
-        border: 1px solid rgba(23, 32, 29, 0.09);
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.94);
+        max-width: min(315px, 45%);
         color: inherit;
         text-decoration: none;
       }
 
-      .map-marker:hover {
-        border-color: color-mix(in srgb, var(--accent) 50%, white);
-        transform: translateY(-1px);
+      .route-map-pin[data-side="right"] {
+        transform: translate(0, -50%);
       }
 
-      .map-marker-index {
+      .route-map-pin[data-side="left"] {
+        flex-direction: row-reverse;
+        transform: translate(-100%, -50%);
+      }
+
+      .route-map-pin[data-side="left"] .pin-label {
+        text-align: right;
+      }
+
+      .pin-dot {
+        flex: 0 0 auto;
         display: inline-grid;
         place-items: center;
-        width: 35px;
-        height: 35px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
-        background: color-mix(in srgb, var(--accent) 18%, white);
-        color: color-mix(in srgb, var(--accent) 82%, #17201d);
+        border: 4px solid rgba(255, 255, 255, 0.88);
+        background: color-mix(in srgb, var(--accent) 86%, #17201d);
+        color: #fff;
         font-size: 13px;
         font-weight: 900;
+        box-shadow: 0 10px 22px rgba(14, 31, 28, 0.17);
       }
 
-      .map-marker-main {
+      .pin-label {
         display: grid;
-        gap: 3px;
-        min-width: 0;
+        gap: 4px;
+        padding: 9px 10px;
+        border: 1px solid rgba(23, 32, 29, 0.09);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 10px 22px rgba(14, 31, 28, 0.11);
       }
 
-      .map-marker-main strong {
+      .pin-label strong {
         overflow-wrap: anywhere;
         font-size: 14px;
         line-height: 1.25;
       }
 
-      .map-marker-main span,
-      .map-marker-time {
+      .pin-label span {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      .pin-label em {
+        color: color-mix(in srgb, var(--accent-2) 80%, #17201d);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 900;
+        line-height: 1.35;
+      }
+
+      .map-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
         color: var(--muted);
         font-size: 12px;
         font-weight: 800;
-      }
-
-      .map-marker-time {
-        justify-self: end;
-        white-space: nowrap;
       }
 
       .info-page {
@@ -1220,13 +1263,23 @@
           grid-template-columns: 1fr;
         }
 
-        .map-marker {
-          grid-template-columns: 40px 1fr;
+        .route-map-pin {
+          max-width: 68%;
+          gap: 7px;
         }
 
-        .map-marker-time {
-          grid-column: 2 / 3;
-          justify-self: start;
+        .pin-dot {
+          width: 34px;
+          height: 34px;
+          border-width: 3px;
+        }
+
+        .pin-label {
+          padding: 8px;
+        }
+
+        .pin-label strong {
+          font-size: 13px;
         }
 
         .stop {
@@ -1354,14 +1407,11 @@
           <span>點選停靠點可開啟 Google Maps</span>
         </div>
         <article class="travel-info-card day-map-card">
-          <iframe
-            class="map-embed"
-            id="dayMapFrame"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="每日行程地圖"
-          ></iframe>
-          <div class="map-marker-list" id="dayMapMarkers"></div>
+          <div class="route-map-canvas" id="routeMapCanvas" aria-label="當日路線示意地圖"></div>
+          <div class="map-legend">
+            <span>圓點為當日停靠位置；標籤顯示停留時間與前段交通時間。</span>
+            <span>點選任一站可開啟 Google Maps。</span>
+          </div>
         </article>
       </section>
 
@@ -2514,8 +2564,7 @@
       const weatherGridEl = document.getElementById("weatherGrid");
       const weatherSectionEl = document.getElementById("weatherSection");
       const dayMapSectionEl = document.getElementById("dayMapSection");
-      const dayMapFrameEl = document.getElementById("dayMapFrame");
-      const dayMapMarkersEl = document.getElementById("dayMapMarkers");
+      const routeMapCanvasEl = document.getElementById("routeMapCanvas");
       const foodSectionEl = document.getElementById("foodSection");
       const foodGridEl = document.getElementById("foodGrid");
       const extrasSectionEl = document.getElementById("extrasSection");
@@ -2580,11 +2629,6 @@
         const destination = queryFor(stops[stops.length - 1]);
         const waypoints = stops.slice(1, -1).map(queryFor).join("|");
         return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=${state.mode}`;
-      }
-
-      function mapEmbedUrl(scheduled) {
-        const focusStop = scheduled[Math.floor(scheduled.length / 2)] || scheduled[0];
-        return `https://www.google.com/maps?q=${queryFor(focusStop)}&output=embed`;
       }
 
       function scheduleFor(day, index = state.selectedDay) {
@@ -2671,26 +2715,64 @@
         });
       }
 
+      function routeMapPoint(index, total) {
+        if (total <= 1) return { x: 50, y: 50 };
+        const progress = index / (total - 1);
+        const y = 8 + progress * 84;
+        const x = index % 2 === 0 ? 29 : 71;
+        return { x, y };
+      }
+
       function renderDayMap(day, scheduled) {
-        dayMapFrameEl.src = mapEmbedUrl(scheduled);
-        dayMapFrameEl.title = `${day.label} ${day.title} 每日地圖`;
-        dayMapMarkersEl.innerHTML = "";
+        const points = scheduled.map((_, index) => routeMapPoint(index, scheduled.length));
+        routeMapCanvasEl.style.minHeight = `${Math.max(380, scheduled.length * 74)}px`;
+        routeMapCanvasEl.innerHTML = `
+          <svg class="route-map-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline
+              points="${points.map((point) => `${point.x},${point.y}`).join(" ")}"
+              fill="none"
+              stroke="rgba(23, 32, 29, 0.2)"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-dasharray="1 2"
+            ></polyline>
+            <polyline
+              points="${points.map((point) => `${point.x},${point.y}`).join(" ")}"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="0.55"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              opacity="0.45"
+            ></polyline>
+          </svg>
+        `;
 
         scheduled.forEach((stop, index) => {
+          const point = points[index];
           const link = document.createElement("a");
-          link.className = "map-marker";
+          link.className = "route-map-pin";
           link.href = mapUrl(stop);
           link.target = "_blank";
           link.rel = "noopener";
+          link.style.left = `${point.x}%`;
+          link.style.top = `${point.y}%`;
+          link.dataset.side = point.x > 50 ? "left" : "right";
+          const travelText = index === 0
+            ? "起點"
+            : stop.travelMinutes
+              ? `前段交通 ${formatMinutes(stop.travelMinutes)}`
+              : "同區域移動";
           link.innerHTML = `
-            <span class="map-marker-index">${String(index + 1).padStart(2, "0")}</span>
-            <span class="map-marker-main">
+            <span class="pin-dot">${String(index + 1).padStart(2, "0")}</span>
+            <span class="pin-label">
               <strong>${stop.name}</strong>
-              <span>${stop.address || stop.place}</span>
+              <span>${formatTime(stop.arrival)}-${formatTime(stop.leave)}</span>
+              <em>${travelText}</em>
             </span>
-            <span class="map-marker-time">${formatTime(stop.arrival)}-${formatTime(stop.leave)}</span>
           `;
-          dayMapMarkersEl.appendChild(link);
+          routeMapCanvasEl.appendChild(link);
         });
       }
 
