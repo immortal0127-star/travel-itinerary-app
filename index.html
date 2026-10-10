@@ -3160,17 +3160,6 @@
           tabsEl.appendChild(button);
         });
 
-        const infoButton = document.createElement("button");
-        infoButton.className = "day-tab";
-        infoButton.type = "button";
-        infoButton.setAttribute("aria-selected", String(state.view === "info"));
-        infoButton.innerHTML = "<strong>資訊</strong><span>匯率與總覽</span>";
-        infoButton.addEventListener("click", () => {
-          state.view = "info";
-          localStorage.setItem("selectedTab", "info");
-          render();
-        });
-        tabsEl.appendChild(infoButton);
       }
 
       function renderRouteMap(day, scheduled) {
