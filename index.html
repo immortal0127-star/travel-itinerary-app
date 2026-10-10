@@ -1938,6 +1938,24 @@
             </div>
             <button class="action map" id="addShoppingItem" type="button">＋ 新增</button>
           </div>
+          <form class="inline-form" id="shoppingItemForm" hidden>
+            <label>
+              商品名稱
+              <input id="shoppingItemName" type="text" placeholder="例如：伴手禮、藥妝、電器、零食" autocomplete="off" />
+            </label>
+            <label>
+              分類
+              <input id="shoppingItemCategory" type="text" placeholder="例如：藥妝、伴手禮、電器" autocomplete="off" />
+            </label>
+            <label>
+              數量 / 店家 / 備註
+              <textarea id="shoppingItemMemo" placeholder="例如：2 盒、松本清、機場買"></textarea>
+            </label>
+            <div class="actions">
+              <button class="action map" type="submit">儲存項目</button>
+              <button class="action secondary" id="cancelShoppingItem" type="button">取消</button>
+            </div>
+          </form>
           <div class="info-page-grid" id="shoppingGrid"></div>
         </article>
 
@@ -3117,6 +3135,11 @@
       const refreshRateEl = document.getElementById("refreshRate");
       const addReservationEl = document.getElementById("addReservation");
       const addShoppingItemEl = document.getElementById("addShoppingItem");
+      const shoppingItemFormEl = document.getElementById("shoppingItemForm");
+      const shoppingItemNameEl = document.getElementById("shoppingItemName");
+      const shoppingItemCategoryEl = document.getElementById("shoppingItemCategory");
+      const shoppingItemMemoEl = document.getElementById("shoppingItemMemo");
+      const cancelShoppingItemEl = document.getElementById("cancelShoppingItem");
       const addFamilyMemoEl = document.getElementById("addFamilyMemo");
       const familyMemoFormEl = document.getElementById("familyMemoForm");
       const familyMemoTitleEl = document.getElementById("familyMemoTitle");
@@ -4043,20 +4066,33 @@
         showToast("已新增預約資料");
       });
       addShoppingItemEl.addEventListener("click", () => {
-        const name = window.prompt("想新增什麼？例如：藥妝、伴手禮、零食、電器", "");
-        if (!name) return;
-        const category = window.prompt("分類？例如：藥妝、伴手禮、電器、零食", "購物");
-        if (!category) return;
-        const memo = window.prompt("數量 / 店家 / 備註？", "");
-        if (memo === null) return;
+        shoppingItemFormEl.hidden = false;
+        shoppingItemNameEl.focus();
+      });
+
+      cancelShoppingItemEl.addEventListener("click", () => {
+        shoppingItemFormEl.reset();
+        shoppingItemFormEl.hidden = true;
+      });
+
+      shoppingItemFormEl.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = shoppingItemNameEl.value.trim();
+        if (!name) {
+          shoppingItemNameEl.focus();
+          showToast("請先輸入商品名稱");
+          return;
+        }
 
         const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
         items.push({
-          name: name.trim(),
-          category: category.trim(),
-          memo: memo.trim() || "尚未填寫備註"
+          name,
+          category: shoppingItemCategoryEl.value.trim() || "購物",
+          memo: shoppingItemMemoEl.value.trim() || "尚未填寫備註"
         });
         localStorage.setItem("shoppingItems", JSON.stringify(items));
+        shoppingItemFormEl.reset();
+        shoppingItemFormEl.hidden = true;
         renderShopping();
         showToast("已新增購物項目");
       });
