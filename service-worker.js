@@ -1,5 +1,12 @@
-const CACHE_NAME = "travel-itinerary-v1";
-const ASSETS = ["./index.html", "./manifest.webmanifest"];
+const CACHE_NAME = "travel-itinerary-v2";
+const ASSETS = [
+  "./index.html",
+  "./manifest.webmanifest",
+  "./assets/icons/favicon-32.png",
+  "./assets/icons/icon-180.png",
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png"
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));

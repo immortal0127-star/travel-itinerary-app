@@ -1,10 +1,23 @@
 {
-  "name": "名古屋黑部立山六日遊",
-  "short_name": "名古屋行程",
+  "name": "ＮＡＧＯＹＡ名古屋6日遊",
+  "short_name": "Nagoya",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f7faf8",
   "theme_color": "#0f766e",
   "description": "名古屋、黑部立山、上高地六日家庭旅遊 App，含 Google Maps 連結與時間排程。",
-  "icons": []
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
