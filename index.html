@@ -1808,7 +1808,7 @@
       <section class="info-section info-page" id="infoPage" aria-label="旅遊資訊總覽" hidden>
         <div class="section-heading">
           <h2 id="infoPageTitle">資訊總覽</h2>
-          <span id="infoPageSubtitle">預約、匯率、購物、準備、成員與設定</span>
+          <span id="infoPageSubtitle">預約、匯率、購物、準備、備忘與設定</span>
         </div>
 
         <article class="info-panel" id="reservationsPanel" aria-label="預約總覽">
@@ -1891,8 +1891,11 @@
 
         <article class="info-panel" id="membersPanel">
           <div class="section-heading">
-            <h2>成員分工</h2>
-            <span>家庭旅遊共用備忘</span>
+            <div>
+              <h2>家庭備忘錄</h2>
+              <span>自己新增資訊提醒</span>
+            </div>
+            <button class="action map" id="addFamilyMemo" type="button">＋ 新增</button>
           </div>
           <div class="info-page-grid" id="membersGrid"></div>
         </article>
@@ -1931,7 +1934,7 @@
       <button type="button" data-target="accountingPanel"><strong>匯</strong><span>匯率</span></button>
       <button type="button" data-target="shoppingPanel"><strong>購</strong><span>購物</span></button>
       <button type="button" data-target="packingPanel"><strong>備</strong><span>準備</span></button>
-      <button type="button" data-target="membersPanel"><strong>員</strong><span>成員</span></button>
+      <button type="button" data-target="membersPanel"><strong>忘</strong><span>備忘</span></button>
       <button type="button" data-target="settingsPanel"><strong>設</strong><span>設定</span></button>
     </nav>
 
@@ -3023,6 +3026,7 @@
       const refreshRateEl = document.getElementById("refreshRate");
       const addReservationEl = document.getElementById("addReservation");
       const addShoppingItemEl = document.getElementById("addShoppingItem");
+      const addFamilyMemoEl = document.getElementById("addFamilyMemo");
       const footerActionsEl = document.getElementById("footerActions");
       const scrapbookDashboardEl = document.getElementById("scrapbookDashboard");
       const overviewWeatherEl = document.getElementById("overviewWeather");
@@ -3384,9 +3388,9 @@
 
       function renderInfoRoute() {
         document.getElementById("routeTitle").textContent = "旅遊資訊總覽";
-        document.getElementById("routeRange").textContent = "預約 · 匯率 · 購物 · 準備 · 成員 · 設定";
+        document.getElementById("routeRange").textContent = "預約 · 匯率 · 購物 · 準備 · 備忘 · 設定";
         routeLineEl.innerHTML = "";
-        ["預約管理", "即時匯率", "購物清單", "準備提醒", "成員分工", "設定"].forEach((label, index) => {
+        ["預約管理", "即時匯率", "購物清單", "準備提醒", "家庭備忘", "設定"].forEach((label, index) => {
           const item = document.createElement("a");
           item.className = "route-stop";
           item.href = "#infoPage";
@@ -3608,15 +3612,29 @@
 
       function renderMembers() {
         membersGridEl.innerHTML = "";
-        [
-          ["票券確認", "每天出門前確認機票、住宿、吉卜力、立山黑部交通與包車資訊。"],
-          ["導航與集合", "上車前先開 Google Maps，長輩與小孩確認集合點與洗手間位置。"],
-          ["行李與保暖", "Day 4 立山黑部行李托運、防風外套、毛帽、手套由出發前共同檢查。"],
-          ["餐飲採買", "便利商店、超市、伴手禮與山上補給可在購物頁快速查看。"]
-        ].forEach(([title, text]) => {
+        const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
+
+        if (memos.length === 0) {
+          const emptyCard = document.createElement("article");
+          emptyCard.className = "info-list-card";
+          emptyCard.innerHTML = `
+            <h3>尚未新增備忘</h3>
+            <p>按右上角「＋ 新增」，加入集合提醒、重要事項、聯絡方式或當天注意事項。</p>
+          `;
+          membersGridEl.appendChild(emptyCard);
+          return;
+        }
+
+        memos.forEach((memo, index) => {
           const card = document.createElement("article");
           card.className = "info-list-card";
-          card.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+          card.innerHTML = `
+            <h3>${escapeHtml(memo.title)}</h3>
+            <p>${escapeHtml(memo.text || "尚未填寫內容")}</p>
+            <div class="actions">
+              <button class="action secondary" type="button" data-delete-memo="${index}">刪除</button>
+            </div>
+          `;
           membersGridEl.appendChild(card);
         });
       }
@@ -3691,8 +3709,8 @@
             subtitle: "出門前快速核對"
           },
           membersPanel: {
-            title: "成員分工",
-            subtitle: "家庭旅遊共用備忘"
+            title: "家庭備忘錄",
+            subtitle: "自己新增資訊提醒"
           },
           settingsPanel: {
             title: "設定",
@@ -3933,6 +3951,34 @@
         localStorage.setItem("shoppingItems", JSON.stringify(items));
         renderShopping();
         showToast("已刪除購物項目");
+      });
+
+      addFamilyMemoEl.addEventListener("click", () => {
+        const title = window.prompt("備忘標題？例如：集合時間、聯絡方式、注意事項", "");
+        if (!title) return;
+        const text = window.prompt("備忘內容？", "");
+        if (text === null) return;
+
+        const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
+        memos.push({
+          title: title.trim(),
+          text: text.trim() || "尚未填寫內容"
+        });
+        localStorage.setItem("familyMemos", JSON.stringify(memos));
+        renderMembers();
+        showToast("已新增備忘");
+      });
+
+      membersGridEl.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-delete-memo]");
+        if (!button) return;
+        const index = Number(button.dataset.deleteMemo);
+        const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
+        if (!Number.isInteger(index) || index < 0 || index >= memos.length) return;
+        memos.splice(index, 1);
+        localStorage.setItem("familyMemos", JSON.stringify(memos));
+        renderMembers();
+        showToast("已刪除備忘");
       });
 
       document.querySelectorAll("[data-theme]").forEach((button) => {
