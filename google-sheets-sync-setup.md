@@ -2,18 +2,22 @@
 
 這份設定用來讓旅遊 App 的「購物清單」與「家庭備忘錄」在不同手機同步。
 
-## 1. 建立 Google 試算表
+## 1. Google 試算表
 
-建立一張 Google 試算表，名稱可用：
+已建立同步用 Google 試算表：
 
 ```text
 名古屋旅遊 App 同步資料表
 ```
 
+```text
+https://docs.google.com/spreadsheets/d/1XFkXiq-Jm8alP-T1puDpl9RJHF86__4b-E6V4oNC7wI/edit
+```
+
 ## 2. 貼上 Apps Script
 
-1. 在試算表上方選單點「擴充功能」。
-2. 點「Apps Script」。
+1. 前往 `https://script.google.com/`。
+2. 建立新專案。
 3. 刪掉原本內容。
 4. 貼上 `google-sheets-sync-apps-script.gs` 的全部內容。
 5. 如果想換同步碼，修改第一行：

@@ -1,4 +1,5 @@
 const SYNC_TOKEN = "nagoya2026";
+const SPREADSHEET_ID = "1XFkXiq-Jm8alP-T1puDpl9RJHF86__4b-E6V4oNC7wI";
 
 const SHEET_NAMES = {
   shopping: "Shopping",
@@ -52,8 +53,12 @@ function jsonOutput(value) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+function getSpreadsheet() {
+  return SpreadsheetApp.openById(SPREADSHEET_ID);
+}
+
 function ensureSheets() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const spreadsheet = getSpreadsheet();
   const shoppingSheet = getOrCreateSheet(spreadsheet, SHEET_NAMES.shopping);
   const memoSheet = getOrCreateSheet(spreadsheet, SHEET_NAMES.memos);
 
@@ -76,7 +81,7 @@ function setHeaders(sheet, headers) {
 }
 
 function readShoppingItems() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAMES.shopping);
+  const sheet = getSpreadsheet().getSheetByName(SHEET_NAMES.shopping);
   const rows = readRows(sheet, 5);
   return rows.map((row) => ({
     id: row[0],
@@ -87,7 +92,7 @@ function readShoppingItems() {
 }
 
 function readFamilyMemos() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAMES.memos);
+  const sheet = getSpreadsheet().getSheetByName(SHEET_NAMES.memos);
   const rows = readRows(sheet, 4);
   return rows.map((row) => ({
     id: row[0],
@@ -103,7 +108,7 @@ function readRows(sheet, columnCount) {
 }
 
 function writeShoppingItems(items) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAMES.shopping);
+  const sheet = getSpreadsheet().getSheetByName(SHEET_NAMES.shopping);
   replaceRows(sheet, 5, items.map((item) => [
     cleanText(item.id),
     cleanText(item.name),
@@ -114,7 +119,7 @@ function writeShoppingItems(items) {
 }
 
 function writeFamilyMemos(memos) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAMES.memos);
+  const sheet = getSpreadsheet().getSheetByName(SHEET_NAMES.memos);
   replaceRows(sheet, 4, memos.map((memo) => [
     cleanText(memo.id),
     cleanText(memo.title),
