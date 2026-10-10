@@ -2880,12 +2880,13 @@
             title: "包車 · 上高地",
             image: "./assets/day-5.jpg",
             tiles: ["河童橋", "明神池", "名古屋車站"],
-            startTime: "07:00",
+            startTime: "08:00",
+            startStorageVersion: "charter-20261020-0800-1900",
             weather: {
               location: "上高地 / 名古屋",
               range: "上高地約 5-15°C，名古屋約 17-24°C",
               summary: "上高地清晨與林間步道偏冷，回到名古屋市區後溫度會明顯上升。",
-              gear: "07:00-18:00 包車版，洋蔥式穿搭、防滑好走鞋、輕便雨具；名古屋採買時可把厚外套收起。"
+              gear: "08:00-19:00 包車版，洋蔥式穿搭、防滑好走鞋、輕便雨具；名古屋採買時可把厚外套收起。"
             },
             stops: [
               {
@@ -2894,7 +2895,7 @@
                 address: "1 Chome-5-1 Takaramachi, Toyama",
                 stayMinutes: 0,
                 travelMinutes: 0,
-                memo: "07:00 從富山住宿出發，包車前往上高地；今日包車時間 07:00-18:00，終點為名古屋車站。"
+                memo: "08:00 從富山住宿出發，包車前往上高地；今日包車時間 08:00-19:00，終點為名古屋車站。"
               },
               {
                 name: "抵達上高地巴士總站",
@@ -2918,7 +2919,7 @@
                 address: "Kamikochi, Azumi, Matsumoto, Nagano",
                 stayMinutes: 120,
                 travelMinutes: 0,
-                memo: "河童橋出發，沿梓川往明神池後原路或對岸步道回河童橋；配合 18:00 包車結束，健行時間抓精簡版，門票大人 ¥500。"
+                memo: "河童橋出發，沿梓川往明神池後原路或對岸步道回河童橋；配合 19:00 包車結束，健行時間抓精簡版，門票大人 ¥500。"
               },
               {
                 name: "河童橋回程整理",
@@ -2934,7 +2935,7 @@
                 address: "Nagoya Station, Nagoya, Aichi",
                 stayMinutes: 110,
                 travelMinutes: 180,
-                memo: "16:10 抵達名古屋車站，晚餐、伴手禮或地下街採買；18:00 包車結束，包車終點為名古屋車站。"
+                memo: "17:10 抵達名古屋車站，晚餐、伴手禮或地下街採買；19:00 包車結束，包車終點為名古屋車站。"
               },
               {
                 name: "前往中部國際機場住宿",
@@ -2942,7 +2943,7 @@
                 address: "4 Chome-2-5 Centrair, Tokoname, Aichi",
                 stayMinutes: 0,
                 travelMinutes: 55,
-                memo: "18:00 包車結束後，自行從名古屋車站前往中部國際機場住宿；此段不列入包車時段。"
+                memo: "19:00 包車結束後，自行從名古屋車站前往中部國際機場住宿；此段不列入包車時段。"
               }
             ],
             foods: [
@@ -3246,6 +3247,20 @@
           .join("");
       }
 
+      function startTimeForDay(day, index) {
+        const savedStart = localStorage.getItem(`start-${index}`);
+        if (!savedStart) return day.startTime;
+        if (day.startStorageVersion) {
+          const versionKey = `start-version-${index}`;
+          if (localStorage.getItem(versionKey) !== day.startStorageVersion) {
+            localStorage.removeItem(`start-${index}`);
+            localStorage.setItem(versionKey, day.startStorageVersion);
+            return day.startTime;
+          }
+        }
+        return savedStart;
+      }
+
       function escapeHtml(value) {
         return String(value)
           .replaceAll("&", "&amp;")
@@ -3301,8 +3316,7 @@
           }));
         }
 
-        const startOverride = localStorage.getItem(`start-${index}`);
-        const startTime = startOverride || day.startTime;
+        const startTime = startTimeForDay(day, index);
         let cursor = parseTime(startTime);
         return day.stops.map((stop) => {
           cursor += stop.travelMinutes || 0;
@@ -3663,7 +3677,7 @@
             rows.push({
               type: "包車",
               title: "富山到上高地與名古屋包車",
-              detail: "包車時間 07:00-18:00；07:00 富山住宿出發，上高地從河童橋往返明神池，18:00 名古屋車站結束。之後自行前往中部國際機場住宿。"
+              detail: "包車時間 08:00-19:00；08:00 富山住宿出發，上高地從河童橋往返明神池，19:00 名古屋車站結束。之後自行前往中部國際機場住宿。"
             });
           }
 
@@ -3996,7 +4010,7 @@
         document.getElementById("fullRoute").href = fullRouteUrl(day);
         const activeStartTime = day.fixedSchedule
           ? day.startTime
-          : localStorage.getItem(`start-${state.selectedDay}`) || day.startTime;
+          : startTimeForDay(day, state.selectedDay);
         setStartTimeOptions(activeStartTime);
         startTimeEl.value = activeStartTime;
         startTimeEl.disabled = Boolean(day.fixedSchedule);
@@ -4045,8 +4059,12 @@
 
       startTimeEl.addEventListener("change", () => {
         if (state.view !== "day") return;
-        if (trip.days[state.selectedDay].fixedSchedule) return;
+        const day = trip.days[state.selectedDay];
+        if (day.fixedSchedule) return;
         localStorage.setItem(`start-${state.selectedDay}`, startTimeEl.value);
+        if (day.startStorageVersion) {
+          localStorage.setItem(`start-version-${state.selectedDay}`, day.startStorageVersion);
+        }
         render();
       });
 
