@@ -35,6 +35,10 @@
         box-sizing: border-box;
       }
 
+      [hidden] {
+        display: none !important;
+      }
+
       html {
         min-height: 100%;
         background: var(--paper);
@@ -858,6 +862,99 @@
         white-space: nowrap;
       }
 
+      .info-page {
+        display: grid;
+        gap: 14px;
+      }
+
+      .info-panel {
+        display: grid;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid rgba(23, 32, 29, 0.09);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 28px rgba(14, 31, 28, 0.09);
+      }
+
+      .converter-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .converter-field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .converter-field label {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .converter-field input {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid rgba(23, 32, 29, 0.13);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        padding: 10px 11px;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .info-page-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .info-list-card {
+        display: grid;
+        gap: 9px;
+        padding: 12px;
+        border: 1px solid rgba(23, 32, 29, 0.09);
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, white), rgba(255, 255, 255, 0.98)),
+          #fff;
+      }
+
+      .info-list-card h3 {
+        font-size: 16px;
+        line-height: 1.25;
+      }
+
+      .info-list-card p {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .compact-list {
+        display: grid;
+        gap: 6px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .compact-list li {
+        display: grid;
+        grid-template-columns: 78px 1fr;
+        gap: 8px;
+        align-items: start;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .compact-list strong {
+        color: var(--ink);
+      }
+
       .schedule-list {
         display: grid;
         gap: 7px;
@@ -1118,8 +1215,18 @@
       @media (max-width: 420px) {
         .controls,
         .summary-grid,
+        .converter-grid,
         .footer-actions {
           grid-template-columns: 1fr;
+        }
+
+        .map-marker {
+          grid-template-columns: 40px 1fr;
+        }
+
+        .map-marker-time {
+          grid-column: 2 / 3;
+          justify-self: start;
         }
 
         .stop {
@@ -1197,7 +1304,7 @@
         </div>
       </section>
 
-      <section class="day-spotlight" aria-label="今日重點">
+      <section class="day-spotlight" id="daySpotlight" aria-label="今日重點">
         <div>
           <p class="spotlight-kicker" id="spotlightKicker">今日路線</p>
           <h2 class="spotlight-title" id="spotlightTitle">--</h2>
@@ -1210,7 +1317,7 @@
         </div>
       </section>
 
-      <section class="summary-grid" aria-label="當日摘要">
+      <section class="summary-grid" id="summaryGrid" aria-label="當日摘要">
         <article class="summary-card">
           <span>預計結束</span>
           <strong id="endTime">--:--</strong>
@@ -1276,7 +1383,70 @@
         <div class="card-grid" id="extrasGrid"></div>
       </section>
 
-      <section class="footer-actions" aria-label="更多操作">
+      <section class="info-section info-page" id="infoPage" aria-label="旅遊資訊總覽" hidden>
+        <div class="section-heading">
+          <h2>資訊總覽</h2>
+          <span>匯率、住宿、景點、時間補充與必帶物品</span>
+        </div>
+
+        <article class="info-panel" aria-label="即時匯率計算器">
+          <div class="section-heading">
+            <h2>即時匯率計算器</h2>
+            <span id="rateStatus">連網時自動更新，離線可手動輸入</span>
+          </div>
+          <div class="converter-grid">
+            <div class="converter-field">
+              <label for="jpyAmount">日圓 JPY</label>
+              <input id="jpyAmount" type="number" min="0" inputmode="decimal" value="10000" />
+            </div>
+            <div class="converter-field">
+              <label for="exchangeRate">1 日圓約台幣</label>
+              <input id="exchangeRate" type="number" min="0" step="0.0001" inputmode="decimal" value="0.2100" />
+            </div>
+            <div class="converter-field">
+              <label for="twdAmount">台幣 TWD</label>
+              <input id="twdAmount" type="number" min="0" inputmode="decimal" />
+            </div>
+          </div>
+          <div class="actions">
+            <button class="action map" id="refreshRate" type="button">更新匯率</button>
+          </div>
+        </article>
+
+        <article class="info-panel">
+          <div class="section-heading">
+            <h2>每日住宿資訊</h2>
+            <span>點地圖可導航</span>
+          </div>
+          <div class="info-page-grid" id="lodgingGrid"></div>
+        </article>
+
+        <article class="info-panel">
+          <div class="section-heading">
+            <h2>景點介紹</h2>
+            <span>依每天行程整理</span>
+          </div>
+          <div class="info-page-grid" id="attractionGrid"></div>
+        </article>
+
+        <article class="info-panel">
+          <div class="section-heading">
+            <h2>時間補充</h2>
+            <span>主行程、備案班次與提醒</span>
+          </div>
+          <div class="info-page-grid" id="timeNotesGrid"></div>
+        </article>
+
+        <article class="info-panel">
+          <div class="section-heading">
+            <h2>必帶物品提醒</h2>
+            <span>出門前快速核對</span>
+          </div>
+          <div class="info-page-grid" id="packingGrid"></div>
+        </article>
+      </section>
+
+      <section class="footer-actions" id="footerActions" aria-label="更多操作">
         <button class="action secondary" id="copyPlan" type="button">複製今日行程</button>
         <a class="action map" id="fullRoute" href="#" target="_blank" rel="noopener">開啟整日路線</a>
       </section>
@@ -1289,6 +1459,65 @@
         title: "名古屋 + 黑部立山六日遊",
         traveler: "家庭旅遊 · 台灣虎航",
         note: "2026/10/16-10/21，已整合 Word 行程與黑部立山 09:00 扇澤穿越時間表。",
+        lodgings: [
+          {
+            nights: "Day 1-2",
+            name: "名古屋太閤 Airbnb",
+            place: "1 Chome-7-12 Taiko Nakamura Ward Nagoya Aichi",
+            address: "〒453-0801 愛知県名古屋市中村区太閤1-7-12",
+            memo: "名古屋站周邊住宿，Day 1 入住、Day 2 吉卜力公園後返回。"
+          },
+          {
+            nights: "Day 3",
+            name: "The Woods Villa Alps-Azumino",
+            place: "The Woods Villa Alps-Azumino",
+            address: "7362-611 Hotakaariake, Azumino, Nagano",
+            memo: "第三晚住安曇野 villa，隔天清晨包車前往扇澤站。"
+          },
+          {
+            nights: "Day 4",
+            name: "東橫 INN 富山站新幹線口 1 號店",
+            place: "Toyoko Inn Toyama-eki Shinkansen-guchi No.1",
+            address: "1 Chome-5-1 Takaramachi, Toyama",
+            memo: "立山站由包車接駁到富山市區，作為上高地前一晚住宿。"
+          },
+          {
+            nights: "Day 5",
+            name: "東橫 INN 中部國際機場 1 號店",
+            place: "Toyoko Inn Chubu International Airport No.1",
+            address: "4 Chome-2-5 Centrair, Tokoname, Aichi",
+            memo: "回程前一晚住機場旁，隔天常滑與中部機場行程最穩。"
+          },
+          {
+            nights: "Day 6",
+            name: "回程航班",
+            place: "Chubu Centrair International Airport",
+            address: "1-1 Centrair, Tokoname, Aichi",
+            memo: "台灣虎航 IT269，20:05 從名古屋中部機場起飛，22:30 抵達高雄。"
+          }
+        ],
+        packing: [
+          {
+            title: "證件與票券",
+            items: ["護照、機票與訂房資料", "吉卜力公園票券與 QR code", "立山黑部票券 / 兌換資料", "海外旅平險與緊急聯絡資訊"]
+          },
+          {
+            title: "金錢與網路",
+            items: ["日圓現金與信用卡", "IC 交通卡或可用手機支付", "eSIM / Wi-Fi 機與備用網路方案", "匯率計算器可先輸入當日換匯匯率"]
+          },
+          {
+            title: "山區保暖",
+            items: ["防風外套、發熱衣或薄羽絨", "毛帽、手套、圍巾", "好走防滑鞋與厚襪", "輕便雨具、暖暖包"]
+          },
+          {
+            title: "電子用品",
+            items: ["手機、充電線、行動電源", "相機與記憶卡", "日本插頭 / 延長線", "行動電源請放隨身行李"]
+          },
+          {
+            title: "家庭常備",
+            items: ["暈車藥、腸胃藥、止痛藥", "濕紙巾、衛生紙、垃圾袋", "水壺與小點心", "行李托運標籤與備用收納袋"]
+          }
+        ],
         days: [
           {
             label: "Day 1",
@@ -2264,23 +2493,44 @@
         ]
       };
 
+      const savedTab = localStorage.getItem("selectedTab");
       const state = {
         selectedDay: Number(localStorage.getItem("selectedDay") || 0),
+        view: savedTab === "info" ? "info" : "day",
         mode: localStorage.getItem("travelMode") || "transit"
       };
+      if (!Number.isFinite(state.selectedDay) || state.selectedDay < 0 || state.selectedDay >= trip.days.length) {
+        state.selectedDay = 0;
+      }
 
       const tabsEl = document.getElementById("dayTabs");
+      const controlsEl = document.querySelector(".controls");
+      const daySpotlightEl = document.getElementById("daySpotlight");
+      const summaryGridEl = document.getElementById("summaryGrid");
       const timelineEl = document.getElementById("timeline");
       const routeLineEl = document.getElementById("routeLine");
       const flightSectionEl = document.getElementById("flightSection");
       const flightGridEl = document.getElementById("flightGrid");
       const weatherGridEl = document.getElementById("weatherGrid");
+      const weatherSectionEl = document.getElementById("weatherSection");
+      const dayMapSectionEl = document.getElementById("dayMapSection");
       const dayMapFrameEl = document.getElementById("dayMapFrame");
       const dayMapMarkersEl = document.getElementById("dayMapMarkers");
       const foodSectionEl = document.getElementById("foodSection");
       const foodGridEl = document.getElementById("foodGrid");
       const extrasSectionEl = document.getElementById("extrasSection");
       const extrasGridEl = document.getElementById("extrasGrid");
+      const infoPageEl = document.getElementById("infoPage");
+      const lodgingGridEl = document.getElementById("lodgingGrid");
+      const attractionGridEl = document.getElementById("attractionGrid");
+      const timeNotesGridEl = document.getElementById("timeNotesGrid");
+      const packingGridEl = document.getElementById("packingGrid");
+      const jpyAmountEl = document.getElementById("jpyAmount");
+      const exchangeRateEl = document.getElementById("exchangeRate");
+      const twdAmountEl = document.getElementById("twdAmount");
+      const rateStatusEl = document.getElementById("rateStatus");
+      const refreshRateEl = document.getElementById("refreshRate");
+      const footerActionsEl = document.getElementById("footerActions");
       const photoTileEls = Array.from(document.querySelectorAll(".photo-tile span"));
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
@@ -2337,7 +2587,7 @@
         return `https://www.google.com/maps?q=${queryFor(focusStop)}&output=embed`;
       }
 
-      function scheduleFor(day) {
+      function scheduleFor(day, index = state.selectedDay) {
         if (day.fixedSchedule) {
           return day.stops.map((stop) => ({
             ...stop,
@@ -2348,7 +2598,7 @@
           }));
         }
 
-        const startOverride = localStorage.getItem(`start-${state.selectedDay}`);
+        const startOverride = localStorage.getItem(`start-${index}`);
         const startTime = startOverride || day.startTime;
         let cursor = parseTime(startTime);
         return day.stops.map((stop) => {
@@ -2373,15 +2623,29 @@
           const button = document.createElement("button");
           button.className = "day-tab";
           button.type = "button";
-          button.setAttribute("aria-selected", String(index === state.selectedDay));
+          button.setAttribute("aria-selected", String(state.view === "day" && index === state.selectedDay));
           button.innerHTML = `<strong>${day.label}</strong><span>${day.title}</span>`;
           button.addEventListener("click", () => {
+            state.view = "day";
             state.selectedDay = index;
             localStorage.setItem("selectedDay", String(index));
+            localStorage.setItem("selectedTab", String(index));
             render();
           });
           tabsEl.appendChild(button);
         });
+
+        const infoButton = document.createElement("button");
+        infoButton.className = "day-tab";
+        infoButton.type = "button";
+        infoButton.setAttribute("aria-selected", String(state.view === "info"));
+        infoButton.innerHTML = "<strong>資訊</strong><span>匯率與總覽</span>";
+        infoButton.addEventListener("click", () => {
+          state.view = "info";
+          localStorage.setItem("selectedTab", "info");
+          render();
+        });
+        tabsEl.appendChild(infoButton);
       }
 
       function renderRouteMap(day, scheduled) {
@@ -2553,9 +2817,194 @@
         });
       }
 
+      function setDailySectionsVisible(visible) {
+        controlsEl.hidden = !visible;
+        daySpotlightEl.hidden = !visible;
+        summaryGridEl.hidden = !visible;
+        flightSectionEl.hidden = !visible;
+        weatherSectionEl.hidden = !visible;
+        dayMapSectionEl.hidden = !visible;
+        timelineEl.hidden = !visible;
+        foodSectionEl.hidden = !visible;
+        extrasSectionEl.hidden = !visible;
+        footerActionsEl.hidden = !visible;
+        infoPageEl.hidden = visible;
+      }
+
+      function renderInfoRoute() {
+        document.getElementById("routeTitle").textContent = "旅遊資訊總覽";
+        document.getElementById("routeRange").textContent = "匯率 · 住宿 · 景點 · 時間 · 物品";
+        routeLineEl.innerHTML = "";
+        ["匯率計算", "每日住宿", "景點介紹", "時間補充", "必帶物品"].forEach((label, index) => {
+          const item = document.createElement("a");
+          item.className = "route-stop";
+          item.href = "#infoPage";
+          item.dataset.step = String(index + 1).padStart(2, "0");
+          if (index === 4) item.dataset.last = "true";
+          item.innerHTML = `
+            <strong>${label}</strong>
+            <span class="route-time">資訊頁</span>
+            <span>${index === 0 ? "起點" : "總覽"}</span>
+          `;
+          routeLineEl.appendChild(item);
+        });
+      }
+
+      function renderLodgings() {
+        lodgingGridEl.innerHTML = "";
+        trip.lodgings.forEach((lodging) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          card.innerHTML = `
+            <div>
+              <h3>${lodging.nights} · ${lodging.name}</h3>
+              <p>${lodging.address}</p>
+            </div>
+            <p>${lodging.memo}</p>
+            <div class="actions">
+              <a class="action map" href="${mapUrl(lodging)}" target="_blank" rel="noopener">地圖</a>
+              <a class="action route" href="${routeUrl(null, lodging)}" target="_blank" rel="noopener">導航</a>
+            </div>
+          `;
+          lodgingGridEl.appendChild(card);
+        });
+      }
+
+      function renderAttractions() {
+        attractionGridEl.innerHTML = "";
+        trip.days.forEach((day) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          const rows = day.stops.map((stop) => {
+            return `
+              <li>
+                <strong>${stop.name}</strong>
+                <span>${stop.memo}<br><a href="${mapUrl(stop)}" target="_blank" rel="noopener">開啟地圖</a></span>
+              </li>
+            `;
+          }).join("");
+          card.innerHTML = `
+            <div>
+              <h3>${day.label} · ${day.title}</h3>
+              <p>${day.date}</p>
+            </div>
+            <ul class="compact-list">${rows}</ul>
+          `;
+          attractionGridEl.appendChild(card);
+        });
+      }
+
+      function renderTimeNotes() {
+        timeNotesGridEl.innerHTML = "";
+        trip.days.forEach((day, index) => {
+          const scheduled = scheduleFor(day, index);
+          const extraRows = (day.extras || []).map((extra) => {
+            if (extra.infoOnly) {
+              const items = (extra.scheduleItems || []).map((item) => {
+                return `${item.time} ${item.text}`;
+              }).join("；");
+              return `<li><strong>${extra.name}</strong><span>${extra.memo}${items ? `<br>${items}` : ""}</span></li>`;
+            }
+            const originText = extra.routeOrigin ? "從白川鄉" : "從最後一站";
+            return `<li><strong>${extra.name}</strong><span>${originText}約 ${formatMinutes(extra.travelFromLastMinutes)}，停留 ${formatMinutes(extra.stayMinutes)}。${extra.memo}</span></li>`;
+          }).join("");
+          const scheduleRows = scheduled.map((stop) => {
+            return `<li><strong>${formatTime(stop.arrival)}-${formatTime(stop.leave)}</strong><span>${stop.name}｜${stop.memo}</span></li>`;
+          }).join("");
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          card.innerHTML = `
+            <div>
+              <h3>${day.label} · ${day.title}</h3>
+              <p>${day.fixedSchedule ? "固定班次時間表" : `可從 ${day.startTime} 微調出發時間`}</p>
+            </div>
+            <ul class="compact-list">${scheduleRows}${extraRows}</ul>
+          `;
+          timeNotesGridEl.appendChild(card);
+        });
+      }
+
+      function renderPacking() {
+        packingGridEl.innerHTML = "";
+        trip.packing.forEach((group) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          const rows = group.items.map((item) => `<li><strong>確認</strong><span>${item}</span></li>`).join("");
+          card.innerHTML = `
+            <h3>${group.title}</h3>
+            <ul class="compact-list">${rows}</ul>
+          `;
+          packingGridEl.appendChild(card);
+        });
+      }
+
+      function updateExchangeResult() {
+        const jpy = Number(jpyAmountEl.value || 0);
+        const rate = Number(exchangeRateEl.value || 0);
+        twdAmountEl.value = Math.round(jpy * rate).toString();
+      }
+
+      function updateJpyFromTwd() {
+        const twd = Number(twdAmountEl.value || 0);
+        const rate = Number(exchangeRateEl.value || 0);
+        if (!rate) return;
+        jpyAmountEl.value = Math.round(twd / rate).toString();
+      }
+
+      let rateLoaded = false;
+      async function refreshExchangeRate(showDoneToast = true) {
+        rateStatusEl.textContent = "正在更新即時匯率...";
+        try {
+          const response = await fetch("https://open.er-api.com/v6/latest/JPY", { cache: "no-store" });
+          if (!response.ok) throw new Error("rate request failed");
+          const data = await response.json();
+          const rate = data && data.rates && Number(data.rates.TWD);
+          if (!rate) throw new Error("rate missing");
+          exchangeRateEl.value = rate.toFixed(4);
+          localStorage.setItem("jpyTwdRate", exchangeRateEl.value);
+          rateStatusEl.textContent = `已更新：1 日圓約 ${exchangeRateEl.value} 台幣`;
+          updateExchangeResult();
+          rateLoaded = true;
+          if (showDoneToast) showToast("匯率已更新");
+        } catch (error) {
+          const savedRate = localStorage.getItem("jpyTwdRate");
+          if (savedRate) exchangeRateEl.value = savedRate;
+          rateStatusEl.textContent = "即時匯率暫時無法更新，可手動輸入換匯匯率。";
+          updateExchangeResult();
+          if (showDoneToast) showToast("匯率無法更新，請手動輸入");
+        }
+      }
+
+      function renderInfoPage() {
+        setDailySectionsVisible(false);
+        document.body.dataset.day = "info";
+        document.documentElement.style.setProperty("--day-image", `url("${trip.days[3].image}")`);
+        document.getElementById("tripTitle").textContent = trip.title;
+        document.getElementById("tripMeta").textContent = `${trip.traveler} · ${trip.note}`;
+        document.getElementById("dayLabel").textContent = "旅遊資訊總覽";
+        photoTileEls.forEach((tile, index) => {
+          tile.textContent = ["即時匯率", "每日住宿", "必帶物品"][index] || "資訊總覽";
+        });
+
+        renderTabs();
+        renderInfoRoute();
+        renderLodgings();
+        renderAttractions();
+        renderTimeNotes();
+        renderPacking();
+        updateExchangeResult();
+        if (!rateLoaded) refreshExchangeRate(false);
+      }
+
       function render() {
+        if (state.view === "info") {
+          renderInfoPage();
+          return;
+        }
+
+        setDailySectionsVisible(true);
         const day = trip.days[state.selectedDay];
-        const scheduled = scheduleFor(day);
+        const scheduled = scheduleFor(day, state.selectedDay);
         const totalStay = scheduled.reduce((sum, stop) => sum + stop.stayMinutes, 0);
         const totalTravel = scheduled.reduce((sum, stop) => sum + stop.travelMinutes, 0);
         const end = scheduled[scheduled.length - 1].leave;
@@ -2628,6 +3077,7 @@
       }
 
       startTimeEl.addEventListener("change", () => {
+        if (state.view !== "day") return;
         if (trip.days[state.selectedDay].fixedSchedule) return;
         localStorage.setItem(`start-${state.selectedDay}`, startTimeEl.value);
         render();
@@ -2640,8 +3090,9 @@
       });
 
       document.getElementById("copyPlan").addEventListener("click", async () => {
+        if (state.view !== "day") return;
         const day = trip.days[state.selectedDay];
-        const lines = scheduleFor(day).map((stop) => {
+        const lines = scheduleFor(day, state.selectedDay).map((stop) => {
           return `${formatTime(stop.arrival)}-${formatTime(stop.leave)} ${stop.name}（停留 ${formatMinutes(stop.stayMinutes)}，交通 ${formatMinutes(stop.travelMinutes)}）`;
         });
         const foodLines = (day.foods || []).map((food) => {
@@ -2677,6 +3128,14 @@
           showToast("無法自動複製，請改用瀏覽器分享");
         }
       });
+
+      jpyAmountEl.addEventListener("input", updateExchangeResult);
+      exchangeRateEl.addEventListener("input", () => {
+        localStorage.setItem("jpyTwdRate", exchangeRateEl.value);
+        updateExchangeResult();
+      });
+      twdAmountEl.addEventListener("input", updateJpyFromTwd);
+      refreshRateEl.addEventListener("click", () => refreshExchangeRate(true));
 
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
         navigator.serviceWorker.register("./service-worker.js").catch(() => {});
