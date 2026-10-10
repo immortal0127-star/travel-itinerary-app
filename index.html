@@ -520,11 +520,11 @@
       }
 
       .day-tabs {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 9px;
-        overflow-x: auto;
+        overflow: visible;
         padding: 2px 0 4px;
-        scrollbar-width: none;
       }
 
       .day-tabs::-webkit-scrollbar {
@@ -532,9 +532,9 @@
       }
 
       .day-tab {
-        flex: 0 0 116px;
+        width: 100%;
         min-width: 0;
-        max-width: 116px;
+        max-width: none;
         border: 1px solid rgba(23, 32, 29, 0.1);
         background: rgba(255, 255, 255, 0.82);
         color: var(--ink);
@@ -580,6 +580,18 @@
         font-size: 12px;
         opacity: 0.82;
         max-width: 100%;
+      }
+
+      @media (max-width: 620px) {
+        .day-tabs {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 420px) {
+        .day-tabs {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
 
       .controls {
@@ -1436,9 +1448,9 @@
       }
 
       .day-tab {
-        flex-basis: 116px;
+        width: 100%;
         min-width: 0;
-        max-width: 116px;
+        max-width: none;
         border-color: #eadfd1;
         border-radius: 24px;
         background: rgba(255, 253, 247, 0.92);
@@ -1564,7 +1576,7 @@
         bottom: 0;
         z-index: 10;
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(7, 1fr);
         width: min(100%, 620px);
         padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
         border: 1px solid #eadfd1;
@@ -1583,7 +1595,7 @@
         border: 0;
         background: transparent;
         color: #9a8f84;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 900;
         cursor: pointer;
       }
@@ -1595,8 +1607,8 @@
       .planner-nav strong {
         display: grid;
         place-items: center;
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         border-radius: 999px;
         background: #fff7e8;
         color: var(--accent);
@@ -1661,12 +1673,6 @@
             <span class="sticker sticker-passport">NAGOYA</span>
             <span class="sticker sticker-ticket">JR</span>
             <span class="sticker sticker-pin">MAP</span>
-          </div>
-          <div class="theme-tools" aria-label="外觀設定">
-            <button class="theme-dot theme-pink" type="button" data-theme="pink" aria-label="粉色主題"></button>
-            <button class="theme-dot theme-mint" type="button" data-theme="mint" aria-label="薄荷主題"></button>
-            <button class="theme-dot theme-sky" type="button" data-theme="sky" aria-label="天空主題"></button>
-            <button class="snow-toggle" id="snowToggle" type="button">雪</button>
           </div>
         </div>
 
@@ -1802,12 +1808,20 @@
       <section class="info-section info-page" id="infoPage" aria-label="旅遊資訊總覽" hidden>
         <div class="section-heading">
           <h2>資訊總覽</h2>
-          <span>匯率、住宿、景點、時間補充與必帶物品</span>
+          <span>預約、記帳、購物、準備、成員與設定</span>
         </div>
 
-        <article class="info-panel" aria-label="即時匯率計算器">
+        <article class="info-panel" id="reservationsPanel" aria-label="預約總覽">
           <div class="section-heading">
-            <h2>即時匯率計算器</h2>
+            <h2>預約管理</h2>
+            <span>機票、住宿與重要票券</span>
+          </div>
+          <div class="info-page-grid" id="reservationsGrid"></div>
+        </article>
+
+        <article class="info-panel" id="accountingPanel" aria-label="即時匯率計算器">
+          <div class="section-heading">
+            <h2>記帳與匯率</h2>
             <span id="rateStatus">連網時自動更新，離線可手動輸入</span>
           </div>
           <div class="converter-grid">
@@ -1829,7 +1843,7 @@
           </div>
         </article>
 
-        <article class="info-panel">
+        <article class="info-panel" id="lodgingPanel">
           <div class="section-heading">
             <h2>每日住宿資訊</h2>
             <span>點地圖可導航</span>
@@ -1837,7 +1851,15 @@
           <div class="info-page-grid" id="lodgingGrid"></div>
         </article>
 
-        <article class="info-panel">
+        <article class="info-panel" id="shoppingPanel">
+          <div class="section-heading">
+            <h2>購物與美食清單</h2>
+            <span>餐飲、超市、伴手禮與採買</span>
+          </div>
+          <div class="info-page-grid" id="shoppingGrid"></div>
+        </article>
+
+        <article class="info-panel" id="attractionPanel">
           <div class="section-heading">
             <h2>景點介紹</h2>
             <span>依每天行程整理</span>
@@ -1845,7 +1867,7 @@
           <div class="info-page-grid" id="attractionGrid"></div>
         </article>
 
-        <article class="info-panel">
+        <article class="info-panel" id="timeNotesPanel">
           <div class="section-heading">
             <h2>時間補充</h2>
             <span>主行程、備案班次與提醒</span>
@@ -1853,12 +1875,41 @@
           <div class="info-page-grid" id="timeNotesGrid"></div>
         </article>
 
-        <article class="info-panel">
+        <article class="info-panel" id="packingPanel">
           <div class="section-heading">
             <h2>必帶物品提醒</h2>
             <span>出門前快速核對</span>
           </div>
           <div class="info-page-grid" id="packingGrid"></div>
+        </article>
+
+        <article class="info-panel" id="membersPanel">
+          <div class="section-heading">
+            <h2>成員分工</h2>
+            <span>家庭旅遊共用備忘</span>
+          </div>
+          <div class="info-page-grid" id="membersGrid"></div>
+        </article>
+
+        <article class="info-panel" id="settingsPanel">
+          <div class="section-heading">
+            <h2>設定</h2>
+            <span>主題顏色與雪花效果</span>
+          </div>
+          <div class="info-page-grid">
+            <article class="info-list-card">
+              <h3>主題顏色</h3>
+              <p>可依心情切換旅行手帳的色系。</p>
+              <div class="actions">
+                <button class="action secondary" type="button" data-theme="pink">粉色</button>
+                <button class="action secondary" type="button" data-theme="mint">薄荷</button>
+              </div>
+              <div class="actions">
+                <button class="action secondary" type="button" data-theme="sky">天空</button>
+                <button class="action map" id="snowToggle" type="button">切換下雪</button>
+              </div>
+            </article>
+          </div>
         </article>
       </section>
 
@@ -1870,11 +1921,12 @@
 
     <nav class="planner-nav" id="plannerNav" aria-label="旅行手帳導覽">
       <button type="button" data-target="timeline"><strong>行</strong><span>行程</span></button>
-      <button type="button" data-target="flightSection"><strong>票</strong><span>預約</span></button>
-      <button type="button" data-target="dayMapSection"><strong>圖</strong><span>地圖</span></button>
-      <button type="button" data-target="foodSection"><strong>食</strong><span>美食</span></button>
-      <button type="button" data-target="infoPage"><strong>備</strong><span>準備</span></button>
-      <button type="button" data-target="topbar"><strong>色</strong><span>外觀</span></button>
+      <button type="button" data-target="reservationsPanel"><strong>票</strong><span>預約</span></button>
+      <button type="button" data-target="accountingPanel"><strong>帳</strong><span>記帳</span></button>
+      <button type="button" data-target="shoppingPanel"><strong>購</strong><span>購物</span></button>
+      <button type="button" data-target="packingPanel"><strong>備</strong><span>準備</span></button>
+      <button type="button" data-target="membersPanel"><strong>員</strong><span>成員</span></button>
+      <button type="button" data-target="settingsPanel"><strong>設</strong><span>設定</span></button>
     </nav>
 
     <div class="snow-layer" id="snowLayer" aria-hidden="true"></div>
@@ -2948,10 +3000,13 @@
       const extrasSectionEl = document.getElementById("extrasSection");
       const extrasGridEl = document.getElementById("extrasGrid");
       const infoPageEl = document.getElementById("infoPage");
+      const reservationsGridEl = document.getElementById("reservationsGrid");
       const lodgingGridEl = document.getElementById("lodgingGrid");
+      const shoppingGridEl = document.getElementById("shoppingGrid");
       const attractionGridEl = document.getElementById("attractionGrid");
       const timeNotesGridEl = document.getElementById("timeNotesGrid");
       const packingGridEl = document.getElementById("packingGrid");
+      const membersGridEl = document.getElementById("membersGrid");
       const jpyAmountEl = document.getElementById("jpyAmount");
       const exchangeRateEl = document.getElementById("exchangeRate");
       const twdAmountEl = document.getElementById("twdAmount");
@@ -3072,7 +3127,7 @@
         document.body.dataset.snow = String(enabled);
         localStorage.setItem("snowMode", String(enabled));
         snowToggleEl.setAttribute("aria-pressed", String(enabled));
-        snowToggleEl.textContent = enabled ? "雪開" : "雪";
+        snowToggleEl.textContent = enabled ? "關閉下雪" : "開啟下雪";
       }
 
       function setPlannerNavActive(target) {
@@ -3319,14 +3374,14 @@
 
       function renderInfoRoute() {
         document.getElementById("routeTitle").textContent = "旅遊資訊總覽";
-        document.getElementById("routeRange").textContent = "匯率 · 住宿 · 景點 · 時間 · 物品";
+        document.getElementById("routeRange").textContent = "預約 · 記帳 · 購物 · 準備 · 成員 · 設定";
         routeLineEl.innerHTML = "";
-        ["匯率計算", "每日住宿", "景點介紹", "時間補充", "必帶物品"].forEach((label, index) => {
+        ["預約管理", "記帳匯率", "購物清單", "準備提醒", "成員分工", "設定"].forEach((label, index) => {
           const item = document.createElement("a");
           item.className = "route-stop";
           item.href = "#infoPage";
           item.dataset.step = String(index + 1).padStart(2, "0");
-          if (index === 4) item.dataset.last = "true";
+          if (index === 5) item.dataset.last = "true";
           item.innerHTML = `
             <strong>${label}</strong>
             <span class="route-time">資訊頁</span>
@@ -3334,6 +3389,58 @@
           `;
           routeLineEl.appendChild(item);
         });
+      }
+
+      function renderReservations() {
+        reservationsGridEl.innerHTML = "";
+        const flights = trip.days
+          .filter((day) => day.flight)
+          .map((day) => ({ day, flight: day.flight }));
+
+        flights.forEach(({ day, flight }) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          card.innerHTML = `
+            <div>
+              <h3>${day.label} · ${flight.airline} ${flight.flightNo}</h3>
+              <p>${flight.route}</p>
+            </div>
+            <ul class="compact-list">
+              <li><strong>出發</strong><span>${flight.fromLabel} ${flight.depart}</span></li>
+              <li><strong>抵達</strong><span>${flight.toLabel} ${flight.arrive}</span></li>
+              <li><strong>報到</strong><span>${flight.checkin}｜${flight.memo}</span></li>
+            </ul>
+          `;
+          reservationsGridEl.appendChild(card);
+        });
+
+        trip.lodgings.forEach((lodging) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          card.innerHTML = `
+            <div>
+              <h3>${lodging.nights} · ${lodging.name}</h3>
+              <p>${lodging.address}</p>
+            </div>
+            <p>${lodging.memo}</p>
+            <div class="actions">
+              <a class="action map" href="${mapUrl(lodging)}" target="_blank" rel="noopener">地圖</a>
+              <a class="action route" href="${routeUrl(null, lodging)}" target="_blank" rel="noopener">導航</a>
+            </div>
+          `;
+          reservationsGridEl.appendChild(card);
+        });
+
+        const routePass = document.createElement("article");
+        routePass.className = "info-list-card";
+        routePass.innerHTML = `
+          <div>
+            <h3>Day 4 · 立山黑部交通票券</h3>
+            <p>扇澤 09:00 出發穿越至立山站，依官方班次表安排。</p>
+          </div>
+          <p>當天請優先確認換票、行李托運與各段交通整理券，現場以站務公告為準。</p>
+        `;
+        reservationsGridEl.appendChild(routePass);
       }
 
       function renderLodgings() {
@@ -3353,6 +3460,43 @@
             </div>
           `;
           lodgingGridEl.appendChild(card);
+        });
+      }
+
+      function renderShopping() {
+        shoppingGridEl.innerHTML = "";
+        const items = [];
+        trip.days.forEach((day) => {
+          (day.foods || []).forEach((food) => items.push({ ...food, dayLabel: day.label, type: "美食" }));
+          (day.extras || []).forEach((extra) => {
+            const text = `${extra.name} ${extra.memo || ""}`;
+            if (/商店|超市|便利商店|採買|免稅|伴手禮|美食|布丁|可樂餅|牛奶|雞蛋糕|AEON|FamilyMart|Big|Bic|購物/i.test(text)) {
+              items.push({ ...extra, dayLabel: day.label, type: "購物" });
+            }
+          });
+          day.stops.forEach((stop) => {
+            const text = `${stop.name} ${stop.memo || ""}`;
+            if (/商圈|購物|Bic|Big|AEON|永旺|伴手禮|採買/i.test(text)) {
+              items.push({ ...stop, dayLabel: day.label, type: "採買" });
+            }
+          });
+        });
+
+        items.forEach((item) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          card.innerHTML = `
+            <div>
+              <h3>${item.dayLabel} · ${item.name}</h3>
+              <p>${item.address || item.place || "行程附近"}</p>
+            </div>
+            <p>${item.type}｜${item.timing || item.memo || "可依當天時間調整"}</p>
+            <div class="actions">
+              <a class="action map" href="${mapUrl(item)}" target="_blank" rel="noopener">地圖</a>
+              <a class="action route" href="${routeUrl(null, item)}" target="_blank" rel="noopener">導航</a>
+            </div>
+          `;
+          shoppingGridEl.appendChild(card);
         });
       }
 
@@ -3410,6 +3554,21 @@
         });
       }
 
+      function renderMembers() {
+        membersGridEl.innerHTML = "";
+        [
+          ["票券確認", "每天出門前確認機票、住宿、吉卜力、立山黑部交通與包車資訊。"],
+          ["導航與集合", "上車前先開 Google Maps，長輩與小孩確認集合點與洗手間位置。"],
+          ["行李與保暖", "Day 4 立山黑部行李托運、防風外套、毛帽、手套由出發前共同檢查。"],
+          ["餐飲採買", "便利商店、超市、伴手禮與山上補給可在購物頁快速查看。"]
+        ].forEach(([title, text]) => {
+          const card = document.createElement("article");
+          card.className = "info-list-card";
+          card.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+          membersGridEl.appendChild(card);
+        });
+      }
+
       function renderPacking() {
         packingGridEl.innerHTML = "";
         trip.packing.forEach((group) => {
@@ -3463,7 +3622,7 @@
 
       function renderInfoPage() {
         setDailySectionsVisible(false);
-        setPlannerNavActive("infoPage");
+        setPlannerNavActive("reservationsPanel");
         document.body.dataset.day = "info";
         document.documentElement.style.setProperty("--day-image", `url("${trip.days[3].image}")`);
         document.getElementById("tripTitle").textContent = trip.title;
@@ -3475,10 +3634,13 @@
 
         renderTabs();
         renderInfoRoute();
+        renderReservations();
         renderLodgings();
+        renderShopping();
         renderAttractions();
         renderTimeNotes();
         renderPacking();
+        renderMembers();
         updateExchangeResult();
         if (!rateLoaded) refreshExchangeRate(false);
       }
@@ -3643,12 +3805,24 @@
         const button = event.target.closest("button");
         if (!button) return;
         const target = button.dataset.target;
+        const infoTargets = new Set([
+          "reservationsPanel",
+          "accountingPanel",
+          "shoppingPanel",
+          "packingPanel",
+          "membersPanel",
+          "settingsPanel"
+        ]);
 
-        if (target === "infoPage") {
+        if (infoTargets.has(target)) {
           state.view = "info";
           localStorage.setItem("selectedTab", "info");
           render();
-          window.setTimeout(() => infoPageEl.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+          window.setTimeout(() => {
+            const targetEl = document.getElementById(target);
+            if (targetEl) targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            setPlannerNavActive(target);
+          }, 40);
           return;
         }
 
@@ -3660,14 +3834,6 @@
 
         const targetEl = document.getElementById(target);
         if (!targetEl || targetEl.hidden) {
-          if (target === "flightSection") {
-            state.view = "info";
-            localStorage.setItem("selectedTab", "info");
-            render();
-            window.setTimeout(() => infoPageEl.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
-            showToast("這天沒有機票卡，已開啟預約總覽");
-            return;
-          }
           showToast("這天沒有這個分類");
           return;
         }
