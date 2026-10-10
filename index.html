@@ -1258,11 +1258,381 @@
       .topbar {
         grid-template-columns: 1fr !important;
       }
+
+      body[data-theme="pink"] {
+        --accent: #ff8fa1;
+        --accent-2: #f4b86f;
+        --accent-soft: rgba(255, 143, 161, 0.16);
+        --paper: #fff8ec;
+      }
+
+      body[data-theme="mint"] {
+        --accent: #66bfae;
+        --accent-2: #ffb186;
+        --accent-soft: rgba(102, 191, 174, 0.16);
+        --paper: #f7fbf2;
+      }
+
+      body[data-theme="sky"] {
+        --accent: #7ca7e8;
+        --accent-2: #f49ab9;
+        --accent-soft: rgba(124, 167, 232, 0.16);
+        --paper: #f6f9ff;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at 12% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 15rem),
+          radial-gradient(circle at 88% 18%, rgba(255, 211, 138, 0.34), transparent 14rem),
+          linear-gradient(180deg, var(--paper), #fffdf7);
+      }
+
+      body::before {
+        background:
+          radial-gradient(circle, rgba(255, 255, 255, 0.8) 0 3px, transparent 4px) 12px 18px / 64px 64px,
+          radial-gradient(circle, color-mix(in srgb, var(--accent) 26%, transparent) 0 2px, transparent 3px) 44px 36px / 92px 92px;
+        opacity: 0.9;
+      }
+
+      body::after {
+        background: linear-gradient(180deg, rgba(255, 253, 247, 0.54), rgba(255, 253, 247, 0.95));
+      }
+
+      .app {
+        width: min(100%, 620px);
+        padding: max(14px, env(safe-area-inset-top)) 14px calc(104px + env(safe-area-inset-bottom));
+      }
+
+      .topbar {
+        position: relative;
+        padding: 24px 18px 18px;
+        border-color: rgba(234, 223, 209, 0.86);
+        border-radius: 30px;
+        background:
+          linear-gradient(120deg, rgba(255, 253, 247, 0.98), rgba(255, 253, 247, 0.78)),
+          var(--day-image) right center / cover no-repeat;
+        box-shadow: 0 14px 28px rgba(110, 86, 64, 0.11);
+      }
+
+      h1 {
+        max-width: 300px;
+        color: #5f554c;
+        font-size: clamp(34px, 11vw, 58px);
+        line-height: 0.96;
+      }
+
+      .trip-meta {
+        max-width: 330px;
+        color: #8f8378;
+        font-size: 16px;
+        font-weight: 850;
+      }
+
+      .weather-chip {
+        border: 0;
+        background: #fff7e8;
+        color: color-mix(in srgb, var(--accent) 80%, #574f46);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, #eadfd1);
+      }
+
+      .sticker-scene {
+        position: absolute;
+        top: 18px;
+        right: 16px;
+        width: 148px;
+        height: 110px;
+        pointer-events: none;
+      }
+
+      .sticker {
+        position: absolute;
+        display: grid;
+        place-items: center;
+        border: 4px solid rgba(255, 255, 255, 0.86);
+        background: #fff7e8;
+        color: #6f645a;
+        font-weight: 950;
+        box-shadow: 0 12px 24px rgba(110, 86, 64, 0.13);
+      }
+
+      .sticker-passport {
+        right: 2px;
+        top: 0;
+        width: 82px;
+        height: 58px;
+        border-radius: 22px 22px 16px 16px;
+        background: color-mix(in srgb, var(--accent) 28%, #fff7e8);
+        transform: rotate(7deg);
+      }
+
+      .sticker-ticket {
+        left: 8px;
+        top: 14px;
+        width: 58px;
+        height: 42px;
+        border-radius: 999px;
+        background: #fff;
+        transform: rotate(-12deg);
+      }
+
+      .sticker-pin {
+        left: 46px;
+        bottom: 4px;
+        width: 70px;
+        height: 44px;
+        border-radius: 20px;
+        background: #fce2e7;
+        transform: rotate(3deg);
+      }
+
+      .theme-tools {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 4px;
+      }
+
+      .theme-dot,
+      .snow-toggle {
+        border: 0;
+        cursor: pointer;
+        box-shadow: 0 8px 18px rgba(110, 86, 64, 0.1);
+      }
+
+      .theme-dot {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+      }
+
+      .theme-pink {
+        background: #ff8fa1;
+      }
+
+      .theme-mint {
+        background: #66bfae;
+      }
+
+      .theme-sky {
+        background: #7ca7e8;
+      }
+
+      .snow-toggle {
+        min-height: 30px;
+        border-radius: 999px;
+        background: #fff7e8;
+        color: #786d63;
+        padding: 0 12px;
+        font-weight: 900;
+      }
+
+      .day-tabs {
+        padding-top: 3px;
+      }
+
+      .day-tab {
+        min-width: 76px;
+        border-color: #eadfd1;
+        border-radius: 24px;
+        background: rgba(255, 253, 247, 0.92);
+      }
+
+      .day-tab[aria-selected="true"] {
+        background: var(--accent);
+        border-color: color-mix(in srgb, var(--accent) 68%, white);
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field input,
+      .field select,
+      .converter-field input {
+        border-color: #eadfd1;
+        border-radius: 18px;
+        background: #fffdf7;
+      }
+
+      .day-spotlight,
+      .summary-card,
+      .travel-info-card,
+      .info-card,
+      .info-panel,
+      .info-list-card,
+      .stop {
+        border-color: #eadfd1;
+        border-radius: 26px;
+        background: rgba(255, 253, 247, 0.96);
+        box-shadow: 0 12px 24px rgba(110, 86, 64, 0.1);
+      }
+
+      .scrapbook-dashboard {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 14px 0;
+      }
+
+      .scrap-card {
+        position: relative;
+        display: grid;
+        gap: 6px;
+        min-height: 92px;
+        padding: 16px;
+        border: 1px solid #eadfd1;
+        border-radius: 26px;
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, #fffdf7), #fffdf7),
+          #fffdf7;
+        box-shadow: 0 12px 24px rgba(110, 86, 64, 0.1);
+        overflow: hidden;
+      }
+
+      .scrap-card::after {
+        content: "";
+        position: absolute;
+        right: 14px;
+        top: 14px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--accent) 16%, transparent);
+      }
+
+      .scrap-card span {
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .scrap-card strong {
+        color: #574f46;
+        font-size: 20px;
+      }
+
+      .scrap-card p {
+        color: #756b62;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .ticket-row {
+        border-radius: 24px;
+        background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 74%, #ffbfca));
+        color: #fff;
+        padding: 18px;
+      }
+
+      .ticket-city span,
+      .ticket-city strong,
+      .ticket-arrow {
+        color: #fff;
+      }
+
+      .mini-meta span,
+      .tag {
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--accent) 10%, #fffdf7);
+        color: #6f645a;
+      }
+
+      .map-embed {
+        border-radius: 24px;
+      }
+
+      .map-marker {
+        border-color: #eadfd1;
+        border-radius: 20px;
+        background: #fffdf7;
+      }
+
+      .action {
+        border-radius: 999px;
+      }
+
+      .planner-nav {
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        width: min(100%, 620px);
+        padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+        border: 1px solid #eadfd1;
+        border-bottom: 0;
+        border-radius: 30px 30px 0 0;
+        background: rgba(255, 253, 247, 0.96);
+        box-shadow: 0 -12px 28px rgba(110, 86, 64, 0.14);
+        transform: translateX(-50%);
+        backdrop-filter: blur(14px);
+      }
+
+      .planner-nav button {
+        display: grid;
+        gap: 4px;
+        place-items: center;
+        border: 0;
+        background: transparent;
+        color: #9a8f84;
+        font-size: 12px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .planner-nav button[aria-current="page"] {
+        color: color-mix(in srgb, var(--accent) 82%, #574f46);
+      }
+
+      .planner-nav strong {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: #fff7e8;
+        color: var(--accent);
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, #eadfd1);
+      }
+
+      .planner-nav button[aria-current="page"] strong {
+        background: var(--accent);
+        color: #ffffff;
+        box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 24%, transparent);
+      }
+
+      .snow-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 9;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 180ms ease;
+      }
+
+      body[data-snow="true"] .snow-layer {
+        opacity: 1;
+        background-image:
+          radial-gradient(circle, rgba(255, 255, 255, 0.95) 0 2px, transparent 3px),
+          radial-gradient(circle, rgba(255, 255, 255, 0.82) 0 1.5px, transparent 2px);
+        background-size: 54px 54px, 86px 86px;
+        animation: snow-fall 7s linear infinite;
+      }
+
+      @keyframes snow-fall {
+        from {
+          background-position: 0 -60px, 20px -90px;
+        }
+        to {
+          background-position: 0 420px, 20px 360px;
+        }
+      }
     </style>
   </head>
   <body>
     <main class="app">
-      <section class="topbar" aria-label="旅遊行程">
+      <section class="topbar" id="topbar" aria-label="旅遊行程">
         <div class="title-row">
           <div>
             <h1 id="tripTitle">旅遊行程</h1>
@@ -1280,6 +1650,17 @@
             <div class="photo-tile"><span>湖畔與機場</span></div>
           </div>
           <div class="weather-chip" id="dayLabel"></div>
+          <div class="sticker-scene" aria-hidden="true">
+            <span class="sticker sticker-passport">NAGOYA</span>
+            <span class="sticker sticker-ticket">JR</span>
+            <span class="sticker sticker-pin">MAP</span>
+          </div>
+          <div class="theme-tools" aria-label="外觀設定">
+            <button class="theme-dot theme-pink" type="button" data-theme="pink" aria-label="粉色主題"></button>
+            <button class="theme-dot theme-mint" type="button" data-theme="mint" aria-label="薄荷主題"></button>
+            <button class="theme-dot theme-sky" type="button" data-theme="sky" aria-label="天空主題"></button>
+            <button class="snow-toggle" id="snowToggle" type="button">雪</button>
+          </div>
         </div>
 
         <div class="route-visual" aria-label="旅程路線">
@@ -1339,6 +1720,24 @@
         <article class="summary-card">
           <span>交通預估</span>
           <strong id="travelTotal">0 分</strong>
+        </article>
+      </section>
+
+      <section class="scrapbook-dashboard" id="scrapbookDashboard" aria-label="今日旅行總覽">
+        <article class="scrap-card weather-overview">
+          <span>WEATHER</span>
+          <strong id="overviewWeather">--</strong>
+          <p id="overviewGear">--</p>
+        </article>
+        <article class="scrap-card">
+          <span>STAY</span>
+          <strong id="overviewStay">--</strong>
+          <p id="overviewStayMemo">--</p>
+        </article>
+        <article class="scrap-card">
+          <span>NEXT</span>
+          <strong id="overviewNext">--</strong>
+          <p id="overviewNextMemo">--</p>
         </article>
       </section>
 
@@ -1461,6 +1860,17 @@
         <a class="action map" id="fullRoute" href="#" target="_blank" rel="noopener">開啟整日路線</a>
       </section>
     </main>
+
+    <nav class="planner-nav" id="plannerNav" aria-label="旅行手帳導覽">
+      <button type="button" data-target="timeline"><strong>行</strong><span>行程</span></button>
+      <button type="button" data-target="flightSection"><strong>票</strong><span>預約</span></button>
+      <button type="button" data-target="dayMapSection"><strong>圖</strong><span>地圖</span></button>
+      <button type="button" data-target="foodSection"><strong>食</strong><span>美食</span></button>
+      <button type="button" data-target="infoPage"><strong>備</strong><span>準備</span></button>
+      <button type="button" data-target="topbar"><strong>色</strong><span>外觀</span></button>
+    </nav>
+
+    <div class="snow-layer" id="snowLayer" aria-hidden="true"></div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -2541,10 +2951,21 @@
       const rateStatusEl = document.getElementById("rateStatus");
       const refreshRateEl = document.getElementById("refreshRate");
       const footerActionsEl = document.getElementById("footerActions");
+      const scrapbookDashboardEl = document.getElementById("scrapbookDashboard");
+      const overviewWeatherEl = document.getElementById("overviewWeather");
+      const overviewGearEl = document.getElementById("overviewGear");
+      const overviewStayEl = document.getElementById("overviewStay");
+      const overviewStayMemoEl = document.getElementById("overviewStayMemo");
+      const overviewNextEl = document.getElementById("overviewNext");
+      const overviewNextMemoEl = document.getElementById("overviewNextMemo");
+      const plannerNavEl = document.getElementById("plannerNav");
+      const snowToggleEl = document.getElementById("snowToggle");
       const photoTileEls = Array.from(document.querySelectorAll(".photo-tile span"));
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
       const toastEl = document.getElementById("toast");
+      document.body.dataset.theme = localStorage.getItem("travelTheme") || "pink";
+      document.body.dataset.snow = localStorage.getItem("snowMode") || "false";
 
       function pad(value) {
         return String(value).padStart(2, "0");
@@ -2597,6 +3018,11 @@
         return `https://www.google.com/maps?q=${queryFor(focusStop)}&output=embed`;
       }
 
+      function lodgingForDay(index) {
+        const lodgingIndexByDay = [0, 0, 1, 2, 3, 4];
+        return trip.lodgings[lodgingIndexByDay[index]] || trip.lodgings[trip.lodgings.length - 1];
+      }
+
       function scheduleFor(day, index = state.selectedDay) {
         if (day.fixedSchedule) {
           return day.stops.map((stop) => ({
@@ -2625,6 +3051,31 @@
         toastEl.classList.add("show");
         window.clearTimeout(showToast.timer);
         showToast.timer = window.setTimeout(() => toastEl.classList.remove("show"), 1800);
+      }
+
+      function setTheme(theme) {
+        document.body.dataset.theme = theme;
+        localStorage.setItem("travelTheme", theme);
+        document.querySelectorAll("[data-theme]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.theme === theme));
+        });
+      }
+
+      function setSnowMode(enabled) {
+        document.body.dataset.snow = String(enabled);
+        localStorage.setItem("snowMode", String(enabled));
+        snowToggleEl.setAttribute("aria-pressed", String(enabled));
+        snowToggleEl.textContent = enabled ? "雪開" : "雪";
+      }
+
+      function setPlannerNavActive(target) {
+        plannerNavEl.querySelectorAll("button").forEach((button) => {
+          if (button.dataset.target === target) {
+            button.setAttribute("aria-current", "page");
+          } else {
+            button.removeAttribute("aria-current");
+          }
+        });
       }
 
       function renderTabs() {
@@ -2759,6 +3210,21 @@
         weatherGridEl.appendChild(card);
       }
 
+      function renderScrapbookDashboard(day, scheduled) {
+        const weather = day.weather;
+        const lodging = lodgingForDay(state.selectedDay);
+        const nextStop = scheduled[1] || scheduled[0];
+
+        overviewWeatherEl.textContent = weather ? `${weather.location} · ${weather.range}` : "出發前再確認";
+        overviewGearEl.textContent = weather ? weather.gear : "保留雨具、行動電源與護照隨身。";
+        overviewStayEl.textContent = lodging ? lodging.name : "今日住宿待確認";
+        overviewStayMemoEl.textContent = lodging ? `${lodging.nights} · ${lodging.memo}` : "可在資訊總覽補上住宿資料。";
+        overviewNextEl.textContent = nextStop ? nextStop.name : day.title;
+        overviewNextMemoEl.textContent = nextStop
+          ? `${formatTime(nextStop.arrival)} 抵達 · 交通約 ${formatMinutes(nextStop.travelMinutes)}`
+          : "今天沒有下一站。";
+      }
+
       function renderFood(day) {
         const foods = day.foods || [];
         foodSectionEl.hidden = foods.length === 0;
@@ -2838,6 +3304,7 @@
         foodSectionEl.hidden = !visible;
         extrasSectionEl.hidden = !visible;
         footerActionsEl.hidden = !visible;
+        scrapbookDashboardEl.hidden = !visible;
         infoPageEl.hidden = visible;
       }
 
@@ -2987,6 +3454,7 @@
 
       function renderInfoPage() {
         setDailySectionsVisible(false);
+        setPlannerNavActive("infoPage");
         document.body.dataset.day = "info";
         document.documentElement.style.setProperty("--day-image", `url("${trip.days[3].image}")`);
         document.getElementById("tripTitle").textContent = trip.title;
@@ -3013,6 +3481,7 @@
         }
 
         setDailySectionsVisible(true);
+        setPlannerNavActive("timeline");
         const day = trip.days[state.selectedDay];
         const scheduled = scheduleFor(day, state.selectedDay);
         const totalStay = scheduled.reduce((sum, stop) => sum + stop.stayMinutes, 0);
@@ -3049,6 +3518,7 @@
 
         renderTabs();
         renderRouteMap(day, scheduled);
+        renderScrapbookDashboard(day, scheduled);
         renderFlight(day);
         renderWeather(day);
         renderDayMap(day, scheduled);
@@ -3146,6 +3616,59 @@
       });
       twdAmountEl.addEventListener("input", updateJpyFromTwd);
       refreshRateEl.addEventListener("click", () => refreshExchangeRate(true));
+
+      document.querySelectorAll("[data-theme]").forEach((button) => {
+        button.addEventListener("click", () => {
+          setTheme(button.dataset.theme);
+          showToast("已切換旅行手帳顏色");
+        });
+      });
+
+      snowToggleEl.addEventListener("click", () => {
+        const enabled = document.body.dataset.snow !== "true";
+        setSnowMode(enabled);
+        showToast(enabled ? "已開啟下雪效果" : "已關閉下雪效果");
+      });
+
+      plannerNavEl.addEventListener("click", (event) => {
+        const button = event.target.closest("button");
+        if (!button) return;
+        const target = button.dataset.target;
+
+        if (target === "infoPage") {
+          state.view = "info";
+          localStorage.setItem("selectedTab", "info");
+          render();
+          window.setTimeout(() => infoPageEl.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+          return;
+        }
+
+        if (state.view === "info") {
+          state.view = "day";
+          localStorage.setItem("selectedTab", String(state.selectedDay));
+          render();
+        }
+
+        const targetEl = document.getElementById(target);
+        if (!targetEl || targetEl.hidden) {
+          if (target === "flightSection") {
+            state.view = "info";
+            localStorage.setItem("selectedTab", "info");
+            render();
+            window.setTimeout(() => infoPageEl.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+            showToast("這天沒有機票卡，已開啟預約總覽");
+            return;
+          }
+          showToast("這天沒有這個分類");
+          return;
+        }
+
+        setPlannerNavActive(target);
+        targetEl.scrollIntoView({ behavior: "smooth", block: target === "topbar" ? "start" : "nearest" });
+      });
+
+      setTheme(localStorage.getItem("travelTheme") || "pink");
+      setSnowMode(localStorage.getItem("snowMode") === "true");
 
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
         navigator.serviceWorker.register("./service-worker.js").catch(() => {});
