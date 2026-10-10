@@ -532,7 +532,9 @@
       }
 
       .day-tab {
-        min-width: 108px;
+        flex: 0 0 116px;
+        min-width: 0;
+        max-width: 116px;
         border: 1px solid rgba(23, 32, 29, 0.1);
         background: rgba(255, 255, 255, 0.82);
         color: var(--ink);
@@ -564,6 +566,8 @@
       .day-tab span {
         display: block;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .day-tab strong {
@@ -575,6 +579,7 @@
         margin-top: 4px;
         font-size: 12px;
         opacity: 0.82;
+        max-width: 100%;
       }
 
       .controls {
@@ -1431,7 +1436,9 @@
       }
 
       .day-tab {
-        min-width: 76px;
+        flex-basis: 116px;
+        min-width: 0;
+        max-width: 116px;
         border-color: #eadfd1;
         border-radius: 24px;
         background: rgba(255, 253, 247, 0.92);
@@ -1757,23 +1764,6 @@
         <div class="travel-info-grid" id="weatherGrid"></div>
       </section>
 
-      <section class="info-section" id="dayMapSection" aria-label="每日地圖">
-        <div class="section-heading">
-          <h2>每日地圖</h2>
-          <span>點選停靠點可開啟 Google Maps</span>
-        </div>
-        <article class="travel-info-card day-map-card">
-          <iframe
-            class="map-embed"
-            id="dayMapFrame"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="每日行程地圖"
-          ></iframe>
-          <div class="map-marker-list" id="dayMapMarkers"></div>
-        </article>
-      </section>
-
       <section class="timeline" id="timeline" aria-label="行程列表"></section>
 
       <section class="info-section" id="foodSection" aria-label="餐飲推薦">
@@ -1790,6 +1780,23 @@
           <span>從主行程最後一站出發</span>
         </div>
         <div class="card-grid" id="extrasGrid"></div>
+      </section>
+
+      <section class="info-section" id="dayMapSection" aria-label="每日地圖">
+        <div class="section-heading">
+          <h2>每日地圖</h2>
+          <span>點選停靠點可開啟 Google Maps</span>
+        </div>
+        <article class="travel-info-card day-map-card">
+          <iframe
+            class="map-embed"
+            id="dayMapFrame"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="每日行程地圖"
+          ></iframe>
+          <div class="map-marker-list" id="dayMapMarkers"></div>
+        </article>
       </section>
 
       <section class="info-section info-page" id="infoPage" aria-label="旅遊資訊總覽" hidden>
@@ -3080,12 +3087,14 @@
 
       function renderTabs() {
         tabsEl.innerHTML = "";
+        const tabLabels = ["高雄出發", "吉卜力", "高山白川", "立山黑部", "上高地", "常滑回程"];
         trip.days.forEach((day, index) => {
           const button = document.createElement("button");
           button.className = "day-tab";
           button.type = "button";
           button.setAttribute("aria-selected", String(state.view === "day" && index === state.selectedDay));
-          button.innerHTML = `<strong>${day.label}</strong><span>${day.title}</span>`;
+          button.title = `${day.label} ${day.title}`;
+          button.innerHTML = `<strong>${day.label}</strong><span>${tabLabels[index] || day.title}</span>`;
           button.addEventListener("click", () => {
             state.view = "day";
             state.selectedDay = index;
