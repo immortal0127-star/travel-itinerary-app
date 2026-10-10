@@ -780,6 +780,84 @@
         font-weight: 800;
       }
 
+      .day-map-card {
+        display: grid;
+        gap: 12px;
+      }
+
+      .map-embed {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        min-height: 260px;
+        border: 0;
+        border-radius: 8px;
+        background: #dfe9e3;
+        box-shadow: 0 12px 28px rgba(14, 31, 28, 0.11);
+      }
+
+      .map-marker-list {
+        display: grid;
+        gap: 7px;
+        max-height: 260px;
+        overflow: auto;
+        padding-right: 2px;
+      }
+
+      .map-marker {
+        display: grid;
+        grid-template-columns: 46px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        min-height: 54px;
+        padding: 9px 10px;
+        border: 1px solid rgba(23, 32, 29, 0.09);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .map-marker:hover {
+        border-color: color-mix(in srgb, var(--accent) 50%, white);
+        transform: translateY(-1px);
+      }
+
+      .map-marker-index {
+        display: inline-grid;
+        place-items: center;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--accent) 18%, white);
+        color: color-mix(in srgb, var(--accent) 82%, #17201d);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .map-marker-main {
+        display: grid;
+        gap: 3px;
+        min-width: 0;
+      }
+
+      .map-marker-main strong {
+        overflow-wrap: anywhere;
+        font-size: 14px;
+        line-height: 1.25;
+      }
+
+      .map-marker-main span,
+      .map-marker-time {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .map-marker-time {
+        justify-self: end;
+        white-space: nowrap;
+      }
+
       .schedule-list {
         display: grid;
         gap: 7px;
@@ -1163,6 +1241,23 @@
         <div class="travel-info-grid" id="weatherGrid"></div>
       </section>
 
+      <section class="info-section" id="dayMapSection" aria-label="每日地圖">
+        <div class="section-heading">
+          <h2>每日地圖</h2>
+          <span>點選停靠點可開啟 Google Maps</span>
+        </div>
+        <article class="travel-info-card day-map-card">
+          <iframe
+            class="map-embed"
+            id="dayMapFrame"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="每日行程地圖"
+          ></iframe>
+          <div class="map-marker-list" id="dayMapMarkers"></div>
+        </article>
+      </section>
+
       <section class="timeline" id="timeline" aria-label="行程列表"></section>
 
       <section class="info-section" id="foodSection" aria-label="餐飲推薦">
@@ -1206,6 +1301,8 @@
               airline: "台灣虎航 Tigerair Taiwan",
               flightNo: "IT284",
               route: "高雄 KHH → 大阪關西 KIX",
+              fromLabel: "高雄 KHH",
+              toLabel: "大阪關西 KIX",
               depart: "06:40",
               arrive: "10:35",
               checkin: "05:00",
@@ -2031,6 +2128,17 @@
             image: "./assets/day-6.jpg",
             tiles: ["常滑散步道", "陶器街", "中部機場"],
             startTime: "09:00",
+            flight: {
+              airline: "台灣虎航 Tigerair Taiwan",
+              flightNo: "IT269",
+              route: "名古屋中部 NGO → 高雄 KHH",
+              fromLabel: "名古屋中部 NGO",
+              toLabel: "高雄 KHH",
+              depart: "20:05",
+              arrive: "22:30",
+              checkin: "17:05",
+              memo: "建議起飛前 3 小時抵達機場，預留退稅、托運、安檢與伴手禮時間。"
+            },
             weather: {
               location: "常滑 / 中部國際機場",
               range: "約 18-24°C",
@@ -2167,6 +2275,8 @@
       const flightSectionEl = document.getElementById("flightSection");
       const flightGridEl = document.getElementById("flightGrid");
       const weatherGridEl = document.getElementById("weatherGrid");
+      const dayMapFrameEl = document.getElementById("dayMapFrame");
+      const dayMapMarkersEl = document.getElementById("dayMapMarkers");
       const foodSectionEl = document.getElementById("foodSection");
       const foodGridEl = document.getElementById("foodGrid");
       const extrasSectionEl = document.getElementById("extrasSection");
@@ -2220,6 +2330,11 @@
         const destination = queryFor(stops[stops.length - 1]);
         const waypoints = stops.slice(1, -1).map(queryFor).join("|");
         return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${waypoints}&travelmode=${state.mode}`;
+      }
+
+      function mapEmbedUrl(scheduled) {
+        const focusStop = scheduled[Math.floor(scheduled.length / 2)] || scheduled[0];
+        return `https://www.google.com/maps?q=${queryFor(focusStop)}&output=embed`;
       }
 
       function scheduleFor(day) {
@@ -2292,6 +2407,29 @@
         });
       }
 
+      function renderDayMap(day, scheduled) {
+        dayMapFrameEl.src = mapEmbedUrl(scheduled);
+        dayMapFrameEl.title = `${day.label} ${day.title} 每日地圖`;
+        dayMapMarkersEl.innerHTML = "";
+
+        scheduled.forEach((stop, index) => {
+          const link = document.createElement("a");
+          link.className = "map-marker";
+          link.href = mapUrl(stop);
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.innerHTML = `
+            <span class="map-marker-index">${String(index + 1).padStart(2, "0")}</span>
+            <span class="map-marker-main">
+              <strong>${stop.name}</strong>
+              <span>${stop.address || stop.place}</span>
+            </span>
+            <span class="map-marker-time">${formatTime(stop.arrival)}-${formatTime(stop.leave)}</span>
+          `;
+          dayMapMarkersEl.appendChild(link);
+        });
+      }
+
       function renderFlight(day) {
         const flight = day.flight;
         flightSectionEl.hidden = !flight;
@@ -2309,13 +2447,13 @@
             <div class="ticket-city">
               <span>出發</span>
               <strong>${flight.depart}</strong>
-              <span>高雄 KHH</span>
+              <span>${flight.fromLabel}</span>
             </div>
             <div class="ticket-arrow" aria-hidden="true">→</div>
             <div class="ticket-city">
               <span>抵達</span>
               <strong>${flight.arrive}</strong>
-              <span>大阪 KIX</span>
+              <span>${flight.toLabel}</span>
             </div>
           </div>
           <div class="mini-meta">
@@ -2454,6 +2592,7 @@
         renderRouteMap(day, scheduled);
         renderFlight(day);
         renderWeather(day);
+        renderDayMap(day, scheduled);
         renderFood(day);
         renderExtras(day, lastStop);
         timelineEl.innerHTML = "";
