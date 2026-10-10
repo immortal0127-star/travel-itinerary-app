@@ -923,6 +923,45 @@
         font-weight: 900;
       }
 
+      .inline-form {
+        display: grid;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid color-mix(in srgb, var(--accent) 24%, white);
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--accent) 8%, white);
+      }
+
+      .inline-form[hidden] {
+        display: none;
+      }
+
+      .inline-form label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .inline-form input,
+      .inline-form textarea {
+        width: 100%;
+        border: 1px solid rgba(23, 32, 29, 0.13);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        padding: 10px 11px;
+        font: inherit;
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      .inline-form textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+
       .info-page-grid {
         display: grid;
         gap: 10px;
@@ -1502,7 +1541,9 @@
 
       .field input,
       .field select,
-      .converter-field input {
+      .converter-field input,
+      .inline-form input,
+      .inline-form textarea {
         border-color: #eadfd1;
         border-radius: 18px;
         background: #fffdf7;
@@ -1932,6 +1973,20 @@
             </div>
             <button class="action map" id="addFamilyMemo" type="button">＋ 新增</button>
           </div>
+          <form class="inline-form" id="familyMemoForm" hidden>
+            <label>
+              備忘標題
+              <input id="familyMemoTitle" type="text" placeholder="例如：集合時間、聯絡方式、注意事項" autocomplete="off" />
+            </label>
+            <label>
+              備忘內容
+              <textarea id="familyMemoText" placeholder="輸入想提醒家人的資訊"></textarea>
+            </label>
+            <div class="actions">
+              <button class="action map" type="submit">儲存備忘</button>
+              <button class="action secondary" id="cancelFamilyMemo" type="button">取消</button>
+            </div>
+          </form>
           <div class="info-page-grid" id="membersGrid"></div>
         </article>
 
@@ -3063,6 +3118,10 @@
       const addReservationEl = document.getElementById("addReservation");
       const addShoppingItemEl = document.getElementById("addShoppingItem");
       const addFamilyMemoEl = document.getElementById("addFamilyMemo");
+      const familyMemoFormEl = document.getElementById("familyMemoForm");
+      const familyMemoTitleEl = document.getElementById("familyMemoTitle");
+      const familyMemoTextEl = document.getElementById("familyMemoText");
+      const cancelFamilyMemoEl = document.getElementById("cancelFamilyMemo");
       const footerActionsEl = document.getElementById("footerActions");
       const scrapbookDashboardEl = document.getElementById("scrapbookDashboard");
       const overviewWeatherEl = document.getElementById("overviewWeather");
@@ -4015,17 +4074,32 @@
       });
 
       addFamilyMemoEl.addEventListener("click", () => {
-        const title = window.prompt("備忘標題？例如：集合時間、聯絡方式、注意事項", "");
-        if (!title) return;
-        const text = window.prompt("備忘內容？", "");
-        if (text === null) return;
+        familyMemoFormEl.hidden = false;
+        familyMemoTitleEl.focus();
+      });
+
+      cancelFamilyMemoEl.addEventListener("click", () => {
+        familyMemoFormEl.reset();
+        familyMemoFormEl.hidden = true;
+      });
+
+      familyMemoFormEl.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const title = familyMemoTitleEl.value.trim();
+        if (!title) {
+          familyMemoTitleEl.focus();
+          showToast("請先輸入備忘標題");
+          return;
+        }
 
         const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
         memos.push({
-          title: title.trim(),
-          text: text.trim() || "尚未填寫內容"
+          title,
+          text: familyMemoTextEl.value.trim() || "尚未填寫內容"
         });
         localStorage.setItem("familyMemos", JSON.stringify(memos));
+        familyMemoFormEl.reset();
+        familyMemoFormEl.hidden = true;
         renderMembers();
         showToast("已新增備忘");
       });
