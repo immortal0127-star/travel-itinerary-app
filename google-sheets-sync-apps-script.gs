@@ -7,9 +7,13 @@ const SHEET_NAMES = {
 };
 
 function doGet(e) {
+  const params = e && e.parameter ? e.parameter : {};
+  const body = params.payload ? JSON.parse(params.payload) : {};
   return handleRequest({
-    action: "read",
-    token: e.parameter.token
+    action: params.action || body.action || "read",
+    token: params.token || body.token,
+    shoppingItems: body.shoppingItems || [],
+    familyMemos: body.familyMemos || []
   });
 }
 

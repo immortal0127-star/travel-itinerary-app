@@ -3252,9 +3252,13 @@
       const toastEl = document.getElementById("toast");
       document.body.dataset.theme = localStorage.getItem("travelTheme") || "pink";
       document.body.dataset.snow = localStorage.getItem("snowMode") || "false";
+      const defaultSyncConfig = {
+        url: "https://script.google.com/macros/s/AKfycbwvY26qKDz9JjS63ut76nBEqFf9Gs5C4Iq4mpydxACjorTIICLCJ8wG_TcvyCZUOQEAGQ/exec",
+        token: "nagoya2026"
+      };
       const sharedSync = {
-        url: localStorage.getItem("sheetSyncUrl") || "",
-        token: localStorage.getItem("sheetSyncToken") || "",
+        url: localStorage.getItem("sheetSyncUrl") || defaultSyncConfig.url,
+        token: localStorage.getItem("sheetSyncToken") || defaultSyncConfig.token,
         timer: null,
         busy: false
       };
@@ -3365,14 +3369,13 @@
 
       async function requestSharedState(payload) {
         if (!isSyncReady()) throw new Error("sync not configured");
-        const response = await fetch(sharedSync.url, {
-          method: "POST",
-          headers: { "content-type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({
-            token: sharedSync.token,
-            ...payload
-          })
-        });
+        const requestUrl = new URL(sharedSync.url);
+        requestUrl.searchParams.set("token", sharedSync.token);
+        requestUrl.searchParams.set("payload", JSON.stringify({
+          token: sharedSync.token,
+          ...payload
+        }));
+        const response = await fetch(requestUrl.toString(), { method: "GET" });
         if (!response.ok) throw new Error("sync request failed");
         const data = await response.json();
         if (!data || data.ok === false) throw new Error(data && data.error ? data.error : "sync failed");

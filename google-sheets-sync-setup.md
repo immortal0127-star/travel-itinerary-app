@@ -46,10 +46,16 @@ const SYNC_TOKEN = "nagoya2026";
 
 ## 5. 回到旅遊 App
 
-1. 打開旅遊 App。
-2. 到最下方「設定」。
-3. 在「Google 試算表同步」貼上 Web App URL。
-4. 輸入同步碼，例如 `nagoya2026`。
-5. 按「儲存同步設定」。
+旅遊 App 已內建這組同步設定：
+
+```text
+Web App URL:
+https://script.google.com/macros/s/AKfycbwvY26qKDz9JjS63ut76nBEqFf9Gs5C4Iq4mpydxACjorTIICLCJ8wG_TcvyCZUOQEAGQ/exec
+
+同步碼:
+nagoya2026
+```
+
+如需更換同步來源，可打開旅遊 App 到最下方「設定」，在「Google 試算表同步」改成新的 Web App URL 與同步碼。
 
 之後購物清單與家庭備忘錄新增或刪除時，會寫入 Google 試算表；其他手機開著同一個 App，約幾秒內會自動更新。
