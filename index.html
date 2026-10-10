@@ -1160,6 +1160,278 @@
         transform: translateX(-50%) translateY(0);
       }
 
+      .add-pill {
+        position: absolute;
+        top: 20px;
+        right: 18px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        min-height: 48px;
+        border: 0;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ff8e9c, #ff9eaa);
+        color: #ffffff;
+        padding: 0 20px;
+        font-size: 16px;
+        font-weight: 900;
+        box-shadow: 0 10px 20px rgba(255, 142, 156, 0.32);
+        cursor: pointer;
+      }
+
+      .manager-page {
+        display: grid;
+        gap: 18px;
+        margin-top: 16px;
+        padding-bottom: 8px;
+      }
+
+      .manager-block {
+        display: grid;
+        gap: 12px;
+      }
+
+      .category-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #6f645a;
+        font-size: 20px;
+        font-weight: 950;
+      }
+
+      .category-badge {
+        display: inline-grid;
+        place-items: center;
+        min-width: 42px;
+        height: 32px;
+        border: 2px solid #ffd7df;
+        border-radius: 999px;
+        background: #fff7e7;
+        color: #a58e78;
+        font-size: 15px;
+        box-shadow: 0 6px 12px rgba(125, 94, 72, 0.08);
+      }
+
+      .reservation-card,
+      .manager-card {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid #eadfd1;
+        border-radius: 28px;
+        background: rgba(255, 253, 246, 0.96);
+        box-shadow: 0 12px 24px rgba(125, 94, 72, 0.12);
+      }
+
+      .boarding-card {
+        overflow: hidden;
+        padding: 0;
+        border-radius: 30px;
+        background: #fffdf6;
+      }
+
+      .boarding-top {
+        position: relative;
+        display: grid;
+        gap: 18px;
+        padding: 24px 26px;
+        background:
+          radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.55) 0 4px, transparent 5px),
+          radial-gradient(circle at 72% 66%, rgba(255, 255, 255, 0.5) 0 5px, transparent 6px),
+          linear-gradient(135deg, #ff8e9c, #ff9ca8);
+        color: #fff;
+      }
+
+      .boarding-top::after {
+        content: "AIR";
+        position: absolute;
+        left: 50%;
+        top: 54%;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 24px;
+        font-weight: 950;
+        transform: translate(-50%, -50%) rotate(-8deg);
+      }
+
+      .boarding-label {
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+
+      .boarding-route {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .boarding-city {
+        display: grid;
+        gap: 8px;
+      }
+
+      .boarding-city:last-child {
+        text-align: right;
+      }
+
+      .boarding-code {
+        color: #fff;
+        font-size: 46px;
+        font-weight: 950;
+        line-height: 1;
+      }
+
+      .boarding-city span {
+        color: rgba(255, 255, 255, 0.84);
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .boarding-arrow {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 24px;
+        font-weight: 950;
+      }
+
+      .boarding-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        padding: 18px 26px;
+        background: #fffdf6;
+      }
+
+      .boarding-detail {
+        display: grid;
+        gap: 5px;
+        color: #9a8f84;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .boarding-detail strong {
+        color: #5a5048;
+        font-size: 18px;
+      }
+
+      .manager-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .manager-row {
+        display: grid;
+        gap: 8px;
+        padding: 14px;
+        border: 1px solid #f0e4d6;
+        border-radius: 22px;
+        background: #fffaf0;
+      }
+
+      .manager-row h3 {
+        color: #5a5048;
+        font-size: 17px;
+      }
+
+      .manager-row p {
+        color: #8f8378;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .bottom-nav {
+        position: fixed;
+        left: 50%;
+        bottom: 0;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        width: min(100%, 640px);
+        padding: 12px 10px calc(12px + env(safe-area-inset-bottom));
+        border: 1px solid #eadfd1;
+        border-bottom: 0;
+        border-radius: 30px 30px 0 0;
+        background: rgba(255, 253, 246, 0.96);
+        box-shadow: 0 -12px 30px rgba(125, 94, 72, 0.14);
+        transform: translateX(-50%);
+        backdrop-filter: blur(14px);
+      }
+
+      .bottom-nav button {
+        display: grid;
+        gap: 4px;
+        place-items: center;
+        border: 0;
+        background: transparent;
+        color: #9a8f84;
+        padding: 0;
+        font-size: 12px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .bottom-nav strong {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        background: transparent;
+        color: inherit;
+        font-size: 15px;
+      }
+
+      .bottom-nav button[aria-selected="true"] {
+        color: #ff8e9c;
+      }
+
+      .bottom-nav button[aria-selected="true"] strong {
+        background: #ffe7ec;
+        box-shadow: inset 0 0 0 2px #ffd2da;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at 15% 10%, rgba(255, 216, 232, 0.72), transparent 15rem),
+          radial-gradient(circle at 82% 18%, rgba(255, 211, 138, 0.38), transparent 14rem),
+          linear-gradient(180deg, #fffaf0 0%, #fff6e7 100%);
+      }
+
+      .app {
+        width: min(100%, 640px);
+        padding-bottom: calc(112px + env(safe-area-inset-bottom));
+      }
+
+      .topbar,
+      .day-spotlight,
+      .summary-card,
+      .travel-info-card,
+      .info-card,
+      .info-panel,
+      .stop {
+        border-color: #eadfd1;
+        border-radius: 28px;
+        background-color: rgba(255, 253, 246, 0.96);
+      }
+
+      .topbar {
+        position: relative;
+        padding-top: 76px;
+      }
+
+      .action,
+      .day-tab,
+      .field input,
+      .field select,
+      .converter-field input {
+        border-radius: 999px;
+      }
+
       @media (min-width: 760px) {
         .app {
           padding: max(22px, env(safe-area-inset-top)) 28px max(34px, env(safe-area-inset-bottom));
@@ -1271,6 +1543,7 @@
           </div>
           <div class="weather-chip" id="dayLabel"></div>
         </div>
+        <button class="add-pill" id="quickAdd" type="button">+ 新增</button>
 
         <div class="route-visual" aria-label="旅程路線">
           <div class="route-label">
@@ -1450,7 +1723,13 @@
         <button class="action secondary" id="copyPlan" type="button">複製今日行程</button>
         <a class="action map" id="fullRoute" href="#" target="_blank" rel="noopener">開啟整日路線</a>
       </section>
+
+      <section class="manager-page" id="categoryPage" aria-label="分類內容" hidden>
+        <div class="manager-block" id="categoryContent"></div>
+      </section>
     </main>
+
+    <nav class="bottom-nav" id="bottomNav" aria-label="主要分類"></nav>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -2494,9 +2773,11 @@
       };
 
       const savedTab = localStorage.getItem("selectedTab");
+      const defaultSection = localStorage.getItem("appSection") || "reservations";
       const state = {
         selectedDay: Number(localStorage.getItem("selectedDay") || 0),
         view: savedTab === "info" ? "info" : "day",
+        section: defaultSection,
         mode: localStorage.getItem("travelMode") || "transit"
       };
       if (!Number.isFinite(state.selectedDay) || state.selectedDay < 0 || state.selectedDay >= trip.days.length) {
@@ -2531,10 +2812,27 @@
       const rateStatusEl = document.getElementById("rateStatus");
       const refreshRateEl = document.getElementById("refreshRate");
       const footerActionsEl = document.getElementById("footerActions");
+      const categoryPageEl = document.getElementById("categoryPage");
+      const categoryContentEl = document.getElementById("categoryContent");
+      const bottomNavEl = document.getElementById("bottomNav");
+      const quickAddEl = document.getElementById("quickAdd");
       const photoTileEls = Array.from(document.querySelectorAll(".photo-tile span"));
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
       const toastEl = document.getElementById("toast");
+
+      const appSections = [
+        { id: "schedule", title: "行程", subtitle: "每天時間、地圖與餐飲", icon: "日" },
+        { id: "reservations", title: "預約", subtitle: "機票、住宿、包車與票券", icon: "券" },
+        { id: "ledger", title: "記帳", subtitle: "匯率換算與預算提醒", icon: "¥" },
+        { id: "shopping", title: "購物", subtitle: "商店、伴手禮與補給", icon: "買" },
+        { id: "prep", title: "準備", subtitle: "天氣、班次與必帶物品", icon: "✓" },
+        { id: "members", title: "成員", subtitle: "家庭分工與集合提醒", icon: "人" },
+        { id: "settings", title: "設置", subtitle: "導航模式與 App 操作", icon: "設" }
+      ];
+      if (!appSections.some((section) => section.id === state.section)) {
+        state.section = "schedule";
+      }
 
       function pad(value) {
         return String(value).padStart(2, "0");
@@ -2634,18 +2932,6 @@
           });
           tabsEl.appendChild(button);
         });
-
-        const infoButton = document.createElement("button");
-        infoButton.className = "day-tab";
-        infoButton.type = "button";
-        infoButton.setAttribute("aria-selected", String(state.view === "info"));
-        infoButton.innerHTML = "<strong>資訊</strong><span>匯率與總覽</span>";
-        infoButton.addEventListener("click", () => {
-          state.view = "info";
-          localStorage.setItem("selectedTab", "info");
-          render();
-        });
-        tabsEl.appendChild(infoButton);
       }
 
       function renderRouteMap(day, scheduled) {
@@ -2700,32 +2986,7 @@
         flightGridEl.innerHTML = "";
         if (!flight) return;
 
-        const card = document.createElement("article");
-        card.className = "travel-info-card";
-        card.innerHTML = `
-          <div>
-            <h3>${flight.airline} · ${flight.flightNo}</h3>
-            <p class="weather-note">${flight.route}</p>
-          </div>
-          <div class="ticket-row">
-            <div class="ticket-city">
-              <span>出發</span>
-              <strong>${flight.depart}</strong>
-              <span>${flight.fromLabel}</span>
-            </div>
-            <div class="ticket-arrow" aria-hidden="true">→</div>
-            <div class="ticket-city">
-              <span>抵達</span>
-              <strong>${flight.arrive}</strong>
-              <span>${flight.toLabel}</span>
-            </div>
-          </div>
-          <div class="mini-meta">
-            <span>報到 ${flight.checkin}</span>
-            <span>${flight.memo}</span>
-          </div>
-        `;
-        flightGridEl.appendChild(card);
+        flightGridEl.innerHTML = flightCardHTML(day);
       }
 
       function renderWeather(day) {
@@ -2818,6 +3079,7 @@
       }
 
       function setDailySectionsVisible(visible) {
+        tabsEl.hidden = !visible;
         controlsEl.hidden = !visible;
         daySpotlightEl.hidden = !visible;
         summaryGridEl.hidden = !visible;
@@ -2828,7 +3090,8 @@
         foodSectionEl.hidden = !visible;
         extrasSectionEl.hidden = !visible;
         footerActionsEl.hidden = !visible;
-        infoPageEl.hidden = visible;
+        infoPageEl.hidden = true;
+        categoryPageEl.hidden = visible;
       }
 
       function renderInfoRoute() {
@@ -2938,6 +3201,371 @@
         });
       }
 
+      function airportCode(label) {
+        const match = (label || "").match(/\b[A-Z]{3}\b/);
+        return match ? match[0] : "---";
+      }
+
+      function flightCity(label) {
+        return (label || "").replace(/\b[A-Z]{3}\b/g, "").trim() || label;
+      }
+
+      function flightDate(day) {
+        return day.date.split("（")[0].replaceAll("-", "/");
+      }
+
+      function flightCardHTML(day) {
+        const flight = day.flight;
+        return `
+          <article class="reservation-card boarding-card">
+            <div class="boarding-top">
+              <div>
+                <div class="boarding-label">BOARDING PASS</div>
+                <h3>${flightCity(flight.fromLabel)} → ${flightCity(flight.toLabel)}</h3>
+              </div>
+              <div class="boarding-route">
+                <div class="boarding-city">
+                  <strong class="boarding-code">${airportCode(flight.fromLabel)}</strong>
+                  <span>出發</span>
+                  <span>${flight.depart}</span>
+                </div>
+                <div class="boarding-arrow">→</div>
+                <div class="boarding-city">
+                  <strong class="boarding-code">${airportCode(flight.toLabel)}</strong>
+                  <span>抵達</span>
+                  <span>${flight.arrive}</span>
+                </div>
+              </div>
+            </div>
+            <div class="boarding-bottom">
+              <div class="boarding-detail">
+                <span>航班編號</span>
+                <strong>${flight.flightNo}</strong>
+              </div>
+              <div class="boarding-detail">
+                <span>日期</span>
+                <strong>${flightDate(day)}</strong>
+              </div>
+              <div class="boarding-detail">
+                <span>航空公司</span>
+                <strong>${flight.airline.split(" ")[0]}</strong>
+              </div>
+              <div class="boarding-detail">
+                <span>報到</span>
+                <strong>${flight.checkin}</strong>
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      function renderBottomNav() {
+        bottomNavEl.innerHTML = "";
+        appSections.forEach((section) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.setAttribute("aria-selected", String(state.section === section.id));
+          button.innerHTML = `<strong>${section.icon}</strong><span>${section.title}</span>`;
+          button.addEventListener("click", () => {
+            state.section = section.id;
+            state.view = "day";
+            localStorage.setItem("appSection", section.id);
+            localStorage.setItem("selectedTab", String(state.selectedDay));
+            render();
+          });
+          bottomNavEl.appendChild(button);
+        });
+      }
+
+      function setTopHeader(section) {
+        document.getElementById("tripTitle").textContent = section.title === "行程" ? trip.title : `${section.title}管理`;
+        document.getElementById("tripMeta").textContent = section.subtitle;
+        document.getElementById("dayLabel").textContent = section.id === "schedule"
+          ? `${trip.days[state.selectedDay].date} · ${trip.days[state.selectedDay].title}`
+          : "2026/10/16-10/21";
+        photoTileEls.forEach((tile, index) => {
+          const labels = {
+            reservations: ["機票", "住宿", "票券"],
+            ledger: ["匯率", "預算", "花費"],
+            shopping: ["伴手禮", "補給", "商圈"],
+            prep: ["天氣", "班次", "行李"],
+            members: ["家庭", "分工", "集合"],
+            settings: ["導航", "複製", "離線"]
+          };
+          tile.textContent = (labels[section.id] || trip.days[state.selectedDay].tiles)[index] || section.title;
+        });
+      }
+
+      function renderCategoryRoute(section) {
+        document.getElementById("routeTitle").textContent = section.title;
+        document.getElementById("routeRange").textContent = section.subtitle;
+        routeLineEl.innerHTML = "";
+        appSections.forEach((item, index) => {
+          const link = document.createElement("a");
+          link.className = "route-stop";
+          link.href = "#";
+          link.dataset.step = String(index + 1).padStart(2, "0");
+          if (index === appSections.length - 1) link.dataset.last = "true";
+          link.innerHTML = `
+            <strong>${item.title}</strong>
+            <span class="route-time">${item.subtitle}</span>
+            <span>${state.section === item.id ? "目前頁面" : "切換分類"}</span>
+          `;
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            state.section = item.id;
+            localStorage.setItem("appSection", item.id);
+            render();
+          });
+          routeLineEl.appendChild(link);
+        });
+      }
+
+      function sectionTitleHTML(title, count) {
+        return `<div class="category-heading"><span>${title}</span><span class="category-badge">${count}</span></div>`;
+      }
+
+      function renderReservationsContent() {
+        const flightDays = trip.days.filter((day) => day.flight);
+        const transportNotes = trip.days.flatMap((day) => (day.extras || [])
+          .filter((extra) => extra.infoOnly)
+          .map((extra) => ({ ...extra, dayLabel: day.label })));
+        categoryContentEl.innerHTML = `
+          ${sectionTitleHTML("機票", flightDays.length)}
+          ${flightDays.map(flightCardHTML).join("")}
+          ${sectionTitleHTML("住宿", trip.lodgings.length)}
+          <div class="manager-list">
+            ${trip.lodgings.map((lodging) => `
+              <article class="manager-row">
+                <h3>${lodging.nights} · ${lodging.name}</h3>
+                <p>${lodging.address}</p>
+                <p>${lodging.memo}</p>
+                <div class="actions">
+                  <a class="action map" href="${mapUrl(lodging)}" target="_blank" rel="noopener">地圖</a>
+                  <a class="action route" href="${routeUrl(null, lodging)}" target="_blank" rel="noopener">導航</a>
+                </div>
+              </article>
+            `).join("")}
+          </div>
+          ${sectionTitleHTML("租車與票券", transportNotes.length)}
+          <div class="manager-list">
+            ${transportNotes.map((note) => `
+              <article class="manager-row">
+                <h3>${note.dayLabel} · ${note.name}</h3>
+                <p>${note.address}</p>
+                <p>${note.memo}</p>
+              </article>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      function renderLedgerContent() {
+        categoryContentEl.innerHTML = `
+          ${sectionTitleHTML("即時匯率", 1)}
+          <article class="manager-card">
+            <div class="converter-grid">
+              <div class="converter-field">
+                <label for="ledgerJpy">日圓 JPY</label>
+                <input id="ledgerJpy" type="number" min="0" inputmode="decimal" value="10000" />
+              </div>
+              <div class="converter-field">
+                <label for="ledgerRate">1 日圓約台幣</label>
+                <input id="ledgerRate" type="number" min="0" step="0.0001" inputmode="decimal" value="${localStorage.getItem("jpyTwdRate") || exchangeRateEl.value || "0.2100"}" />
+              </div>
+              <div class="converter-field">
+                <label for="ledgerTwd">台幣 TWD</label>
+                <input id="ledgerTwd" type="number" min="0" inputmode="decimal" />
+              </div>
+            </div>
+            <div class="actions">
+              <button class="action map" id="ledgerRefreshRate" type="button">更新匯率</button>
+              <button class="action secondary" id="ledgerSaveRate" type="button">儲存匯率</button>
+            </div>
+          </article>
+          ${sectionTitleHTML("預算提醒", 4)}
+          <div class="manager-list">
+            ${["交通與包車：跨城市移動、立山黑部票券、上高地接駁", "餐飲：名古屋鰻魚飯、白川鄉小吃、機場晚餐", "購物：藥妝、電器、永旺、機場免稅", "備用金：山區天候、臨時排隊、行李托運與寄送"].map((item) => `
+              <article class="manager-row"><h3>${item.split("：")[0]}</h3><p>${item.split("：")[1]}</p></article>
+            `).join("")}
+          </div>
+        `;
+        bindLedgerConverter();
+      }
+
+      function bindLedgerConverter() {
+        const ledgerJpy = document.getElementById("ledgerJpy");
+        const ledgerRate = document.getElementById("ledgerRate");
+        const ledgerTwd = document.getElementById("ledgerTwd");
+        const updateTwd = () => {
+          ledgerTwd.value = Math.round(Number(ledgerJpy.value || 0) * Number(ledgerRate.value || 0)).toString();
+        };
+        const updateJpy = () => {
+          const rate = Number(ledgerRate.value || 0);
+          if (rate) ledgerJpy.value = Math.round(Number(ledgerTwd.value || 0) / rate).toString();
+        };
+        ledgerJpy.addEventListener("input", updateTwd);
+        ledgerRate.addEventListener("input", () => {
+          localStorage.setItem("jpyTwdRate", ledgerRate.value);
+          updateTwd();
+        });
+        ledgerTwd.addEventListener("input", updateJpy);
+        document.getElementById("ledgerSaveRate").addEventListener("click", () => {
+          localStorage.setItem("jpyTwdRate", ledgerRate.value);
+          showToast("匯率已儲存");
+        });
+        document.getElementById("ledgerRefreshRate").addEventListener("click", async () => {
+          await refreshExchangeRate(false);
+          ledgerRate.value = exchangeRateEl.value;
+          updateTwd();
+          showToast("匯率已更新");
+        });
+        updateTwd();
+      }
+
+      function renderShoppingContent() {
+        const shoppingItems = [];
+        const pattern = /購物|採買|伴手禮|電器|永旺|免稅|商店|大須|名古屋車站|藥妝|補給/;
+        trip.days.forEach((day) => {
+          [...day.stops, ...(day.extras || []), ...(day.foods || [])].forEach((item) => {
+            if (pattern.test(`${item.name}${item.memo || ""}${item.address || ""}`)) {
+              shoppingItems.push({ ...item, dayLabel: day.label });
+            }
+          });
+        });
+        categoryContentEl.innerHTML = `
+          ${sectionTitleHTML("購物與補給", shoppingItems.length)}
+          <div class="manager-list">
+            ${shoppingItems.map((item) => `
+              <article class="manager-row">
+                <h3>${item.dayLabel} · ${item.name}</h3>
+                <p>${item.address || item.place || "依現場店鋪位置"}</p>
+                <p>${item.memo || item.timing || "順路採買與補給。"}</p>
+                <div class="actions">
+                  <a class="action map" href="${mapUrl(item)}" target="_blank" rel="noopener">地圖</a>
+                  <a class="action route" href="${routeUrl(null, item)}" target="_blank" rel="noopener">導航</a>
+                </div>
+              </article>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      function renderPrepContent() {
+        const weatherRows = trip.days.map((day) => `
+          <article class="manager-row">
+            <h3>${day.label} · ${day.weather.location}</h3>
+            <p>${day.weather.range}</p>
+            <p>${day.weather.gear}</p>
+          </article>
+        `).join("");
+        categoryContentEl.innerHTML = `
+          ${sectionTitleHTML("每日天氣", trip.days.length)}
+          <div class="manager-list">${weatherRows}</div>
+          ${sectionTitleHTML("必帶物品", trip.packing.length)}
+          <div class="manager-list">
+            ${trip.packing.map((group) => `
+              <article class="manager-row">
+                <h3>${group.title}</h3>
+                <p>${group.items.join("、")}</p>
+              </article>
+            `).join("")}
+          </div>
+          ${sectionTitleHTML("時間補充", trip.days.length)}
+          <div class="manager-list">
+            ${trip.days.map((day, index) => {
+              const scheduled = scheduleFor(day, index);
+              return `<article class="manager-row"><h3>${day.label} · ${day.title}</h3><p>${formatTime(scheduled[0].arrival)}-${formatTime(scheduled[scheduled.length - 1].leave)} · ${day.fixedSchedule ? "固定班次時間表" : "可微調出發時間"}</p></article>`;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      function renderMembersContent() {
+        const rows = [
+          ["全員", "每天出門前確認護照、手機、行動電源、外套與水。"],
+          ["票券負責", "保管機票、吉卜力公園票券、立山黑部票券與住宿資訊。"],
+          ["導航負責", "開 Google Maps，確認包車集合點、車站月台與回飯店路線。"],
+          ["行李負責", "檢查託運重量、山區行李托運、伴手禮防撞與回程收納。"],
+          ["時間提醒", "立山黑部與機場日優先看時間，遇排隊時提醒提早移動。"]
+        ];
+        categoryContentEl.innerHTML = `
+          ${sectionTitleHTML("成員分工", rows.length)}
+          <div class="manager-list">
+            ${rows.map(([title, memo]) => `<article class="manager-row"><h3>${title}</h3><p>${memo}</p></article>`).join("")}
+          </div>
+        `;
+      }
+
+      function renderSettingsContent() {
+        const day = trip.days[state.selectedDay];
+        categoryContentEl.innerHTML = `
+          ${sectionTitleHTML("App 設置", 3)}
+          <article class="manager-card">
+            <div class="field">
+              <label for="settingsMode">預設導航方式</label>
+              <select id="settingsMode">
+                <option value="driving">開車</option>
+                <option value="transit">大眾運輸</option>
+                <option value="walking">步行</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="settingsStart">目前選取日出發時間</label>
+              <input id="settingsStart" type="time" value="${localStorage.getItem(`start-${state.selectedDay}`) || day.startTime}" ${day.fixedSchedule ? "disabled" : ""} />
+            </div>
+            <div class="actions">
+              <button class="action map" id="settingsCopy" type="button">複製目前行程</button>
+              <a class="action route" href="${fullRouteUrl(day)}" target="_blank" rel="noopener">開啟路線</a>
+            </div>
+          </article>
+          <article class="manager-row">
+            <h3>離線提醒</h3>
+            <p>已開過的頁面與資料可由瀏覽器快取保留；Google Maps、即時匯率與外部導航仍需要網路。</p>
+          </article>
+        `;
+        const settingsMode = document.getElementById("settingsMode");
+        const settingsStart = document.getElementById("settingsStart");
+        settingsMode.value = state.mode;
+        settingsMode.addEventListener("change", () => {
+          state.mode = settingsMode.value;
+          localStorage.setItem("travelMode", state.mode);
+          showToast("導航方式已更新");
+        });
+        settingsStart.addEventListener("change", () => {
+          if (!day.fixedSchedule) {
+            localStorage.setItem(`start-${state.selectedDay}`, settingsStart.value);
+            showToast("出發時間已更新");
+          }
+        });
+        document.getElementById("settingsCopy").addEventListener("click", () => {
+          state.section = "schedule";
+          render();
+          document.getElementById("copyPlan").click();
+        });
+      }
+
+      function renderCategoryContent(section) {
+        if (section.id === "reservations") renderReservationsContent();
+        if (section.id === "ledger") renderLedgerContent();
+        if (section.id === "shopping") renderShoppingContent();
+        if (section.id === "prep") renderPrepContent();
+        if (section.id === "members") renderMembersContent();
+        if (section.id === "settings") renderSettingsContent();
+      }
+
+      function renderCategoryPage() {
+        const section = appSections.find((item) => item.id === state.section) || appSections[0];
+        setDailySectionsVisible(false);
+        document.body.dataset.day = String(state.selectedDay);
+        document.documentElement.style.setProperty("--day-image", `url("${trip.days[state.selectedDay].image}")`);
+        setTopHeader(section);
+        renderTabs();
+        renderBottomNav();
+        renderCategoryRoute(section);
+        renderCategoryContent(section);
+      }
+
       function updateExchangeResult() {
         const jpy = Number(jpyAmountEl.value || 0);
         const rate = Number(exchangeRateEl.value || 0);
@@ -2997,8 +3625,8 @@
       }
 
       function render() {
-        if (state.view === "info") {
-          renderInfoPage();
+        if (state.section !== "schedule") {
+          renderCategoryPage();
           return;
         }
 
@@ -3014,8 +3642,7 @@
 
         document.body.dataset.day = String(state.selectedDay);
         document.documentElement.style.setProperty("--day-image", `url("${day.image}")`);
-        document.getElementById("tripTitle").textContent = trip.title;
-        document.getElementById("tripMeta").textContent = `${trip.traveler} · ${trip.note}`;
+        setTopHeader(appSections[0]);
         document.getElementById("dayLabel").textContent = `${day.date} · ${day.title}`;
         photoTileEls.forEach((tile, index) => {
           tile.textContent = day.tiles[index] || day.title;
@@ -3038,6 +3665,7 @@
         travelModeEl.value = state.mode;
 
         renderTabs();
+        renderBottomNav();
         renderRouteMap(day, scheduled);
         renderFlight(day);
         renderWeather(day);
@@ -3077,7 +3705,7 @@
       }
 
       startTimeEl.addEventListener("change", () => {
-        if (state.view !== "day") return;
+        if (state.section !== "schedule") return;
         if (trip.days[state.selectedDay].fixedSchedule) return;
         localStorage.setItem(`start-${state.selectedDay}`, startTimeEl.value);
         render();
@@ -3090,7 +3718,7 @@
       });
 
       document.getElementById("copyPlan").addEventListener("click", async () => {
-        if (state.view !== "day") return;
+        if (state.section !== "schedule") return;
         const day = trip.days[state.selectedDay];
         const lines = scheduleFor(day, state.selectedDay).map((stop) => {
           return `${formatTime(stop.arrival)}-${formatTime(stop.leave)} ${stop.name}（停留 ${formatMinutes(stop.stayMinutes)}，交通 ${formatMinutes(stop.travelMinutes)}）`;
@@ -3136,6 +3764,12 @@
       });
       twdAmountEl.addEventListener("input", updateJpyFromTwd);
       refreshRateEl.addEventListener("click", () => refreshExchangeRate(true));
+      quickAddEl.addEventListener("click", () => {
+        state.section = "reservations";
+        localStorage.setItem("appSection", state.section);
+        render();
+        showToast("已切換到預約管理");
+      });
 
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
         navigator.serviceWorker.register("./service-worker.js").catch(() => {});
