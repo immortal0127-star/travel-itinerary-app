@@ -1807,8 +1807,8 @@
 
       <section class="info-section info-page" id="infoPage" aria-label="旅遊資訊總覽" hidden>
         <div class="section-heading">
-          <h2>資訊總覽</h2>
-          <span>預約、記帳、購物、準備、成員與設定</span>
+          <h2 id="infoPageTitle">資訊總覽</h2>
+          <span id="infoPageSubtitle">預約、記帳、購物、準備、成員與設定</span>
         </div>
 
         <article class="info-panel" id="reservationsPanel" aria-label="預約總覽">
@@ -1856,8 +1856,11 @@
 
         <article class="info-panel" id="shoppingPanel">
           <div class="section-heading">
-            <h2>購物與美食清單</h2>
-            <span>餐飲、超市、伴手禮與採買</span>
+            <div>
+              <h2>購物清單</h2>
+              <span>自己新增想買的東西</span>
+            </div>
+            <button class="action map" id="addShoppingItem" type="button">＋ 新增</button>
           </div>
           <div class="info-page-grid" id="shoppingGrid"></div>
         </article>
@@ -2979,7 +2982,8 @@
       const state = {
         selectedDay: Number(localStorage.getItem("selectedDay") || 0),
         view: savedTab === "info" ? "info" : "day",
-        mode: localStorage.getItem("travelMode") || "transit"
+        mode: localStorage.getItem("travelMode") || "transit",
+        infoTarget: localStorage.getItem("infoTarget") || "reservationsPanel"
       };
       if (!Number.isFinite(state.selectedDay) || state.selectedDay < 0 || state.selectedDay >= trip.days.length) {
         state.selectedDay = 0;
@@ -3003,6 +3007,8 @@
       const extrasSectionEl = document.getElementById("extrasSection");
       const extrasGridEl = document.getElementById("extrasGrid");
       const infoPageEl = document.getElementById("infoPage");
+      const infoPageTitleEl = document.getElementById("infoPageTitle");
+      const infoPageSubtitleEl = document.getElementById("infoPageSubtitle");
       const reservationsGridEl = document.getElementById("reservationsGrid");
       const lodgingGridEl = document.getElementById("lodgingGrid");
       const shoppingGridEl = document.getElementById("shoppingGrid");
@@ -3016,6 +3022,7 @@
       const rateStatusEl = document.getElementById("rateStatus");
       const refreshRateEl = document.getElementById("refreshRate");
       const addReservationEl = document.getElementById("addReservation");
+      const addShoppingItemEl = document.getElementById("addShoppingItem");
       const footerActionsEl = document.getElementById("footerActions");
       const scrapbookDashboardEl = document.getElementById("scrapbookDashboard");
       const overviewWeatherEl = document.getElementById("overviewWeather");
@@ -3360,6 +3367,7 @@
       }
 
       function setDailySectionsVisible(visible) {
+        tabsEl.hidden = !visible;
         controlsEl.hidden = !visible;
         daySpotlightEl.hidden = !visible;
         summaryGridEl.hidden = !visible;
@@ -3514,35 +3522,30 @@
 
       function renderShopping() {
         shoppingGridEl.innerHTML = "";
-        const items = [];
-        trip.days.forEach((day) => {
-          (day.foods || []).forEach((food) => items.push({ ...food, dayLabel: day.label, type: "美食" }));
-          (day.extras || []).forEach((extra) => {
-            const text = `${extra.name} ${extra.memo || ""}`;
-            if (/商店|超市|便利商店|採買|免稅|伴手禮|美食|布丁|可樂餅|牛奶|雞蛋糕|AEON|FamilyMart|Big|Bic|購物/i.test(text)) {
-              items.push({ ...extra, dayLabel: day.label, type: "購物" });
-            }
-          });
-          day.stops.forEach((stop) => {
-            const text = `${stop.name} ${stop.memo || ""}`;
-            if (/商圈|購物|Bic|Big|AEON|永旺|伴手禮|採買/i.test(text)) {
-              items.push({ ...stop, dayLabel: day.label, type: "採買" });
-            }
-          });
-        });
+        const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
 
-        items.forEach((item) => {
+        if (items.length === 0) {
+          const emptyCard = document.createElement("article");
+          emptyCard.className = "info-list-card";
+          emptyCard.innerHTML = `
+            <h3>尚未新增購物項目</h3>
+            <p>按右上角「＋ 新增」，把伴手禮、藥妝、電器、零食或想買的東西加入清單。</p>
+          `;
+          shoppingGridEl.appendChild(emptyCard);
+          return;
+        }
+
+        items.forEach((item, index) => {
           const card = document.createElement("article");
           card.className = "info-list-card";
           card.innerHTML = `
             <div>
-              <h3>${item.dayLabel} · ${item.name}</h3>
-              <p>${item.address || item.place || "行程附近"}</p>
+              <h3>${escapeHtml(item.name)}</h3>
+              <p>${escapeHtml(item.category || "購物")}</p>
             </div>
-            <p>${item.type}｜${item.timing || item.memo || "可依當天時間調整"}</p>
+            <p>${escapeHtml(item.memo || "尚未填寫備註")}</p>
             <div class="actions">
-              <a class="action map" href="${mapUrl(item)}" target="_blank" rel="noopener">地圖</a>
-              <a class="action route" href="${routeUrl(null, item)}" target="_blank" rel="noopener">導航</a>
+              <button class="action secondary" type="button" data-delete-shopping="${index}">刪除</button>
             </div>
           `;
           shoppingGridEl.appendChild(card);
@@ -3669,29 +3672,67 @@
         }
       }
 
+      function infoPageMeta(panelId) {
+        return {
+          reservationsPanel: {
+            title: "預約管理",
+            subtitle: "Day 1-6 機票、住宿、包車與票券"
+          },
+          accountingPanel: {
+            title: "即時匯率計算器",
+            subtitle: "只保留日圓與台幣換算"
+          },
+          shoppingPanel: {
+            title: "購物清單",
+            subtitle: "自己新增想買的東西"
+          },
+          packingPanel: {
+            title: "準備清單",
+            subtitle: "出門前快速核對"
+          },
+          membersPanel: {
+            title: "成員分工",
+            subtitle: "家庭旅遊共用備忘"
+          },
+          settingsPanel: {
+            title: "設定",
+            subtitle: "主題顏色與雪花效果"
+          }
+        }[panelId] || {
+          title: "旅遊資訊",
+          subtitle: "請從下方選擇功能"
+        };
+      }
+
       function renderInfoPage() {
         setDailySectionsVisible(false);
-        setPlannerNavActive("reservationsPanel");
+        const activePanel = state.infoTarget || "reservationsPanel";
+        const pageMeta = infoPageMeta(activePanel);
+        setPlannerNavActive(activePanel);
         document.body.dataset.day = "info";
         document.documentElement.style.setProperty("--day-image", `url("${trip.days[3].image}")`);
-        document.getElementById("tripTitle").textContent = trip.title;
-        document.getElementById("tripMeta").textContent = `${trip.traveler} · ${trip.note}`;
-        document.getElementById("dayLabel").textContent = "旅遊資訊總覽";
+        document.getElementById("tripTitle").textContent = pageMeta.title;
+        document.getElementById("tripMeta").textContent = pageMeta.subtitle;
+        document.getElementById("dayLabel").textContent = pageMeta.title;
+        infoPageTitleEl.textContent = pageMeta.title;
+        infoPageSubtitleEl.textContent = pageMeta.subtitle;
         photoTileEls.forEach((tile, index) => {
           tile.textContent = ["即時匯率", "每日住宿", "必帶物品"][index] || "資訊總覽";
         });
 
         renderTabs();
-        renderInfoRoute();
-        renderReservations();
-        renderLodgings();
-        renderShopping();
-        renderAttractions();
-        renderTimeNotes();
-        renderPacking();
-        renderMembers();
-        updateExchangeResult();
-        if (!rateLoaded) refreshExchangeRate(false);
+        document.querySelectorAll(".info-page > .info-panel").forEach((panel) => {
+          panel.hidden = panel.id !== activePanel;
+        });
+
+        if (activePanel === "reservationsPanel") renderReservations();
+        if (activePanel === "accountingPanel") {
+          updateExchangeResult();
+          if (!rateLoaded) refreshExchangeRate(false);
+        }
+        if (activePanel === "shoppingPanel") renderShopping();
+        if (activePanel === "packingPanel") renderPacking();
+        if (activePanel === "membersPanel") renderMembers();
       }
 
       function render() {
@@ -3863,6 +3904,36 @@
         renderReservations();
         showToast("已新增預約資料");
       });
+      addShoppingItemEl.addEventListener("click", () => {
+        const name = window.prompt("想新增什麼？例如：藥妝、伴手禮、零食、電器", "");
+        if (!name) return;
+        const category = window.prompt("分類？例如：藥妝、伴手禮、電器、零食", "購物");
+        if (!category) return;
+        const memo = window.prompt("數量 / 店家 / 備註？", "");
+        if (memo === null) return;
+
+        const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
+        items.push({
+          name: name.trim(),
+          category: category.trim(),
+          memo: memo.trim() || "尚未填寫備註"
+        });
+        localStorage.setItem("shoppingItems", JSON.stringify(items));
+        renderShopping();
+        showToast("已新增購物項目");
+      });
+
+      shoppingGridEl.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-delete-shopping]");
+        if (!button) return;
+        const index = Number(button.dataset.deleteShopping);
+        const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
+        if (!Number.isInteger(index) || index < 0 || index >= items.length) return;
+        items.splice(index, 1);
+        localStorage.setItem("shoppingItems", JSON.stringify(items));
+        renderShopping();
+        showToast("已刪除購物項目");
+      });
 
       document.querySelectorAll("[data-theme]").forEach((button) => {
         button.addEventListener("click", () => {
@@ -3892,7 +3963,9 @@
 
         if (infoTargets.has(target)) {
           state.view = "info";
+          state.infoTarget = target;
           localStorage.setItem("selectedTab", "info");
+          localStorage.setItem("infoTarget", target);
           render();
           window.setTimeout(() => {
             const targetEl = document.getElementById(target);
