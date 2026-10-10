@@ -1808,7 +1808,7 @@
       <section class="info-section info-page" id="infoPage" aria-label="旅遊資訊總覽" hidden>
         <div class="section-heading">
           <h2 id="infoPageTitle">資訊總覽</h2>
-          <span id="infoPageSubtitle">預約、記帳、購物、準備、成員與設定</span>
+          <span id="infoPageSubtitle">預約、匯率、購物、準備、成員與設定</span>
         </div>
 
         <article class="info-panel" id="reservationsPanel" aria-label="預約總覽">
@@ -1824,7 +1824,7 @@
 
         <article class="info-panel" id="accountingPanel" aria-label="即時匯率計算器">
           <div class="section-heading">
-            <h2>記帳與匯率</h2>
+            <h2>即時匯率計算器</h2>
             <span id="rateStatus">連網時自動更新，離線可手動輸入</span>
           </div>
           <div class="converter-grid">
@@ -1928,7 +1928,7 @@
     <nav class="planner-nav" id="plannerNav" aria-label="旅行手帳導覽">
       <button type="button" data-target="topbar"><strong>行</strong><span>行程</span></button>
       <button type="button" data-target="reservationsPanel"><strong>票</strong><span>預約</span></button>
-      <button type="button" data-target="accountingPanel"><strong>帳</strong><span>記帳</span></button>
+      <button type="button" data-target="accountingPanel"><strong>匯</strong><span>匯率</span></button>
       <button type="button" data-target="shoppingPanel"><strong>購</strong><span>購物</span></button>
       <button type="button" data-target="packingPanel"><strong>備</strong><span>準備</span></button>
       <button type="button" data-target="membersPanel"><strong>員</strong><span>成員</span></button>
@@ -3384,9 +3384,9 @@
 
       function renderInfoRoute() {
         document.getElementById("routeTitle").textContent = "旅遊資訊總覽";
-        document.getElementById("routeRange").textContent = "預約 · 記帳 · 購物 · 準備 · 成員 · 設定";
+        document.getElementById("routeRange").textContent = "預約 · 匯率 · 購物 · 準備 · 成員 · 設定";
         routeLineEl.innerHTML = "";
-        ["預約管理", "記帳匯率", "購物清單", "準備提醒", "成員分工", "設定"].forEach((label, index) => {
+        ["預約管理", "即時匯率", "購物清單", "準備提醒", "成員分工", "設定"].forEach((label, index) => {
           const item = document.createElement("a");
           item.className = "route-stop";
           item.href = "#infoPage";
