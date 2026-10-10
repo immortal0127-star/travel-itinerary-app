@@ -2059,6 +2059,24 @@
                 <button class="action map" id="snowToggle" type="button">切換下雪</button>
               </div>
             </article>
+            <article class="info-list-card">
+              <h3>Google 試算表同步</h3>
+              <p id="syncStatus">尚未設定同步，購物與備忘會先存在本機。</p>
+              <form class="inline-form" id="syncSettingsForm">
+                <label>
+                  Apps Script Web App URL
+                  <input id="syncUrl" type="url" placeholder="貼上 https://script.google.com/macros/s/.../exec" autocomplete="off" />
+                </label>
+                <label>
+                  同步碼
+                  <input id="syncToken" type="password" placeholder="家人共用的同步碼" autocomplete="off" />
+                </label>
+                <div class="actions">
+                  <button class="action map" type="submit">儲存同步設定</button>
+                  <button class="action secondary" id="syncNow" type="button">立即同步</button>
+                </div>
+              </form>
+            </article>
           </div>
         </article>
       </section>
@@ -3223,12 +3241,23 @@
       const overviewNextMemoEl = document.getElementById("overviewNextMemo");
       const plannerNavEl = document.getElementById("plannerNav");
       const snowToggleEl = document.getElementById("snowToggle");
+      const syncSettingsFormEl = document.getElementById("syncSettingsForm");
+      const syncUrlEl = document.getElementById("syncUrl");
+      const syncTokenEl = document.getElementById("syncToken");
+      const syncNowEl = document.getElementById("syncNow");
+      const syncStatusEl = document.getElementById("syncStatus");
       const photoTileEls = Array.from(document.querySelectorAll(".photo-tile span"));
       const startTimeEl = document.getElementById("startTime");
       const travelModeEl = document.getElementById("travelMode");
       const toastEl = document.getElementById("toast");
       document.body.dataset.theme = localStorage.getItem("travelTheme") || "pink";
       document.body.dataset.snow = localStorage.getItem("snowMode") || "false";
+      const sharedSync = {
+        url: localStorage.getItem("sheetSyncUrl") || "",
+        token: localStorage.getItem("sheetSyncToken") || "",
+        timer: null,
+        busy: false
+      };
 
       function pad(value) {
         return String(value).padStart(2, "0");
@@ -3290,6 +3319,115 @@
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#39;");
+      }
+
+      function safeJsonParse(value, fallback) {
+        try {
+          return JSON.parse(value || "");
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function makeSharedId(prefix) {
+        if (window.crypto && typeof window.crypto.randomUUID === "function") {
+          return `${prefix}-${window.crypto.randomUUID()}`;
+        }
+        return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      }
+
+      function getSharedState() {
+        return {
+          shoppingItems: safeJsonParse(localStorage.getItem("shoppingItems"), []),
+          familyMemos: safeJsonParse(localStorage.getItem("familyMemos"), [])
+        };
+      }
+
+      function setSharedState(nextState) {
+        localStorage.setItem("shoppingItems", JSON.stringify(nextState.shoppingItems || []));
+        localStorage.setItem("familyMemos", JSON.stringify(nextState.familyMemos || []));
+      }
+
+      function isSyncReady() {
+        return Boolean(sharedSync.url && sharedSync.token);
+      }
+
+      function updateSyncStatus(message) {
+        if (!syncStatusEl) return;
+        if (message) {
+          syncStatusEl.textContent = message;
+          return;
+        }
+        syncStatusEl.textContent = isSyncReady()
+          ? "已設定 Google 試算表同步，購物與備忘會自動更新。"
+          : "尚未設定同步，購物與備忘會先存在本機。";
+      }
+
+      async function requestSharedState(payload) {
+        if (!isSyncReady()) throw new Error("sync not configured");
+        const response = await fetch(sharedSync.url, {
+          method: "POST",
+          headers: { "content-type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            token: sharedSync.token,
+            ...payload
+          })
+        });
+        if (!response.ok) throw new Error("sync request failed");
+        const data = await response.json();
+        if (!data || data.ok === false) throw new Error(data && data.error ? data.error : "sync failed");
+        return {
+          shoppingItems: Array.isArray(data.shoppingItems) ? data.shoppingItems : [],
+          familyMemos: Array.isArray(data.familyMemos) ? data.familyMemos : []
+        };
+      }
+
+      function renderSharedPanels() {
+        if (state.view !== "info") return;
+        if (state.infoTarget === "shoppingPanel") renderShopping();
+        if (state.infoTarget === "membersPanel") renderMembers();
+      }
+
+      async function syncFromSheet(showDoneToast = false) {
+        if (!isSyncReady() || sharedSync.busy) return;
+        sharedSync.busy = true;
+        updateSyncStatus("正在同步 Google 試算表...");
+        try {
+          const remoteState = await requestSharedState({ action: "read" });
+          setSharedState(remoteState);
+          renderSharedPanels();
+          updateSyncStatus("已同步 Google 試算表資料。");
+          if (showDoneToast) showToast("同步完成");
+        } catch (error) {
+          updateSyncStatus("同步失敗，會先使用本機資料；請檢查 Web App URL 與同步碼。");
+          if (showDoneToast) showToast("同步失敗");
+        } finally {
+          sharedSync.busy = false;
+        }
+      }
+
+      async function saveSharedState(nextState, toastMessage) {
+        setSharedState(nextState);
+        renderSharedPanels();
+        if (!isSyncReady()) {
+          showToast(`${toastMessage}，尚未啟用同步`);
+          return;
+        }
+        updateSyncStatus("正在寫入 Google 試算表...");
+        try {
+          const remoteState = await requestSharedState({
+            action: "write",
+            shoppingItems: nextState.shoppingItems || [],
+            familyMemos: nextState.familyMemos || []
+          });
+          setSharedState(remoteState);
+          renderSharedPanels();
+          updateSyncStatus("已寫入 Google 試算表，其他手機稍後會更新。");
+          showToast(toastMessage);
+        } catch (error) {
+          updateSyncStatus("寫入同步失敗，資料已先保存在本機。");
+          showToast("已存在本機，同步失敗");
+        }
       }
 
       function queryFor(stop) {
@@ -3752,7 +3890,7 @@
 
       function renderShopping() {
         shoppingGridEl.innerHTML = "";
-        const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
+        const items = getSharedState().shoppingItems;
 
         if (items.length === 0) {
           const emptyCard = document.createElement("article");
@@ -3838,7 +3976,7 @@
 
       function renderMembers() {
         membersGridEl.innerHTML = "";
-        const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
+        const memos = getSharedState().familyMemos;
 
         if (memos.length === 0) {
           const emptyCard = document.createElement("article");
@@ -3968,6 +4106,7 @@
         setDailySectionsVisible(false);
         const activePanel = state.infoTarget || "reservationsPanel";
         const pageMeta = infoPageMeta(activePanel);
+        updateSyncStatus();
         setPlannerNavActive(activePanel);
         document.body.dataset.day = "info";
         document.documentElement.style.setProperty("--day-image", `url("${trip.days[3].image}")`);
@@ -4143,6 +4282,30 @@
       });
       twdAmountEl.addEventListener("input", updateJpyFromTwd);
       refreshRateEl.addEventListener("click", () => refreshExchangeRate(true));
+      syncUrlEl.value = sharedSync.url;
+      syncTokenEl.value = sharedSync.token;
+      syncSettingsFormEl.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        sharedSync.url = syncUrlEl.value.trim();
+        sharedSync.token = syncTokenEl.value.trim();
+        localStorage.setItem("sheetSyncUrl", sharedSync.url);
+        localStorage.setItem("sheetSyncToken", sharedSync.token);
+        updateSyncStatus();
+        if (isSyncReady()) {
+          if (!sharedSync.timer) {
+            sharedSync.timer = window.setInterval(() => syncFromSheet(false), 8000);
+          }
+          await syncFromSheet(true);
+        } else {
+          if (sharedSync.timer) {
+            window.clearInterval(sharedSync.timer);
+            sharedSync.timer = null;
+          }
+          showToast("同步設定已清空");
+        }
+      });
+      syncNowEl.addEventListener("click", () => syncFromSheet(true));
+
       addReservationEl.addEventListener("click", () => {
         const dayInput = window.prompt("要新增到第幾天？請輸入 1-6", String(state.selectedDay + 1));
         if (!dayInput) return;
@@ -4180,7 +4343,7 @@
         shoppingItemFormEl.hidden = true;
       });
 
-      shoppingItemFormEl.addEventListener("submit", (event) => {
+      shoppingItemFormEl.addEventListener("submit", async (event) => {
         event.preventDefault();
         const name = shoppingItemNameEl.value.trim();
         if (!name) {
@@ -4189,29 +4352,26 @@
           return;
         }
 
-        const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
-        items.push({
+        const currentState = getSharedState();
+        currentState.shoppingItems.push({
+          id: makeSharedId("shop"),
           name,
           category: shoppingItemCategoryEl.value.trim() || "購物",
           memo: shoppingItemMemoEl.value.trim() || "尚未填寫備註"
         });
-        localStorage.setItem("shoppingItems", JSON.stringify(items));
         shoppingItemFormEl.reset();
         shoppingItemFormEl.hidden = true;
-        renderShopping();
-        showToast("已新增購物項目");
+        await saveSharedState(currentState, "已新增購物項目");
       });
 
-      shoppingGridEl.addEventListener("click", (event) => {
+      shoppingGridEl.addEventListener("click", async (event) => {
         const button = event.target.closest("[data-delete-shopping]");
         if (!button) return;
         const index = Number(button.dataset.deleteShopping);
-        const items = JSON.parse(localStorage.getItem("shoppingItems") || "[]");
-        if (!Number.isInteger(index) || index < 0 || index >= items.length) return;
-        items.splice(index, 1);
-        localStorage.setItem("shoppingItems", JSON.stringify(items));
-        renderShopping();
-        showToast("已刪除購物項目");
+        const currentState = getSharedState();
+        if (!Number.isInteger(index) || index < 0 || index >= currentState.shoppingItems.length) return;
+        currentState.shoppingItems.splice(index, 1);
+        await saveSharedState(currentState, "已刪除購物項目");
       });
 
       addFamilyMemoEl.addEventListener("click", () => {
@@ -4224,7 +4384,7 @@
         familyMemoFormEl.hidden = true;
       });
 
-      familyMemoFormEl.addEventListener("submit", (event) => {
+      familyMemoFormEl.addEventListener("submit", async (event) => {
         event.preventDefault();
         const title = familyMemoTitleEl.value.trim();
         if (!title) {
@@ -4233,28 +4393,25 @@
           return;
         }
 
-        const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
-        memos.push({
+        const currentState = getSharedState();
+        currentState.familyMemos.push({
+          id: makeSharedId("memo"),
           title,
           text: familyMemoTextEl.value.trim() || "尚未填寫內容"
         });
-        localStorage.setItem("familyMemos", JSON.stringify(memos));
         familyMemoFormEl.reset();
         familyMemoFormEl.hidden = true;
-        renderMembers();
-        showToast("已新增備忘");
+        await saveSharedState(currentState, "已新增備忘");
       });
 
-      membersGridEl.addEventListener("click", (event) => {
+      membersGridEl.addEventListener("click", async (event) => {
         const button = event.target.closest("[data-delete-memo]");
         if (!button) return;
         const index = Number(button.dataset.deleteMemo);
-        const memos = JSON.parse(localStorage.getItem("familyMemos") || "[]");
-        if (!Number.isInteger(index) || index < 0 || index >= memos.length) return;
-        memos.splice(index, 1);
-        localStorage.setItem("familyMemos", JSON.stringify(memos));
-        renderMembers();
-        showToast("已刪除備忘");
+        const currentState = getSharedState();
+        if (!Number.isInteger(index) || index < 0 || index >= currentState.familyMemos.length) return;
+        currentState.familyMemos.splice(index, 1);
+        await saveSharedState(currentState, "已刪除備忘");
       });
 
       packingGridEl.addEventListener("click", (event) => {
@@ -4325,6 +4482,11 @@
 
       setTheme(localStorage.getItem("travelTheme") || "pink");
       setSnowMode(localStorage.getItem("snowMode") === "true");
+      updateSyncStatus();
+      if (isSyncReady()) {
+        syncFromSheet(false);
+        sharedSync.timer = window.setInterval(() => syncFromSheet(false), 8000);
+      }
 
       if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
         navigator.serviceWorker.register("./service-worker.js").catch(() => {});
