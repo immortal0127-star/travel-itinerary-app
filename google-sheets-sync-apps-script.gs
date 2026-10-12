@@ -66,7 +66,7 @@ function ensureSheets() {
   const shoppingSheet = getOrCreateSheet(spreadsheet, SHEET_NAMES.shopping);
   const memoSheet = getOrCreateSheet(spreadsheet, SHEET_NAMES.memos);
 
-  setHeaders(shoppingSheet, ["id", "name", "category", "memo", "updatedAt"]);
+  setHeaders(shoppingSheet, ["id", "name", "category", "memo", "updatedAt", "imageData"]);
   setHeaders(memoSheet, ["id", "title", "text", "updatedAt"]);
 }
 
@@ -86,12 +86,13 @@ function setHeaders(sheet, headers) {
 
 function readShoppingItems() {
   const sheet = getSpreadsheet().getSheetByName(SHEET_NAMES.shopping);
-  const rows = readRows(sheet, 5);
+  const rows = readRows(sheet, 6);
   return rows.map((row) => ({
     id: row[0],
     name: row[1],
     category: row[2],
-    memo: row[3]
+    memo: row[3],
+    imageData: cleanImage(row[5])
   })).filter((item) => item.id && item.name);
 }
 
@@ -113,12 +114,16 @@ function readRows(sheet, columnCount) {
 
 function writeShoppingItems(items) {
   const sheet = getSpreadsheet().getSheetByName(SHEET_NAMES.shopping);
-  replaceRows(sheet, 5, items.map((item) => [
+  const existingImages = new Map(readShoppingItems().map((item) => [String(item.id), item.imageData]));
+  replaceRows(sheet, 6, items.map((item) => [
     cleanText(item.id),
     cleanText(item.name),
     cleanText(item.category || "購物"),
     cleanText(item.memo || "尚未填寫備註"),
-    new Date().toISOString()
+    new Date().toISOString(),
+    cleanImage(Object.prototype.hasOwnProperty.call(item, "imageData")
+      ? item.imageData
+      : existingImages.get(String(item.id)))
   ]));
 }
 
@@ -141,4 +146,13 @@ function replaceRows(sheet, columnCount, rows) {
 
 function cleanText(value) {
   return String(value || "").trim().slice(0, 500);
+}
+
+function cleanImage(value) {
+  const data = String(value || "");
+  if (!data) return "";
+  if (data.length > 45000 || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(data)) {
+    throw new Error("圖片格式不支援或圖片太大");
+  }
+  return data;
 }

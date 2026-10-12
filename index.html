@@ -974,6 +974,43 @@
         resize: vertical;
       }
 
+      .shopping-image {
+        display: block;
+        width: 100%;
+        max-width: 360px;
+        height: 220px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .shopping-image[hidden] {
+        display: none;
+      }
+
+      .shopping-upload {
+        position: relative;
+        cursor: pointer;
+      }
+
+      .shopping-upload input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+
+      .shopping-upload:focus-within {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+
+      #shoppingItemForm input[type="file"] {
+        min-width: 0;
+        max-width: 100%;
+        font-size: 16px;
+      }
+
       .info-page-grid {
         display: grid;
         gap: 10px;
@@ -1984,6 +2021,14 @@
               數量 / 店家 / 備註
               <textarea id="shoppingItemMemo" placeholder="例如：2 盒、松本清、機場買"></textarea>
             </label>
+            <label>
+              商品圖片
+              <input id="shoppingItemImage" type="file" accept="image/*" />
+            </label>
+            <img class="shopping-image" id="shoppingImagePreview" alt="商品圖片預覽" hidden />
+            <div id="shoppingImageTools" hidden>
+              <button class="action secondary" id="removeShoppingImage" type="button">移除圖片</button>
+            </div>
             <div class="actions">
               <button class="action map" type="submit">儲存項目</button>
               <button class="action secondary" id="cancelShoppingItem" type="button">取消</button>
@@ -3225,6 +3270,13 @@
       const shoppingItemNameEl = document.getElementById("shoppingItemName");
       const shoppingItemCategoryEl = document.getElementById("shoppingItemCategory");
       const shoppingItemMemoEl = document.getElementById("shoppingItemMemo");
+      const shoppingItemImageEl = document.getElementById("shoppingItemImage");
+      const shoppingImagePreviewEl = document.getElementById("shoppingImagePreview");
+      const shoppingImageToolsEl = document.getElementById("shoppingImageTools");
+      const removeShoppingImageEl = document.getElementById("removeShoppingImage");
+      let pendingShoppingImage = "";
+      let shoppingImageVersion = 0;
+      let shoppingImageBusy = false;
       const cancelShoppingItemEl = document.getElementById("cancelShoppingItem");
       const addFamilyMemoEl = document.getElementById("addFamilyMemo");
       const familyMemoFormEl = document.getElementById("familyMemoForm");
@@ -3371,11 +3423,13 @@
         if (!isSyncReady()) throw new Error("sync not configured");
         const requestUrl = new URL(sharedSync.url);
         requestUrl.searchParams.set("token", sharedSync.token);
-        requestUrl.searchParams.set("payload", JSON.stringify({
-          token: sharedSync.token,
-          ...payload
-        }));
-        const response = await fetch(requestUrl.toString(), { method: "GET" });
+        const requestBody = JSON.stringify({ token: sharedSync.token, ...payload });
+        // Images belong in the body to avoid URL length limits.
+        const options = payload.action === "write"
+          ? { method: "POST", headers: { "Content-Type": "text/plain;charset=UTF-8" }, body: requestBody }
+          : { method: "GET" };
+        if (payload.action !== "write") requestUrl.searchParams.set("payload", requestBody);
+        const response = await fetch(requestUrl.toString(), options);
         if (!response.ok) throw new Error("sync request failed");
         const data = await response.json();
         if (!data || data.ok === false) throw new Error(data && data.error ? data.error : "sync failed");
@@ -3410,13 +3464,19 @@
       }
 
       async function saveSharedState(nextState, toastMessage) {
-        setSharedState(nextState);
+        try {
+          setSharedState(nextState);
+        } catch (error) {
+          showToast("手機儲存空間不足，請移除不需要的商品圖片後再試");
+          return false;
+        }
         renderSharedPanels();
         if (!isSyncReady()) {
           showToast(`${toastMessage}，尚未啟用同步`);
-          return;
+          return true;
         }
         updateSyncStatus("正在寫入 Google 試算表...");
+        sharedSync.busy = true;
         try {
           const remoteState = await requestSharedState({
             action: "write",
@@ -3430,7 +3490,58 @@
         } catch (error) {
           updateSyncStatus("寫入同步失敗，資料已先保存在本機。");
           showToast("已存在本機，同步失敗");
+        } finally {
+          sharedSync.busy = false;
         }
+        return true;
+      }
+
+      function validShoppingImage(value) {
+        return typeof value === "string" && value.length <= 45000 &&
+          /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/.test(value);
+      }
+
+      async function prepareShoppingImage(file) {
+        if (!file || !file.type.startsWith("image/")) throw new Error("請選擇圖片檔案");
+        if (file.size > 25 * 1024 * 1024) throw new Error("圖片太大，請選擇 25 MB 以下的圖片");
+        const url = URL.createObjectURL(file);
+        try {
+          const image = new Image();
+          image.src = url;
+          await image.decode();
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          if (!context) throw new Error("無法處理圖片");
+          // Keep each image within Google Sheets' per-cell limit.
+          for (const edge of [720, 600, 480, 360, 240]) {
+            const scale = Math.min(1, edge / Math.max(image.naturalWidth, image.naturalHeight));
+            canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+            canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+            context.fillStyle = "#ffffff";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            for (const quality of [0.8, 0.65, 0.5]) {
+              const data = canvas.toDataURL("image/jpeg", quality);
+              if (validShoppingImage(data)) return data;
+            }
+          }
+          throw new Error("圖片太大，請改用較小的圖片");
+        } catch (error) {
+          if (error.name === "EncodingError") throw new Error("無法讀取圖片，請改用 JPG 或 PNG");
+          throw error;
+        } finally {
+          URL.revokeObjectURL(url);
+        }
+      }
+
+      function resetShoppingImage() {
+        shoppingImageVersion += 1;
+        pendingShoppingImage = "";
+        shoppingImageBusy = false;
+        shoppingItemImageEl.value = "";
+        shoppingImagePreviewEl.removeAttribute("src");
+        shoppingImagePreviewEl.hidden = true;
+        shoppingImageToolsEl.hidden = true;
       }
 
       function queryFor(stop) {
@@ -3915,7 +4026,13 @@
               <p>${escapeHtml(item.category || "購物")}</p>
             </div>
             <p>${escapeHtml(item.memo || "尚未填寫備註")}</p>
+            ${validShoppingImage(item.imageData) ? `<img class="shopping-image" src="${escapeHtml(item.imageData)}" alt="${escapeHtml(item.name)}的商品圖片" loading="lazy" />` : ""}
             <div class="actions">
+              <label class="action secondary shopping-upload">
+                ${validShoppingImage(item.imageData) ? "更換圖片" : "上傳圖片"}
+                <input type="file" accept="image/*" data-shopping-image="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)}：上傳圖片" />
+              </label>
+              ${validShoppingImage(item.imageData) ? `<button class="action secondary" type="button" data-remove-shopping-image="${escapeHtml(item.id)}">移除圖片</button>` : ""}
               <button class="action secondary" type="button" data-delete-shopping="${index}">刪除</button>
             </div>
           `;
@@ -4343,11 +4460,40 @@
 
       cancelShoppingItemEl.addEventListener("click", () => {
         shoppingItemFormEl.reset();
+        resetShoppingImage();
         shoppingItemFormEl.hidden = true;
+      });
+
+      removeShoppingImageEl.addEventListener("click", resetShoppingImage);
+
+      shoppingItemImageEl.addEventListener("change", async () => {
+        const file = shoppingItemImageEl.files[0];
+        if (!file) return;
+        const version = ++shoppingImageVersion;
+        shoppingImageBusy = true;
+        try {
+          const imageData = await prepareShoppingImage(file);
+          if (version !== shoppingImageVersion) return;
+          pendingShoppingImage = imageData;
+          shoppingImagePreviewEl.src = imageData;
+          shoppingImagePreviewEl.hidden = false;
+          shoppingImageToolsEl.hidden = false;
+        } catch (error) {
+          if (version === shoppingImageVersion) {
+            shoppingItemImageEl.value = "";
+            showToast(error.message);
+          }
+        } finally {
+          if (version === shoppingImageVersion) shoppingImageBusy = false;
+        }
       });
 
       shoppingItemFormEl.addEventListener("submit", async (event) => {
         event.preventDefault();
+        if (shoppingImageBusy || sharedSync.busy) {
+          showToast("圖片處理或同步中，請稍候再儲存");
+          return;
+        }
         const name = shoppingItemNameEl.value.trim();
         if (!name) {
           shoppingItemNameEl.focus();
@@ -4360,14 +4506,31 @@
           id: makeSharedId("shop"),
           name,
           category: shoppingItemCategoryEl.value.trim() || "購物",
-          memo: shoppingItemMemoEl.value.trim() || "尚未填寫備註"
+          memo: shoppingItemMemoEl.value.trim() || "尚未填寫備註",
+          imageData: pendingShoppingImage
         });
-        shoppingItemFormEl.reset();
-        shoppingItemFormEl.hidden = true;
-        await saveSharedState(currentState, "已新增購物項目");
+        const saved = await saveSharedState(currentState, "已新增購物項目");
+        if (saved) {
+          shoppingItemFormEl.reset();
+          resetShoppingImage();
+          shoppingItemFormEl.hidden = true;
+        }
       });
 
       shoppingGridEl.addEventListener("click", async (event) => {
+        const removeImageButton = event.target.closest("[data-remove-shopping-image]");
+        if (sharedSync.busy && event.target.closest("button")) {
+          showToast("正在同步，請稍候");
+          return;
+        }
+        if (removeImageButton) {
+          const currentState = getSharedState();
+          const item = currentState.shoppingItems.find((entry) => entry.id === removeImageButton.dataset.removeShoppingImage);
+          if (!item) return;
+          item.imageData = "";
+          await saveSharedState(currentState, "已移除商品圖片");
+          return;
+        }
         const button = event.target.closest("[data-delete-shopping]");
         if (!button) return;
         const index = Number(button.dataset.deleteShopping);
@@ -4375,6 +4538,29 @@
         if (!Number.isInteger(index) || index < 0 || index >= currentState.shoppingItems.length) return;
         currentState.shoppingItems.splice(index, 1);
         await saveSharedState(currentState, "已刪除購物項目");
+      });
+
+      shoppingGridEl.addEventListener("change", async (event) => {
+        const input = event.target.closest("[data-shopping-image]");
+        if (!input || !input.files[0]) return;
+        input.disabled = true;
+        try {
+          const imageData = await prepareShoppingImage(input.files[0]);
+          if (sharedSync.busy) {
+            showToast("正在同步，請稍候再上傳");
+            return;
+          }
+          const currentState = getSharedState();
+          const item = currentState.shoppingItems.find((entry) => entry.id === input.dataset.shoppingImage);
+          if (!item) return;
+          item.imageData = imageData;
+          await saveSharedState(currentState, "已儲存商品圖片");
+        } catch (error) {
+          showToast(error.message);
+        } finally {
+          input.disabled = false;
+          input.value = "";
+        }
       });
 
       addFamilyMemoEl.addEventListener("click", () => {
