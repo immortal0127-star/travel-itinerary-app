@@ -3122,6 +3122,18 @@
                 ]
               },
               {
+                name: "山田電機 テックランド名古屋本店（備用）",
+                place: "ヤマダデンキ テックランド名古屋本店",
+                address: "〒454-0855 愛知県名古屋市中川区昭明町5-1-5",
+                routeOrigin: "Nagoya Station",
+                routeOriginLabel: "從名古屋車站開車預估",
+                routeActionLabel: "從名古屋車站開車導航",
+                routeMode: "driving",
+                travelFromLastMinutes: 30,
+                stayMinutes: 45,
+                memo: "Day 5 名古屋市區採買的備用店，營業 10:00-20:00，建議逛店約 45 分鐘。名古屋車站單程車程預估 20-30 分鐘，需另外預留回程；搭公共交通可由青波線港北站步行約 15 分鐘抵達。"
+              },
+              {
                 name: "Flight of Dreams 夜間散步",
                 place: "Flight of Dreams Chubu Centrair",
                 address: "1-1 Centrair, Tokoname, Aichi",
@@ -3253,6 +3265,18 @@
               }
             ],
             extras: [
+              {
+                name: "山田電機 テックランド常滑店（備用）",
+                place: "ヤマダデンキ テックランド常滑店",
+                address: "〒479-0849 愛知県常滑市虹の丘六丁目117番地",
+                routeOrigin: "Tokoname Station",
+                routeOriginLabel: "從常滑站步行約",
+                routeActionLabel: "從常滑站步行導航",
+                routeMode: "walking",
+                travelFromLastMinutes: 15,
+                stayMinutes: 45,
+                memo: "Day 6 常滑市區散步時的電器採買備案，營業 10:00-20:00；官方資訊為常滑站步行約 15 分鐘，建議逛店約 45 分鐘。回程日若前往，請保留取行李與移動至機場的時間，目標 17:05 前抵達機場報到。"
+              },
               {
                 name: "中部國際機場 Sky Deck",
                 place: "Chubu Centrair Sky Deck",
@@ -3614,10 +3638,11 @@
 
       function routeUrl(origin, destination) {
         const destinationQuery = queryFor(destination);
+        const mode = destination.routeMode || state.mode;
         if (!origin) {
-          return `https://www.google.com/maps/dir/?api=1&destination=${destinationQuery}&travelmode=${state.mode}`;
+          return `https://www.google.com/maps/dir/?api=1&destination=${destinationQuery}&travelmode=${mode}`;
         }
-        return `https://www.google.com/maps/dir/?api=1&origin=${queryFor(origin)}&destination=${destinationQuery}&travelmode=${state.mode}`;
+        return `https://www.google.com/maps/dir/?api=1&origin=${queryFor(origin)}&destination=${destinationQuery}&travelmode=${mode}`;
       }
 
       function fullRouteUrl(day) {
