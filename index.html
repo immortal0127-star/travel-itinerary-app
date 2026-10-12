@@ -2515,7 +2515,7 @@
             image: "./assets/day-5.jpg",
             tiles: ["高山老街", "河童橋往返", "安曇野採買"],
             startTime: "08:00",
-            startStorageVersion: "swap-20261018-0800-1800",
+            startStorageVersion: "direct-20261018-0800-1800",
             weather: {
               location: "高山 / 上高地 / 安曇野",
               range: "上高地約 5-15°C，安曇野約 9-20°C",
@@ -2529,39 +2529,31 @@
                 address: "Nagoya, Aichi",
                 stayMinutes: 0,
                 travelMinutes: 0,
-                memo: "08:00 準時上車，合法綠牌豐田海獅 9 人座包車；08:00-18:00 共 10 小時，包含高山、上高地轉乘與散步、採買及抵達住宿。"
+                memo: "08:00 準時上車；依你們的綠牌包車可直接進入上高地安排，08:00-18:00 共 10 小時，包含高山、上高地散步、採買及抵達住宿。"
               },
               {
                 name: "高山老街快速午餐",
                 place: "Sanmachi Suji Takayama",
                 address: "Kamiichinomachi, Takayama, Gifu",
-                stayMinutes: 30,
+                stayMinutes: 45,
                 travelMinutes: 150,
-                memo: "10:30-11:00，高山仍安排在第三天；上三之町短逛與外帶午餐，30 分鐘後前往平湯轉乘。若塞車，優先縮短此站。"
+                memo: "10:30-11:15，上三之町短逛與外帶午餐，停留 45 分鐘後由原包車直達上高地。若道路延誤，優先縮短此站。"
               },
               {
-                name: "平湯溫泉轉乘上高地",
-                place: "Hirayu Bus Terminal",
-                address: "628 Okuhida Onsengo Hirayu, Takayama, Gifu",
-                stayMinutes: 30,
-                travelMinutes: 60,
-                memo: "12:00-12:30，購票、洗手間與候車；目標搭 12:30 平湯發車、12:55 抵達上高地的接駁巴士。司機另行移動至澤渡，回程在澤渡接駁，請事先確認集合點。"
-              },
-              {
-                name: "抵達上高地巴士總站",
+                name: "上高地包車下車點",
                 place: "Kamikochi Bus Terminal",
                 address: "Azumi, Matsumoto, Nagano",
-                stayMinutes: 5,
-                travelMinutes: 25,
-                memo: "12:55-13:00，確認回程往澤渡的月台與購票方式；不從大正池下車，直接從河童橋開始。"
+                stayMinutes: 10,
+                travelMinutes: 90,
+                memo: "12:45-12:55，綠牌包車直接送達上高地，整理隨身物品、洗手間並與司機確認 15:35 集合出發；從河童橋開始散步。"
               },
               {
                 name: "河童橋午餐與休息",
                 place: "Kappa Bridge Kamikochi",
                 address: "Kamikochi, Azumi, Matsumoto, Nagano",
-                stayMinutes: 10,
+                stayMinutes: 20,
                 travelMinutes: 5,
-                memo: "13:05-13:15，河童橋拍照、補水與外帶輕食；主餐可先在高山買好，避免現場候位。"
+                memo: "13:00-13:20，河童橋拍照、補水與輕食，停留 20 分鐘；可先在高山買好午餐。"
               },
               {
                 name: "河童橋往返明神池健行",
@@ -2569,7 +2561,7 @@
                 address: "Kamikochi, Azumi, Matsumoto, Nagano",
                 stayMinutes: 120,
                 travelMinutes: 0,
-                memo: "13:15-15:15，河童橋出發沿梓川往明神池再回河童橋，精簡健行約 2 小時；腳程較慢或轉乘延誤時改短程折返，優先保留回程搭車時間。"
+                memo: "13:20-15:20，河童橋出發沿梓川往明神池再回河童橋，精簡健行約 2 小時；依家人腳程彈性折返，保留 15:35 包車出發時間。"
               },
               {
                 name: "河童橋回程整理",
@@ -2577,32 +2569,24 @@
                 address: "Kamikochi, Azumi, Matsumoto, Nagano",
                 stayMinutes: 5,
                 travelMinutes: 0,
-                memo: "15:15-15:20，洗手間與確認人數，接著步行回巴士總站。"
+                memo: "15:20-15:25，洗手間與確認人數，接著步行回原包車集合點。"
               },
               {
-                name: "上高地回程候車",
+                name: "上高地與包車司機會合",
                 place: "Kamikochi Bus Terminal",
                 address: "Azumi, Matsumoto, Nagano",
-                stayMinutes: 20,
+                stayMinutes: 5,
                 travelMinutes: 5,
-                memo: "15:25-15:45，目標搭 15:45 往澤渡的班次；這次回程目的地是澤渡，不是平湯。自由席可能排隊，請依現場站務安排提早集合。"
-              },
-              {
-                name: "澤渡與包車司機會合",
-                place: "Sawando Bus Terminal",
-                address: "Sawando, Azumi, Matsumoto, Nagano",
-                stayMinutes: 6,
-                travelMinutes: 24,
-                memo: "預定 16:09 抵達澤渡巴士總站，16:15 與司機會合出發；接駁巴士與包車費用分開，轉乘及司機等候均計入今日 10 小時。"
+                memo: "15:30-15:35，在約定集合點上原包車，直接前往安曇野採買；司機等候與上下車整理均包含在今日 10 小時內。"
               },
               {
                 name: "The BIG Hotaka by AEON 採買",
                 place: "The BIG Hotaka by AEON",
                 address: "Hotaka, Azumino, Nagano",
                 mapUrl: "https://maps.app.goo.gl/PHQoWt94WnNDzzo67",
-                stayMinutes: 15,
-                travelMinutes: 75,
-                memo: "17:30-17:45，依事先列好的清單快速採買晚餐、早餐、飲料與隔天扇澤上山補給。若道路或候車延誤，可改住宿附近便利商店快速補給。"
+                stayMinutes: 25,
+                travelMinutes: 105,
+                memo: "17:20-17:45，採買晚餐、早餐、飲料與隔天扇澤上山補給，停留 25 分鐘；上高地到安曇野車程預留 1 小時 45 分鐘，含道路緩衝。"
               },
               {
                 name: "The Woods Villa Alps-Azumino",
@@ -2611,7 +2595,7 @@
                 stayMinutes: 0,
                 travelMinutes: 15,
                 charterEnd: true,
-                memo: "18:00 抵達第三晚住宿並結束包車；08:00-18:00 共 10 小時。路程為預估，紅葉季候車或塞車時須提早縮短散步，避免超時。"
+                memo: "18:00 抵達第三晚住宿並結束包車；08:00-18:00 共 10 小時，含直接接送、景點停留、司機等候與採買。車程為預估，依當日道路狀況調整停留時間。"
               }
             ],
             foods: [
@@ -2646,15 +2630,15 @@
             ],
             extras: [
               {
-                name: "上高地轉乘與 10 小時時間補充",
-                address: "平湯進、澤渡出；司機須先確認可在澤渡會合",
+                name: "綠牌包車直達與 10 小時時間補充",
+                address: "高山 → 上高地 → 安曇野採買 → The Woods Villa Alps-Azumino",
                 infoOnly: true,
-                memo: "這天保留高山在第三天，屬緊湊預估版。一般車輛須轉乘，車程、候車、步行及採買都計入包車 10 小時；若延誤，以縮短高山與河童橋周邊散步優先。",
+                memo: "依你們的綠牌包車可直接進入上高地安排；同一部包車接送，車程、步行、景點停留、司機等候與採買均計入 08:00-18:00 共 10 小時。",
                 scheduleItems: [
-                  { time: "12:30-12:55", text: "平湯溫泉 → 上高地；濃飛巴士 2026 年時刻表，實際以現場公告為準。" },
-                  { time: "13:15-15:15", text: "河童橋往返明神池精簡健行；若腳程慢，改河童橋附近短程折返。" },
-                  { time: "15:45-16:09", text: "上高地 → 澤渡巴士總站；司機改在澤渡接駁，不回平湯。" },
-                  { time: "18:00", text: "安曇野住宿結束用車；若改變出發時間，須重新確認接駁班次，不能只平移巴士時間。" }
+                  { time: "10:30-11:15", text: "高山老街短逛與外帶午餐，停留 45 分鐘。" },
+                  { time: "12:45-15:35", text: "上高地共 2 小時 50 分鐘；河童橋開始往返散步，由原包車接送。" },
+                  { time: "15:35-17:20", text: "包車直接前往安曇野，車程保守預估 1 小時 45 分鐘。" },
+                  { time: "17:20-17:45", text: "The BIG 採買 25 分鐘；18:00 抵達住宿，結束 10 小時用車。" }
                 ]
               },
               {
@@ -2665,8 +2649,8 @@
                 routeOriginLabel: "從河童橋約",
                 routeActionLabel: "從河童橋導航",
                 travelFromLastMinutes: 0,
-                stayMinutes: 10,
-                memo: "第三天以外帶輕食為主，安排在 13:05-13:15 河童橋休息時段；排隊長時吃事先準備的午餐。"
+                stayMinutes: 20,
+                memo: "安排在 13:00-13:20 河童橋休息時段；排隊長時吃事先準備的午餐。"
               },
               {
                 name: "上高地食堂",
@@ -3980,7 +3964,7 @@
             rows.push({
               type: "包車",
               title: "高山老街、上高地與安曇野包車",
-              detail: "08:00-18:00 共 10 小時；高山短逛 30 分鐘、上高地從河童橋往返、17:30 快速採買，18:00 抵達安曇野住宿。含平湯進、澤渡出的轉乘及等候，司機須先確認澤渡接駁；接駁費用另計。"
+              detail: "依你們可直接進入上高地的綠牌包車安排，08:00-18:00 共 10 小時；高山 10:30-11:15、上高地 12:45-15:35、採買 17:20-17:45，18:00 抵達安曇野住宿。全程由原包車接送，含司機等候與採買時間。"
             });
           }
 
@@ -4340,7 +4324,7 @@
         document.getElementById("spotlightTitle").textContent = day.title;
         document.getElementById("spotlightNote").textContent =
           charterEnd
-            ? `${scheduled.length} 站 · 包車 ${formatMinutes(charterEnd.leave - firstStop.arrival)}${day.stops.some((stop) => stop.outsideCharter) ? ` · 飯店預計 ${formatTime(end)}（自行轉乘）` : " · 含轉乘、採買與住宿抵達"}`
+            ? `${scheduled.length} 站 · 包車 ${formatMinutes(charterEnd.leave - firstStop.arrival)}${day.stops.some((stop) => stop.outsideCharter) ? ` · 飯店預計 ${formatTime(end)}（自行轉乘）` : " · 含接送、採買與住宿抵達"}`
             : `${scheduled.length} 站 · 全日約 ${formatMinutes(totalSpan)} · ${day.fixedSchedule ? "固定班次時間表" : "可微調出發時間"}`;
         document.getElementById("spotlightStart").textContent = firstStop.name;
         document.getElementById("spotlightEnd").textContent = lastStop.name;
