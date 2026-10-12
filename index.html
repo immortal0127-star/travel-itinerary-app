@@ -2172,7 +2172,7 @@
             name: "東橫 INN 富山站新幹線口 1 號店",
             place: "Toyoko Inn Toyama-eki Shinkansen-guchi No.1",
             address: "1 Chome-5-1 Takaramachi, Toyama",
-            memo: "立山站由包車接駁到富山市區，作為上高地前一晚住宿。"
+            memo: "立山站由包車接駁到富山市區，隔天從住宿出發前往白川鄉合掌村。"
           },
           {
             nights: "Day 5",
@@ -2511,15 +2511,16 @@
           {
             label: "Day 3",
             date: "2026-10-18（日）",
-            title: "包車 · 高山快閃、白川鄉與安曇野採買",
-            image: "./assets/day-3.jpg",
-            tiles: ["名古屋出發", "白川鄉3小時", "安曇野採買"],
+            title: "包車 · 高山、上高地與安曇野採買",
+            image: "./assets/day-5.jpg",
+            tiles: ["高山老街", "河童橋往返", "安曇野採買"],
             startTime: "08:00",
+            startStorageVersion: "swap-20261018-0800-1800",
             weather: {
-              location: "高山 / 白川鄉 / 安曇野",
-              range: "約 9-20°C",
-              summary: "山區早晚冷，高山與白川鄉溫差比名古屋大，傍晚往安曇野會更涼。",
-              gear: "08:00-19:00 包車版，保暖外套、長褲、可收納雨具；白川鄉停留 3 小時要注意腳部保暖。"
+              location: "高山 / 上高地 / 安曇野",
+              range: "上高地約 5-15°C，安曇野約 9-20°C",
+              summary: "上高地林間步道與河邊偏冷，前往安曇野住宿時注意早晚溫差。",
+              gear: "08:00-18:00 包車 10 小時，保暖外套、長褲、防滑好走鞋與輕便雨具。"
             },
             stops: [
               {
@@ -2528,32 +2529,80 @@
                 address: "Nagoya, Aichi",
                 stayMinutes: 0,
                 travelMinutes: 0,
-                memo: "08:00 準時上車，合法綠牌豐田海獅 9 人座包車；今日包車時間 08:00-19:00，含住宿抵達與採買。"
+                memo: "08:00 準時上車，合法綠牌豐田海獅 9 人座包車；08:00-18:00 共 10 小時，包含高山、上高地轉乘與散步、採買及抵達住宿。"
               },
               {
                 name: "高山老街快速午餐",
                 place: "Sanmachi Suji Takayama",
                 address: "Kamiichinomachi, Takayama, Gifu",
-                stayMinutes: 60,
+                stayMinutes: 30,
                 travelMinutes: 150,
-                memo: "10:30-11:30，只保留上三之町 / 宮川朝市周邊短逛與外帶午餐；若路況延誤，直接買飛驒牛小吃後前往白川鄉。"
+                memo: "10:30-11:00，高山仍安排在第三天；上三之町短逛與外帶午餐，30 分鐘後前往平湯轉乘。若塞車，優先縮短此站。"
               },
               {
-                name: "白川鄉合掌村",
-                place: "Shirakawa-go",
-                address: "Ogimachi, Shirakawa, Ono District, Gifu",
-                stayMinutes: 180,
+                name: "平湯溫泉轉乘上高地",
+                place: "Hirayu Bus Terminal",
+                address: "628 Okuhida Onsengo Hirayu, Takayama, Gifu",
+                stayMinutes: 30,
                 travelMinutes: 60,
-                memo: "12:30-15:30 停留完整 3 小時；展望台接駁巴士 09:00-16:00，每 20 分鐘一班，必吃美食放在村內散步時完成。"
+                memo: "12:00-12:30，購票、洗手間與候車；目標搭 12:30 平湯發車、12:55 抵達上高地的接駁巴士。司機另行移動至澤渡，回程在澤渡接駁，請事先確認集合點。"
+              },
+              {
+                name: "抵達上高地巴士總站",
+                place: "Kamikochi Bus Terminal",
+                address: "Azumi, Matsumoto, Nagano",
+                stayMinutes: 5,
+                travelMinutes: 25,
+                memo: "12:55-13:00，確認回程往澤渡的月台與購票方式；不從大正池下車，直接從河童橋開始。"
+              },
+              {
+                name: "河童橋午餐與休息",
+                place: "Kappa Bridge Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 10,
+                travelMinutes: 5,
+                memo: "13:05-13:15，河童橋拍照、補水與外帶輕食；主餐可先在高山買好，避免現場候位。"
+              },
+              {
+                name: "河童橋往返明神池健行",
+                place: "Myojin Pond Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 120,
+                travelMinutes: 0,
+                memo: "13:15-15:15，河童橋出發沿梓川往明神池再回河童橋，精簡健行約 2 小時；腳程較慢或轉乘延誤時改短程折返，優先保留回程搭車時間。"
+              },
+              {
+                name: "河童橋回程整理",
+                place: "Kappa Bridge Kamikochi",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                stayMinutes: 5,
+                travelMinutes: 0,
+                memo: "15:15-15:20，洗手間與確認人數，接著步行回巴士總站。"
+              },
+              {
+                name: "上高地回程候車",
+                place: "Kamikochi Bus Terminal",
+                address: "Azumi, Matsumoto, Nagano",
+                stayMinutes: 20,
+                travelMinutes: 5,
+                memo: "15:25-15:45，目標搭 15:45 往澤渡的班次；這次回程目的地是澤渡，不是平湯。自由席可能排隊，請依現場站務安排提早集合。"
+              },
+              {
+                name: "澤渡與包車司機會合",
+                place: "Sawando Bus Terminal",
+                address: "Sawando, Azumi, Matsumoto, Nagano",
+                stayMinutes: 6,
+                travelMinutes: 24,
+                memo: "預定 16:09 抵達澤渡巴士總站，16:15 與司機會合出發；接駁巴士與包車費用分開，轉乘及司機等候均計入今日 10 小時。"
               },
               {
                 name: "The BIG Hotaka by AEON 採買",
                 place: "The BIG Hotaka by AEON",
                 address: "Hotaka, Azumino, Nagano",
                 mapUrl: "https://maps.app.goo.gl/PHQoWt94WnNDzzo67",
-                stayMinutes: 45,
-                travelMinutes: 150,
-                memo: "18:00-18:45，採買晚餐、早餐、飲料與隔天扇澤上山補給；以快速補給為主，配合 19:00 抵達住宿。"
+                stayMinutes: 15,
+                travelMinutes: 75,
+                memo: "17:30-17:45，依事先列好的清單快速採買晚餐、早餐、飲料與隔天扇澤上山補給。若道路或候車延誤，可改住宿附近便利商店快速補給。"
               },
               {
                 name: "The Woods Villa Alps-Azumino",
@@ -2561,7 +2610,8 @@
                 address: "7362-611 Hotakaariake, Azumino, Nagano",
                 stayMinutes: 0,
                 travelMinutes: 15,
-                memo: "19:00 抵達第三晚住宿；從名古屋出發到住宿、含高山短逛、白川鄉 3 小時、採買與用車時間共 11 小時。"
+                charterEnd: true,
+                memo: "18:00 抵達第三晚住宿並結束包車；08:00-18:00 共 10 小時。路程為預估，紅葉季候車或塞車時須提早縮短散步，避免超時。"
               }
             ],
             foods: [
@@ -2596,52 +2646,38 @@
             ],
             extras: [
               {
-                name: "★ 白川鄉必吃美食",
-                address: "白川鄉合掌村散步補充清單",
+                name: "上高地轉乘與 10 小時時間補充",
+                address: "平湯進、澤渡出；司機須先確認可在澤渡會合",
                 infoOnly: true,
-                memo: "安排在白川鄉 3 小時停留內分散採買，建議先拍展望台，再邊逛合掌村邊吃。下面每一家都有地圖與從白川鄉導航。",
+                memo: "這天保留高山在第三天，屬緊湊預估版。一般車輛須轉乘，車程、候車、步行及採買都計入包車 10 小時；若延誤，以縮短高山與河童橋周邊散步優先。",
                 scheduleItems: [
-                  { time: "白川鄉布丁之家", text: "三層次超美透明「水布丁」" },
-                  { time: "味処 結の郷", text: "飛驒牛可樂餅，適合邊走邊吃" },
-                  { time: "OKESA おけさ", text: "飛驒牛奶，岐阜縣飛驒地區酪農家 100% 生乳" },
-                  { time: "KATARIBE かたりべ", text: "合掌雞蛋糕，適合當散步點心" }
+                  { time: "12:30-12:55", text: "平湯溫泉 → 上高地；濃飛巴士 2026 年時刻表，實際以現場公告為準。" },
+                  { time: "13:15-15:15", text: "河童橋往返明神池精簡健行；若腳程慢，改河童橋附近短程折返。" },
+                  { time: "15:45-16:09", text: "上高地 → 澤渡巴士總站；司機改在澤渡接駁，不回平湯。" },
+                  { time: "18:00", text: "安曇野住宿結束用車；若改變出發時間，須重新確認接駁班次，不能只平移巴士時間。" }
                 ]
               },
               {
-                name: "白川鄉布丁之家",
-                place: "Shirakawa-go Pudding House",
-                address: "Ogimachi, Shirakawa, Ono District, Gifu",
-                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
-                travelFromLastMinutes: 5,
-                stayMinutes: 15,
-                memo: "三層次超美透明「水布丁」，白川鄉散步甜點。"
-              },
-              {
-                name: "味処 結の郷",
-                place: "Ajidokoro Yui no Sato Shirakawa-go",
-                address: "Ogimachi, Shirakawa, Ono District, Gifu",
-                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
-                travelFromLastMinutes: 5,
-                stayMinutes: 15,
-                memo: "飛驒牛可樂餅，適合邊逛合掌村邊吃。"
-              },
-              {
-                name: "OKESA おけさ",
-                place: "OKESA Shirakawa-go",
-                address: "Ogimachi, Shirakawa, Ono District, Gifu",
-                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
-                travelFromLastMinutes: 5,
+                name: "河童橋周邊午餐",
+                place: "Kappa Bridge Kamikochi restaurants",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                routeOrigin: "Kappa Bridge Kamikochi",
+                routeOriginLabel: "從河童橋約",
+                routeActionLabel: "從河童橋導航",
+                travelFromLastMinutes: 0,
                 stayMinutes: 10,
-                memo: "飛驒牛奶，岐阜縣飛驒地區酪農家 100% 生乳。"
+                memo: "第三天以外帶輕食為主，安排在 13:05-13:15 河童橋休息時段；排隊長時吃事先準備的午餐。"
               },
               {
-                name: "KATARIBE かたりべ",
-                place: "Kataribe Shirakawa-go",
-                address: "Ogimachi, Shirakawa, Ono District, Gifu",
-                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
-                travelFromLastMinutes: 5,
-                stayMinutes: 15,
-                memo: "合掌雞蛋糕，適合當白川鄉散步點心。"
+                name: "上高地食堂",
+                place: "Kamikochi Shokudo",
+                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                routeOrigin: "Kamikochi Bus Terminal",
+                routeOriginLabel: "從上高地巴士總站約",
+                routeActionLabel: "從巴士總站導航",
+                travelFromLastMinutes: 0,
+                stayMinutes: 10,
+                memo: "上高地午餐備案，請先確認現場排隊；若用餐較久，需相應縮短健行。"
               },
               {
                 name: "FamilyMart Hotaka Ariake 備案",
@@ -2951,16 +2987,16 @@
           {
             label: "Day 5",
             date: "2026-10-20（二）",
-            title: "包車 · 上高地",
-            image: "./assets/day-5.jpg",
-            tiles: ["河童橋", "明神池", "名古屋車站"],
+            title: "包車 · 白川鄉合掌村與名古屋",
+            image: "./assets/day-3.jpg",
+            tiles: ["白川鄉3小時", "合掌村美食", "名古屋車站"],
             startTime: "08:00",
-            startStorageVersion: "charter-20261020-0800-1900",
+            startStorageVersion: "swap-20261020-0800-1800",
             weather: {
-              location: "上高地 / 名古屋",
-              range: "上高地約 5-15°C，名古屋約 17-24°C",
-              summary: "上高地清晨與林間步道偏冷，回到名古屋市區後溫度會明顯上升。",
-              gear: "08:00-19:00 包車版，洋蔥式穿搭、防滑好走鞋、輕便雨具；名古屋採買時可把厚外套收起。"
+              location: "白川鄉 / 名古屋",
+              range: "白川鄉約 9-20°C，名古屋約 17-24°C",
+              summary: "白川鄉早晚偏涼，回到名古屋市區後溫度會明顯上升。",
+              gear: "08:00-18:00 包車 10 小時，薄外套、長褲、好走鞋與輕便雨具；合掌村停留完整 3 小時。"
             },
             stops: [
               {
@@ -2969,47 +3005,24 @@
                 address: "1 Chome-5-1 Takaramachi, Toyama",
                 stayMinutes: 0,
                 travelMinutes: 0,
-                memo: "08:00 從富山住宿出發，包車前往上高地；今日包車時間 08:00-19:00，終點為名古屋車站。"
+                memo: "08:00 從富山住宿出發，包車前往白川鄉合掌村；08:00-18:00 共 10 小時，終點仍為名古屋車站。"
               },
               {
-                name: "抵達上高地巴士總站",
-                place: "Kamikochi Bus Terminal",
-                address: "Azumi, Matsumoto, Nagano",
-                stayMinutes: 15,
-                travelMinutes: 165,
-                memo: "不從大正池開始；以河童橋周邊為核心，抵達後先整理、洗手間與確認回程集合點。"
-              },
-              {
-                name: "河童橋午餐與休息",
-                place: "Kappa Bridge Kamikochi",
-                address: "Kamikochi, Azumi, Matsumoto, Nagano",
-                stayMinutes: 50,
-                travelMinutes: 5,
-                memo: "從上高地巴士總站步行到河童橋；眺望穗高連峰，簡單用餐與補水。"
-              },
-              {
-                name: "河童橋往返明神池健行",
-                place: "Myojin Pond Kamikochi",
-                address: "Kamikochi, Azumi, Matsumoto, Nagano",
-                stayMinutes: 120,
-                travelMinutes: 0,
-                memo: "河童橋出發，沿梓川往明神池後原路或對岸步道回河童橋；配合 19:00 包車結束，健行時間抓精簡版，門票大人 ¥500。"
-              },
-              {
-                name: "河童橋回程整理",
-                place: "Kappa Bridge Kamikochi",
-                address: "Kamikochi, Azumi, Matsumoto, Nagano",
-                stayMinutes: 15,
-                travelMinutes: 0,
-                memo: "回到河童橋周邊，洗手間、買飲料，準備離開上高地"
+                name: "白川鄉合掌村",
+                place: "Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                stayMinutes: 180,
+                travelMinutes: 90,
+                memo: "09:30-12:30，完整停留 3 小時，包含合掌村散步、展望台與村內午餐小吃；必吃美食及導航已移到本日補充行程。"
               },
               {
                 name: "前往名古屋車站",
                 place: "Nagoya Station",
                 address: "Nagoya Station, Nagoya, Aichi",
-                stayMinutes: 110,
+                stayMinutes: 150,
                 travelMinutes: 180,
-                memo: "17:10 抵達名古屋車站，晚餐、伴手禮或地下街採買；19:00 包車結束，包車終點為名古屋車站。"
+                charterEnd: true,
+                memo: "15:30-18:00，預留晚餐、伴手禮、地下街採買與交通緩衝；18:00 在名古屋車站結束包車，從富山 08:00 出發共 10 小時。"
               },
               {
                 name: "前往中部國際機場住宿",
@@ -3017,23 +3030,17 @@
                 address: "4 Chome-2-5 Centrair, Tokoname, Aichi",
                 stayMinutes: 0,
                 travelMinutes: 55,
-                memo: "19:00 包車結束後，自行從名古屋車站前往中部國際機場住宿；此段不列入包車時段。"
+                outsideCharter: true,
+                memo: "18:00 結束包車後，自行轉搭名鐵往中部國際機場，再前往飯店；連同轉乘及步行預估 18:55 抵達，此段不列入包車 10 小時。"
               }
             ],
             foods: [
               {
-                name: "河童橋周邊午餐",
-                place: "Kappa Bridge Kamikochi restaurants",
-                address: "Kamikochi, Azumi, Matsumoto, Nagano",
+                name: "白川鄉村內午餐",
+                place: "Shirakawa-go restaurants",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
                 timing: "午餐",
-                memo: "健行中段最順路，天氣好可買輕食在河邊休息。"
-              },
-              {
-                name: "上高地食堂",
-                place: "Kamikochi Shokudo",
-                address: "Kamikochi, Azumi, Matsumoto, Nagano",
-                timing: "午餐備案",
-                memo: "想坐下來吃熱食時可查現場營業與排隊狀況。"
+                memo: "午餐與必吃美食安排在 09:30-12:30 合掌村 3 小時停留內。"
               },
               {
                 name: "名古屋車站晚餐",
@@ -3052,6 +3059,54 @@
             ],
             extras: [
               {
+                name: "★ 白川鄉必吃美食",
+                address: "白川鄉合掌村散步補充清單",
+                infoOnly: true,
+                memo: "美食清單跟著合掌村移到第五天，安排在 09:30-12:30 的 3 小時停留內；下面每一家都有地圖與從白川鄉導航。",
+                scheduleItems: [
+                  { time: "白川鄉布丁之家", text: "三層次超美透明「水布丁」" },
+                  { time: "味処 結の郷", text: "飛驒牛可樂餅，適合邊走邊吃" },
+                  { time: "OKESA おけさ", text: "飛驒牛奶，岐阜縣飛驒地區酪農家 100% 生乳" },
+                  { time: "KATARIBE かたりべ", text: "合掌雞蛋糕，適合當散步點心" }
+                ]
+              },
+              {
+                name: "白川鄉布丁之家",
+                place: "Shirakawa-go Pudding House",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 15,
+                memo: "三層次超美透明「水布丁」，白川鄉散步甜點。"
+              },
+              {
+                name: "味処 結の郷",
+                place: "Ajidokoro Yui no Sato Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 15,
+                memo: "飛驒牛可樂餅，適合邊逛合掌村邊吃。"
+              },
+              {
+                name: "OKESA おけさ",
+                place: "OKESA Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 10,
+                memo: "飛驒牛奶，岐阜縣飛驒地區酪農家 100% 生乳。"
+              },
+              {
+                name: "KATARIBE かたりべ",
+                place: "Kataribe Shirakawa-go",
+                address: "Ogimachi, Shirakawa, Ono District, Gifu",
+                routeOrigin: "Shirakawa-go Ogimachi, Gifu",
+                travelFromLastMinutes: 5,
+                stayMinutes: 15,
+                memo: "合掌雞蛋糕，適合當白川鄉散步點心。"
+              },
+              {
                 name: "Phiten Shop 名古屋 Unimall 店",
                 place: "ファイテンショップ 名古屋ユニモール店",
                 address: "愛知県名古屋市中村区名駅4丁目5番26号先 ユニモール地下街",
@@ -3060,7 +3115,7 @@
                 routeActionLabel: "從名古屋車站導航",
                 travelFromLastMinutes: 5,
                 stayMinutes: 20,
-                memo: "位在名古屋站前 Unimall 地下街，離名古屋車站比榮商圈近；建議安排在 17:10-19:00 名古屋車站晚餐與伴手禮採買時順路去。"
+                memo: "位在名古屋站前 Unimall 地下街，離名古屋車站比榮商圈近；建議安排在 15:30-18:00 名古屋車站晚餐與伴手禮採買時順路去。"
               },
               {
                 name: "Flight of Dreams 夜間散步",
@@ -3215,7 +3270,7 @@
         ]
       };
 
-      const scheduleVersion = "charter-times-20261018";
+      const scheduleVersion = "swap-kamikochi-shirakawa-10h-20261012";
       if (localStorage.getItem("scheduleVersion") !== scheduleVersion) {
         ["start-2", "start-4"].forEach((key) => localStorage.removeItem(key));
         localStorage.setItem("scheduleVersion", scheduleVersion);
@@ -3644,7 +3699,7 @@
 
       function renderTabs() {
         tabsEl.innerHTML = "";
-        const tabLabels = ["高雄出發", "吉卜力", "高山白川", "立山黑部", "上高地", "常滑回程"];
+        const tabLabels = ["高雄出發", "吉卜力", "高山上高地", "立山黑部", "白川鄉", "常滑回程"];
         trip.days.forEach((day, index) => {
           const button = document.createElement("button");
           button.className = "day-tab";
@@ -3924,8 +3979,8 @@
           if (index === 2) {
             rows.push({
               type: "包車",
-              title: "高山老街與白川鄉包車",
-              detail: "合法綠牌豐田海獅 9 人座包車；08:00 出發，19:00 抵達安曇野住宿，全程 11 小時，白川鄉停留 3 小時。"
+              title: "高山老街、上高地與安曇野包車",
+              detail: "08:00-18:00 共 10 小時；高山短逛 30 分鐘、上高地從河童橋往返、17:30 快速採買，18:00 抵達安曇野住宿。含平湯進、澤渡出的轉乘及等候，司機須先確認澤渡接駁；接駁費用另計。"
             });
           }
 
@@ -3950,8 +4005,8 @@
           if (index === 4) {
             rows.push({
               type: "包車",
-              title: "富山到上高地與名古屋包車",
-              detail: "包車時間 08:00-19:00；08:00 富山住宿出發，上高地從河童橋往返明神池，19:00 名古屋車站結束。之後自行前往中部國際機場住宿。"
+              title: "富山到白川鄉與名古屋包車",
+              detail: "08:00-18:00 共 10 小時；08:00 富山住宿出發，09:30-12:30 合掌村停留 3 小時，15:30 抵達名古屋車站，18:00 結束用車。之後自行前往中部國際機場住宿，預計 18:55 抵達。"
             });
           }
 
@@ -4075,8 +4130,8 @@
               }).join("；");
               return `<li><strong>${extra.name}</strong><span>${extra.memo}${items ? `<br>${items}` : ""}</span></li>`;
             }
-            const originText = extra.routeOrigin ? "從白川鄉" : "從最後一站";
-            return `<li><strong>${extra.name}</strong><span>${originText}約 ${formatMinutes(extra.travelFromLastMinutes)}，停留 ${formatMinutes(extra.stayMinutes)}。${extra.memo}</span></li>`;
+            const originText = extra.routeOriginLabel || (extra.routeOrigin ? "從白川鄉約" : "從最後一站約");
+            return `<li><strong>${extra.name}</strong><span>${originText} ${formatMinutes(extra.travelFromLastMinutes)}，停留 ${formatMinutes(extra.stayMinutes)}。${extra.memo}</span></li>`;
           }).join("");
           const scheduleRows = scheduled.map((stop) => {
             return `<li><strong>${formatTime(stop.arrival)}-${formatTime(stop.leave)}</strong><span>${stop.name}｜${stop.memo}</span></li>`;
@@ -4264,8 +4319,10 @@
         setPlannerNavActive("topbar");
         const day = trip.days[state.selectedDay];
         const scheduled = scheduleFor(day, state.selectedDay);
-        const totalStay = scheduled.reduce((sum, stop) => sum + stop.stayMinutes, 0);
-        const totalTravel = scheduled.reduce((sum, stop) => sum + stop.travelMinutes, 0);
+        const charterEnd = scheduled.find((stop) => stop.charterEnd);
+        const summaryStops = charterEnd ? scheduled.filter((stop) => !stop.outsideCharter) : scheduled;
+        const totalStay = summaryStops.reduce((sum, stop) => sum + stop.stayMinutes, 0);
+        const totalTravel = summaryStops.reduce((sum, stop) => sum + stop.travelMinutes, 0);
         const end = scheduled[scheduled.length - 1].leave;
         const firstStop = scheduled[0];
         const lastStop = scheduled[scheduled.length - 1];
@@ -4282,10 +4339,13 @@
         document.getElementById("spotlightKicker").textContent = `${day.label} · ${day.date}`;
         document.getElementById("spotlightTitle").textContent = day.title;
         document.getElementById("spotlightNote").textContent =
-          `${scheduled.length} 站 · 全日約 ${formatMinutes(totalSpan)} · ${day.fixedSchedule ? "固定班次時間表" : "可微調出發時間"}`;
+          charterEnd
+            ? `${scheduled.length} 站 · 包車 ${formatMinutes(charterEnd.leave - firstStop.arrival)}${day.stops.some((stop) => stop.outsideCharter) ? ` · 飯店預計 ${formatTime(end)}（自行轉乘）` : " · 含轉乘、採買與住宿抵達"}`
+            : `${scheduled.length} 站 · 全日約 ${formatMinutes(totalSpan)} · ${day.fixedSchedule ? "固定班次時間表" : "可微調出發時間"}`;
         document.getElementById("spotlightStart").textContent = firstStop.name;
         document.getElementById("spotlightEnd").textContent = lastStop.name;
-        document.getElementById("endTime").textContent = formatTime(end);
+        document.getElementById("endTime").previousElementSibling.textContent = charterEnd ? "包車結束" : "預計結束";
+        document.getElementById("endTime").textContent = formatTime(charterEnd ? charterEnd.leave : end);
         document.getElementById("stayTotal").textContent = formatMinutes(totalStay);
         document.getElementById("travelTotal").textContent = formatMinutes(totalTravel);
         document.getElementById("fullRoute").href = fullRouteUrl(day);
